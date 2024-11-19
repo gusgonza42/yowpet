@@ -1,0 +1,19 @@
+
+ __     __   ____   __          __  _____    ______   _______
+ \ \   / /  / __ \  \ \        / / |  __ \  |  ____| |__   __|
+  \ \_/ /  | |  | |  \ \  /\  / /  | |__) | | |__       | |
+   \   /   | |  | |   \ \/  \/ /   |  ___/  |  __|      | |
+    | |    | |__| |    \  /\  /    | |      | |____     | |
+    |_|     \____/      \/  \/     |_|      |______|    |_|
+
+
+   🐾 Welcome to YowPet! 🐾
+                A place where pets and people meet.🚀
+    ${application.title} ${application.version}
+            Powered by Spring Boot ${spring-boot.version}
+             Version: ${application.version}
+                Java Version: ${java.version}
+                Operating System: ${os.name} (${os.arch})
+                Running on port: ${server.port}
+                Profiles Active: ${spring.profiles.active:default}
+                Executed by: ${user.name}
