@@ -1,0 +1,64 @@
+# Directorios y archivos específicos de IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+# Directorio de salida de compilación
+/out/
+build/
+
+# Archivos de configuración de Maven o Gradle
+# (descomentar según tu caso)
+# Maven
+target/
+# Gradle
+.gradle/
+build/
+
+# Archivos de configuración del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos generados por logs o configuraciones temporales
+*.log
+*.tmp
+
+# Archivos relacionados con el entorno
+*.env
+.env.local
+.env.*.local
+
+# Dependencias descargadas por Node.js (si usas npm o yarn)
+node_modules/
+
+# Archivos de compilación de Java
+*.class
+
+# Archivos de empaquetado
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+
+# Archivos específicos de sistemas de contenedores o virtualización
+.vagrant/
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+docker-compose.override.yaml
+docker-compose.local.yml
+docker-compose.local.yaml
+.docker/
+
+# Archivos y datos de MySQL
+*.sql~
+*.sql.bak
+*.sql.gz
+*.sql.zip
+*.sql.tar.gz
+mysql-data/
+
+# Otros archivos comunes en sistemas de contenedores
+*.pid
