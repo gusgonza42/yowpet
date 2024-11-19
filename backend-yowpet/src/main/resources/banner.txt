@@ -1,19 +1,19 @@
 
- __     __   ____   __          __  _____    ______   _______            ____                _____   _  __  ______   _   _   _____
- \ \   / /  / __ \  \ \        / / |  __ \  |  ____| |__   __|          |  _ \      /\      / ____| | |/ / |  ____| | \ | | |  __ \
-  \ \_/ /  | |  | |  \ \  /\  / /  | |__) | | |__       | |     ______  | |_) |    /  \    | |      | ' /  | |__    |  \| | | |  | |
-   \   /   | |  | |   \ \/  \/ /   |  ___/  |  __|      | |    |______| |  _ <    / /\ \   | |      |  <   |  __|   | . ` | | |  | |
-    | |    | |__| |    \  /\  /    | |      | |____     | |             | |_) |  / ____ \  | |____  | . \  | |____  | |\  | | |__| |
-    |_|     \____/      \/  \/     |_|      |______|    |_|             |____/  /_/    \_\  \_____| |_|\_\ |______| |_| \_| |_____/
+ __     __   ____   __          __  _____    ______   _______
+ \ \   / /  / __ \  \ \        / / |  __ \  |  ____| |__   __|
+  \ \_/ /  | |  | |  \ \  /\  / /  | |__) | | |__       | |
+   \   /   | |  | |   \ \/  \/ /   |  ___/  |  __|      | |
+    | |    | |__| |    \  /\  /    | |      | |____     | |
+    |_|     \____/      \/  \/     |_|      |______|    |_|
 
 
-                                             🐾 Welcome to YowPet! 🐾
-                                                             A place where pets and people meet.🚀
-                                                 ${application.title} ${application.version}
-                                                         Powered by Spring Boot ${spring-boot.version}
-                                                          Version: ${application.version}
-                                                             Java Version: ${java.version}
-                                                             Operating System: ${os.name} (${os.arch})
-                                                             Running on port: ${server.port}
-                                                             Profiles Active: ${spring.profiles.active:default}
-                                                             Executed by: ${user.name}
+   🐾 Welcome to YowPet! 🐾
+                A place where pets and people meet.🚀
+    ${application.title} ${application.version}
+            Powered by Spring Boot ${spring-boot.version}
+             Version: ${application.version}
+                Java Version: ${java.version}
+                Operating System: ${os.name} (${os.arch})
+                Running on port: ${server.port}
+                Profiles Active: ${spring.profiles.active:default}
+                Executed by: ${user.name}
