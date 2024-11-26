@@ -1,40 +1,40 @@
-version: '3.8' # Versión de la sintaxis de Docker Compose
+version: '3.8' # Docker Compose syntax version
 
 services:
-  # Configuración para el servicio MySQL
+  # Configuration for MySQL service
   mysql:
-    image: mysql:8.0 # Imagen de MySQL versión 8.0
-    container_name: mysql_yowpet # Nombre del contenedor
+    image: mysql:8.0 # MySQL version 8.0 image
+    container_name: mysql_yowpet # Container name
     ports:
-      - "3306:3306" # Mapea el puerto 3306 del contenedor al puerto 3306 de la máquina host
+      - "3306:3306" # Map container port 3306 to host port 3306
     environment:
-      MYSQL_ROOT_PASSWORD: root # Contraseña del usuario root
-      MYSQL_DATABASE: yowpet # Nombre de la base de datos que se creará al iniciar el contenedor
-      MYSQL_USER: admin # Usuario personalizado que se creará
-      MYSQL_PASSWORD: MainTester # Contraseña para el usuario personalizado
+      MYSQL_ROOT_PASSWORD: root # Root user password
+      MYSQL_DATABASE: yowpet # Database name to create at start
+      MYSQL_USER: admin # Custom user to create
+      MYSQL_PASSWORD: MainTester # Password for custom user
     volumes:
-      - mysql_data:/var/lib/mysql # Volumen para almacenar los datos de MySQL de forma persistente
+      - mysql_data:/var/lib/mysql # Volume to save MySQL data
     networks:
-      - yowpet-network # Red personalizada para comunicar servicios
+      - yowpet-network # Custom network to connect services
 
-  # Configuración para el servicio MongoDB
+  # Configuration for MongoDB service
   mongodb:
-    image: mongo:6.0 # Imagen de MongoDB versión 6.0
-    container_name: mongodb_yowpet # Nombre del contenedor
+    image: mongo:6.0 # MongoDB version 6.0 image
+    container_name: mongodb_yowpet # Container name
     ports:
-      - "27017:27017" # Mapea el puerto 27017 del contenedor al puerto 27017 de la máquina host
+      - "27017:27017" # Map container port 27017 to host port 27017
     environment:
-      MONGO_INITDB_DATABASE: yowpet # Nombre de la base de datos que se creará al iniciar el contenedor
+      MONGO_INITDB_DATABASE: yowpet # Database name to create at start
     volumes:
-      - mongo_data:/data/db # Volumen para almacenar los datos de MongoDB de forma persistente
+      - mongo_data:/data/db # Volume to save MongoDB data
     networks:
-      - yowpet-network # Red personalizada para comunicar servicios
+      - yowpet-network # Custom network to connect services
 
-# Declaración de la red personalizada
+# Custom network declaration
 networks:
   yowpet-network:
 
-# Declaración de los volúmenes para persistir datos
+# Volumes declaration to save data
 volumes:
-  mysql_data: # Volumen para almacenar los datos de MySQL
-  mongo_data: # Volumen para almacenar los datos de MongoDB
+  mysql_data: # Volume for MySQL data
+  mongo_data: # Volume for MongoDB data
