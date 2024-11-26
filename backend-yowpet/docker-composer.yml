@@ -1,0 +1,40 @@
+version: '3.8' # Versión de la sintaxis de Docker Compose
+
+services:
+  # Configuración para el servicio MySQL
+  mysql:
+    image: mysql:8.0 # Imagen de MySQL versión 8.0
+    container_name: mysql_yowpet # Nombre del contenedor
+    ports:
+      - "3306:3306" # Mapea el puerto 3306 del contenedor al puerto 3306 de la máquina host
+    environment:
+      MYSQL_ROOT_PASSWORD: root # Contraseña del usuario root
+      MYSQL_DATABASE: yowpet # Nombre de la base de datos que se creará al iniciar el contenedor
+      MYSQL_USER: admin # Usuario personalizado que se creará
+      MYSQL_PASSWORD: MainTester # Contraseña para el usuario personalizado
+    volumes:
+      - mysql_data:/var/lib/mysql # Volumen para almacenar los datos de MySQL de forma persistente
+    networks:
+      - yowpet-network # Red personalizada para comunicar servicios
+
+  # Configuración para el servicio MongoDB
+  mongodb:
+    image: mongo:6.0 # Imagen de MongoDB versión 6.0
+    container_name: mongodb_yowpet # Nombre del contenedor
+    ports:
+      - "27017:27017" # Mapea el puerto 27017 del contenedor al puerto 27017 de la máquina host
+    environment:
+      MONGO_INITDB_DATABASE: yowpet # Nombre de la base de datos que se creará al iniciar el contenedor
+    volumes:
+      - mongo_data:/data/db # Volumen para almacenar los datos de MongoDB de forma persistente
+    networks:
+      - yowpet-network # Red personalizada para comunicar servicios
+
+# Declaración de la red personalizada
+networks:
+  yowpet-network:
+
+# Declaración de los volúmenes para persistir datos
+volumes:
+  mysql_data: # Volumen para almacenar los datos de MySQL
+  mongo_data: # Volumen para almacenar los datos de MongoDB
