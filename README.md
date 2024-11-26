@@ -1,45 +1,81 @@
 # YOWPET
 
-//TODO: titulo del proyecto
-
-//TODO: descripcion del proyecto
-
-//TODO: que vamos a usar (tecnologias) de backen,
-todo techonologias de backend que usamos en pom.xml
-Backend(JAVA, Spring Boot, MySQL, Mongo, Docker, Swagger); Frontend(React Native)
-
-//TODO: quienes forman parte del proyecto solo nombres y enlaces al perfil de gitub
-
-//TODO: metodologia de trabajo 🆗
-## Metodología de Trabajo
-
-Para gestionar las ramas y versiones del proyecto, seguimos la metodología **Git Flow**. Además, contamos con guías
-específicas que detallan cómo implementar esta metodología y utilizar Trello en el flujo de trabajo.
-
-- **Git Flow**:
-    - **`master`**: Contiene la versión estable y lista para producción.
-    - **`develop`**: Reúne la última versión en desarrollo, con las funcionalidades recientes integradas y listas para
-      pruebas.
-    - **Feature branches**: Se utilizan para el desarrollo de nuevas funcionalidades, permitiendo que cada cambio sea
-      independiente y fácil de probar.
-    - **Release branches**: Ramas dedicadas a la preparación de una versión para producción, enfocadas en estabilizar el
-      código antes de su lanzamiento.
-    - **Hotfix branches**: Ramas para corregir errores críticos en producción que necesitan solución inmediata.
-
-Consulta nuestra guía detallada sobre 
-[Guía de Creación de Ramas y Draft PR en GitHub](utils/guides/Como_trabajar_con_GitHub_y_Git_V1.pdf)
-para obtener una explicación paso a paso de cómo emplear esta metodología en el proyecto.
-
-- **Organización de Tareas**:
-    - **Trello** y **GitHub Projects**: Utilizamos **Trello** para la planificación inicial de tareas y organización del
-      flujo de trabajo, y **GitHub Projects** para gestionar los Pull Requests y vincular tareas con las ramas de Git.
-
-Para conocer cómo estructurar las tareas y asignaciones, revisa nuestra [Guía para uso de Trello](utils/guides/Como_usar_Trello_V1.pdf).
+**¡Bienvenido a YOWPET!**  
+Una innovadora aplicación móvil diseñada para los amantes de las mascotas. Con YOWPET, los dueños pueden gestionar todo lo relacionado con sus amigos peludos, desde su historial médico hasta la ubicación de veterinarios y parques cercanos. Además, incluye un chat para conectar con otros dueños de mascotas. ¡Todo en una sola aplicación!
 
 ---
 
-//TODO: herramientas de colaboracion y organizacion 
-gestion de proyecto trello y github proyejets, para documentar
+## 📖 Descripción del Proyecto
 
-//TODO: guia de como descargar el proyecto  y abres el proyecto parar trabajar en el
+YOWPET es una solución integral para los dueños de mascotas, que combina tecnología avanzada y un diseño intuitivo para mejorar la experiencia de cuidar a nuestros compañeros animales.  
+Entre las principales características de YOWPET se encuentran:
 
+- Gestión del perfil de las mascotas (historial médico, vacunación, etc.).
+- Mapa interactivo con veterinarios, parques y tiendas de mascotas cercanas.
+- Chat para que los dueños compartan consejos y experiencias.
+- Un sitio web complementario para la administración avanzada.
+
+---
+
+## ⚙️ Tecnologías Usadas
+
+**Backend**:
+- **Java**
+- **Spring Boot**
+- **MySQL**
+- **MongoDB**
+- **Docker**
+- **Swagger**
+
+**Frontend**:
+- **React Native**
+
+Para más detalles sobre las dependencias del backend, revisa el archivo `pom.xml`.
+
+---
+
+## 👥 Equipo
+
+Estos son los integrantes del equipo que están construyendo YOWPET:
+- [Denys](https://github.com/zondikkk)
+- [Gustavo](https://github.com/gusgonza42)
+- [Manuel](https://github.com/manogirgis)
+
+---
+
+## 🛠️ Metodología de Trabajo
+
+Para mantener una organización eficiente, utilizamos **Git Flow** como metodología de control de versiones y las siguientes herramientas para la colaboración y gestión del proyecto:
+
+### Git Flow
+
+1. **master**: Contiene la versión estable y lista para producción.
+2. **develop**: Ramas de desarrollo activo donde se integran las funcionalidades para pruebas.
+3. **Feature branches**: Ramas para el desarrollo de nuevas funcionalidades.
+4. **Release branches**: Preparación de versiones estables antes del lanzamiento.
+5. **Hotfix branches**: Corrección rápida de errores críticos en producción.
+
+Consulta nuestra [Guía de Creación de Ramas y Draft PR en GitHub](utils/guides/Como_trabajar_con_GitHub_y_Git_V1.pdf) para aprender cómo implementar esta metodología.
+
+### Organización de Tareas
+
+1. **Trello**: Para la planificación inicial y la organización general del proyecto.
+2. **GitHub Projects**: Vincula las tareas de Trello con los Pull Requests para un flujo de trabajo más integrado.
+
+Más detalles en nuestra [Guía para el Uso de Trello](utils/guides/Como_usar_Trello_V1.pdf).
+
+---
+
+## 🔧 Herramientas de Colaboración
+
+- **Trello**: Gestión y planificación de tareas.
+- **GitHub Projects**: Seguimiento del desarrollo técnico y gestión de Pull Requests.
+- **Documentación**: Centralizada en este repositorio.
+
+---
+
+## 🚀 Guía para Descargar y Trabajar en el Proyecto
+
+1. **Clona el Repositorio**
+   ```bash
+   git clone https://github.com/gusgonza42/yowpet.git
