@@ -62,3 +62,40 @@ mysql-data/
 
 # Otros archivos comunes en sistemas de contenedores
 *.pid
+
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+frontend-yowpet/node_modules/
+
+# Expo
+frontend-yowpet/.expo/
+frontend-yowpet/dist/
+frontend-yowpet/web-build/
+frontend-yowpet/expo-env.d.ts
+
+# Native
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+frontend-yowpet/.metro-health-check*
+
+# debug
+frontend-yowpet/npm-debug.*
+frontend-yowpet/yarn-debug.*
+frontend-yowpet/yarn-error.*
+
+# macOS
+frontend-yowpet/.DS_Store
+*.pem
+
+# local env files
+frontend-yowpet/.env*.local
+
+# typescript
+*.tsbuildinfo
