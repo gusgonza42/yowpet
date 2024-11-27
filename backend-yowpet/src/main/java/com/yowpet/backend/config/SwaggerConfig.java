@@ -8,11 +8,15 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Swagger configuration for the YowPet API.
+ * Defines basic information about the API and the security scheme.
+ */
 @OpenAPIDefinition(
         info = @Info(
                 title = "YowPet API",
                 version = "1.0.0",
-                description = "API para la gestión de mascotas, cuidadores y funciones relacionadas"
+                description = "API for managing pets, caregivers, and related functions"
         ),
         security = {@SecurityRequirement(name = "bearerAuth")}
 )
@@ -25,5 +29,5 @@ import org.springframework.context.annotation.Configuration;
 )
 @Configuration
 public class SwaggerConfig {
-    // No es necesario agregar métodos adicionales
+        // No need to add extra methods
 }

@@ -1,36 +1,36 @@
-version: '3.8' # Docker Compose syntax version
+version: '3.8'
 
 services:
   # Configuration for MySQL service
   mysql:
-    image: mysql:8.0 # MySQL version 8.0 image
-    container_name: mysql_yowpet # Container name
+    image: mysql:8.0
+    container_name: mysql_yowpet
     ports:
-      - "3306:3306" # Map container port 3306 to host port 3306
+      - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: root # Root user password
-      MYSQL_DATABASE: yowpet # Database name to create at start
-      MYSQL_USER: admin # Custom user to create
-      MYSQL_PASSWORD: MainTester # Password for custom user
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: yowpet
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: MainTester
     volumes:
-      - mysql_data:/var/lib/mysql # Volume to save MySQL data
+      - mysql_data:/var/lib/mysql
     networks:
-      - yowpet-network # Custom network to connect services
+      - yowpet-network
 
-  # Configuration for MongoDB service
-  mongodb:
-    image: mongo:6.0 # MongoDB version 6.0 image
-    container_name: mongodb_yowpet # Container name
-    ports:
-      - "27017:27017" # Map container port 27017 to host port 27017
-    environment:
-      MONGO_INITDB_DATABASE: yowpet # Database name to create at start
-      MONGO_INITDB_ROOT_USERNAME: admin # Root username
-      MONGO_INITDB_ROOT_PASSWORD: MainTester # Root password
-    volumes:
-      - mongo_data:/data/db # Volume to save MongoDB data
-    networks:
-      - yowpet-network # Custom network to connect services
+  # Configuration for MongoDB service (commented out)
+  # mongodb:
+  #   image: mongo:6.0
+  #   container_name: mongodb_yowpet
+  #   ports:
+  #     - "27017:27017"
+  #   environment:
+  #     MONGO_INITDB_DATABASE: yowpet
+  #     MONGO_INITDB_ROOT_USERNAME: admin
+  #     MONGO_INITDB_ROOT_PASSWORD: MainTester
+  #   volumes:
+  #     - mongo_data:/data/db
+  #   networks:
+  #     - yowpet-network
 
 # Custom network declaration
 networks:
@@ -38,5 +38,5 @@ networks:
 
 # Volumes declaration to save data
 volumes:
-  mysql_data: # Volume for MySQL data
-  mongo_data: # Volume for MongoDB data
+  mysql_data:
+  # mongo_data: # Volume for MongoDB (commented out)
