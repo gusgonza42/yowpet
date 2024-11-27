@@ -25,6 +25,8 @@ services:
       - "27017:27017" # Map container port 27017 to host port 27017
     environment:
       MONGO_INITDB_DATABASE: yowpet # Database name to create at start
+      MONGO_INITDB_ROOT_USERNAME: admin # Root username
+      MONGO_INITDB_ROOT_PASSWORD: MainTester # Root password
     volumes:
       - mongo_data:/data/db # Volume to save MongoDB data
     networks:
