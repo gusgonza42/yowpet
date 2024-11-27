@@ -1,48 +1,35 @@
-# Directorios y archivos específicos de IntelliJ IDEA
+# General
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.pid
+
+# IntelliJ IDEA
 .idea/
 *.iml
 *.iws
 
-# Directorio de salida de compilación
-/out/
-build/
-
-# Archivos de configuración de Maven o Gradle
-# (descomentar según tu caso)
-# Maven
+# Java (Maven y Spring Boot)
 target/
-# Gradle
-.gradle/
-build/
-
-# Archivos de configuración del sistema operativo
-.DS_Store
-Thumbs.db
-
-# Archivos generados por logs o configuraciones temporales
-*.log
-*.tmp
-
-# Archivos relacionados con el entorno
-*.env
-.env.local
-.env.*.local
-
-# Dependencias descargadas por Node.js (si usas npm o yarn)
-node_modules/
-
-# Archivos de compilación de Java
 *.class
-
-# Archivos de empaquetado
 *.jar
 *.war
 *.ear
-*.zip
-*.tar.gz
+*.h2.db
+*.mv.db
+*.db.trace
+application-*.yml
+application-*.yaml
 
-# Archivos específicos de sistemas de contenedores o virtualización
-.vagrant/
+# Maven
+.mvn/
+!mvnw
+!mvnw.cmd
+
+# Gradle (si lo usas)
+.gradle/
+build/
 
 # Docker
 .dockerignore
@@ -52,50 +39,49 @@ docker-compose.local.yml
 docker-compose.local.yaml
 .docker/
 
-# Archivos y datos de MySQL
+# MySQL y otros archivos relacionados con bases de datos
 *.sql~
 *.sql.bak
 *.sql.gz
 *.sql.zip
 *.sql.tar.gz
-mysql-data/
+database/
 
-# Otros archivos comunes en sistemas de contenedores
-*.pid
-
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
-# dependencies
+# Node.js (para React Native con Expo)
 frontend-yowpet/node_modules/
+frontend-yowpet/npm-debug.log*
+frontend-yowpet/yarn-debug.log*
+frontend-yowpet/yarn-error.log*
 
-# Expo
+# React Native/Expo
 frontend-yowpet/.expo/
+frontend-yowpet/.expo-shared/
 frontend-yowpet/dist/
 frontend-yowpet/web-build/
+frontend-yowpet/android/
+frontend-yowpet/ios/
 frontend-yowpet/expo-env.d.ts
 
-# Native
-*.orig.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
+# Expo specific files
+frontend-yowpet/.expo/
+frontend-yowpet/.expo-shared/
 
-# Metro
+# Expo debugging
 frontend-yowpet/.metro-health-check*
 
-# debug
-frontend-yowpet/npm-debug.*
-frontend-yowpet/yarn-debug.*
-frontend-yowpet/yarn-error.*
+# React Native debugging
+frontend-yowpet/.react-native/
 
-# macOS
-frontend-yowpet/.DS_Store
-*.pem
+# Otros relacionados con React Native
+frontend-yowpet/assets/
+frontend-yowpet/*.jks
+frontend-yowpet/*.keystore
+frontend-yowpet/*.p8
+frontend-yowpet/*.p12
+frontend-yowpet/*.key
+frontend-yowpet/*.mobileprovision
+frontend-yowpet/tsconfig.tsbuildinfo
 
-# local env files
-frontend-yowpet/.env*.local
-
-# typescript
-*.tsbuildinfo
+# Configuración de entornos
+frontend-yowpet/.env*
+backend-yowpet/.env*
