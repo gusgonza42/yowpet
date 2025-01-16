@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table ( name = "pet" )
+@Table ( name = "pet_test" )
 public class PetModel {
 
     /**
