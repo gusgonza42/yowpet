@@ -3,10 +3,10 @@ version: '3.8'
 services:
   backend:
     build:
-      context: ../backend-yowpet  # Especificamos la ruta al contexto de construcción (fuera de la carpeta docker)
-      dockerfile: Dockerfile       # Aseguramos que Docker use el archivo Dockerfile de la carpeta backend-yowpet
+      context: ../backend-yowpet
+      dockerfile: Dockerfile
     ports:
-      - "${BACKEND_PORT}:${BACKEND_PORT}"
+      - "8082:8080" # Puerto fijo para el backend
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
@@ -25,7 +25,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "${MYSQL_PORT}:${MYSQL_PORT}"
+      - "3306:3306" # Puerto fijo para MySQL
     networks:
       - backend-network
     volumes:
