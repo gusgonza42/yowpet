@@ -31,6 +31,10 @@ public class Pet {
     @JoinColumn(name = "p_owner_id", referencedColumnName = "u_id")
     private User p_owner;
 
+    @ManyToOne
+    @JoinColumn(name = "p_breed_id", referencedColumnName = "b_id")
+    private Breed p_breed_id;
+
     @ManyToMany
     @JoinTable(
             name = "pet_allergies",
