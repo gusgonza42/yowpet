@@ -10,7 +10,7 @@ import lombok.*;
 @Table(name = "lesson_reviews")
 public class Lesson_reviews {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int review_id;
 
     @Column(nullable = false)
