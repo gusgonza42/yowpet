@@ -7,11 +7,11 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "place_reviews")
-public class Place_reviews {
+@Table(name = "lesson_reviews")
+public class Lesson_reviews {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int pr_id;
+    private int review_id;
 
     @Column(nullable = false)
     private int rating;
@@ -20,19 +20,19 @@ public class Place_reviews {
     private String comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "place_id", nullable = false)
-    private Place place;
+    @JoinColumn(name = "lesson_id", nullable = false)
+    private Lesson lesson;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public int getPr_id() {
-        return pr_id;
+    public int getReview_id() {
+        return review_id;
     }
 
-    public void setPr_id(int pr_id) {
-        this.pr_id = pr_id;
+    public void setReview_id(int review_id) {
+        this.review_id = review_id;
     }
 
     public int getRating() {
@@ -51,12 +51,12 @@ public class Place_reviews {
         this.comment = comment;
     }
 
-    public Place getPlace() {
-        return place;
+    public Lesson getLesson() {
+        return lesson;
     }
 
-    public void setPlace(Place place) {
-        this.place = place;
+    public void setLesson(Lesson lesson) {
+        this.lesson = lesson;
     }
 
     public User getUser() {
@@ -69,11 +69,11 @@ public class Place_reviews {
 
     @Override
     public String toString() {
-        return "Place_reviews{" +
-                "pr_id=" + pr_id +
+        return "LessonReview{" +
+                "review_id=" + review_id +
                 ", rating=" + rating +
                 ", comment='" + comment + '\'' +
-                ", place=" + place +
+                ", lesson=" + lesson +
                 ", user=" + user +
                 '}';
     }
