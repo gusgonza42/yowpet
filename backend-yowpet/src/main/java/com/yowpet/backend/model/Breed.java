@@ -24,7 +24,7 @@ public class Breed {
      * Unique identifier for the animal.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int b_id;
 
     /**

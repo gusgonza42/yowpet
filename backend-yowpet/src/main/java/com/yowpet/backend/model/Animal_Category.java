@@ -24,7 +24,7 @@ public class Animal_Category {
      * Unique identifier for the Animal Category.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     /**
