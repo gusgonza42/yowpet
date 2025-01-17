@@ -2,13 +2,13 @@ package com.yowpet.backend.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
- * Representa una entidad de mascota en el sistema.
+ * Represents a pet entity in the system.
  */
 @Getter
 @Setter
@@ -16,108 +16,64 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table ( name = "pet" )
+@Table(name = "pet")
 public class Pet {
 
-    /**
-     * El identificador único para la mascota.
-     */
     @Id
-    @GeneratedValue ( strategy = GenerationType.IDENTITY )
-    @Column ( name = "p_id" )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "p_id")
     private Long p_id;
 
-    /**
-     * El ID del animal de la mascota.
-     */
-    @Column ( name = "p_animal_id" )
+    @Column(name = "p_animal_id", nullable = false)
     private String p_animal_id;
 
-    /**
-     * El propietario de la mascota.
-     */
     @ManyToOne
-    @JoinColumn ( name = "p_owner_id", referencedColumnName = "u_id" )
+    @JoinColumn(name = "p_owner_id", referencedColumnName = "u_id")
     private User p_owner;
 
-    /**
-     * El estado de la mascota.
-     * Valores por defecto: 1 = activo, 0 = inactivo.
-     */
-    @Column ( name = "p_status" )
+    @ManyToMany
+    @JoinTable(
+            name = "pet_allergies",
+            joinColumns = @JoinColumn(name = "p_id"),
+            inverseJoinColumns = @JoinColumn(name = "al_id")
+    )
+    private List<Allergy> allergies;
+
+    @Column(name = "p_status", nullable = false)
     private int p_status = 1;
 
-    /**
-     * El nombre de la mascota.
-     */
-    @Column ( name = "p_name", nullable = false )
+    @Column(name = "p_name", nullable = false)
     private String p_name;
 
-    /**
-     * La fecha de nacimiento de la mascota.
-     */
-    @Column ( name = "p_birth_date" )
-    @Temporal ( TemporalType.DATE )
+    @Temporal(TemporalType.DATE)
+    @Column(name = "p_birth_date")
     private Date p_birth_date;
 
-    /**
-     * El género de la mascota.
-     */
-    @Column ( name = "p_gender" )
+    @Column(name = "p_gender", nullable = false)
     private String p_gender;
 
-    /**
-     * El estado de esterilización de la mascota.
-     * Valores: 1 = esterilizado, 0 = no esterilizado, 2 = no aplica.
-     */
-    @Column ( name = "p_sterilized" )
+    @Column(name = "p_sterilized", nullable = false)
     private int p_sterilized;
 
-    /**
-     * La foto de perfil de la mascota.
-     */
-    @Column ( name = "p_profile_picture" )
+    @Column(name = "p_profile_picture")
     private String p_profile_picture;
 
-    /**
-     * La descripción de la mascota.
-     */
-    @Column ( name = "p_description" )
+    @Column(name = "p_description")
     private String p_description;
 
-    /**
-     * El contacto de emergencia de la mascota.
-     */
-    @Column ( name = "p_emergency_contact" )
+    @Column(name = "p_emergency_contact")
     private String p_emergency_contact;
 
-    /**
-     * Verifica si esta mascota es igual a otro objeto.
-     *
-     * @param o el objeto con el que comparar
-     * @return true si los objetos son iguales, false en caso contrario
-     */
     @Override
-    public final boolean equals( Object o ) {
-        if( this == o )
-            return true;
-        if( o == null )
-            return false;
-        Class< ? > oEffectiveClass = o instanceof HibernateProxy ? ( ( HibernateProxy ) o ).getHibernateLazyInitializer( ).getPersistentClass( ) : o.getClass( );
-        Class< ? > thisEffectiveClass = this instanceof HibernateProxy ? ( ( HibernateProxy ) this ).getHibernateLazyInitializer( ).getPersistentClass( ) : this.getClass( );
-        if( thisEffectiveClass != oEffectiveClass )
-            return false;
-        Pet pet = ( Pet ) o;
-        return getP_id( ) != null && Objects.equals( getP_id( ), pet.getP_id( ) );
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Pet)) return false;
+        Pet pet = (Pet) o;
+        return Objects.equals(p_id, pet.p_id);
     }
 
-    /**
-     * Devuelve el código hash de esta mascota.
-     *
-     * @return el código hash
-     */
     @Override
-    public final int hashCode( ) {
-        return this instanceof HibernateProxy ? ( ( HibernateProxy ) this ).getHibernateLazyInitializer( ).getPersistentClass( ).hashCode( ) : getClass( ).hashCode( );
+    public int hashCode() {
+        return Objects.hash(p_id);
     }
 }
