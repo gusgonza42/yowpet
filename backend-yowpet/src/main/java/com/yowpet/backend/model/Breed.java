@@ -25,12 +25,12 @@ public class Breed {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int r_id;
+    private int b_id;
 
     /**
      * Name of the animal.
      */
-    private String r_name;
+    private String b_name;
 
     /**
      * Reference to the animal category.
