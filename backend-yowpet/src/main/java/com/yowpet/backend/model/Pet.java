@@ -43,7 +43,7 @@ public class Pet {
 
 
     @ManyToMany
-    @JoinTable ( name = "allergies",joinColumns = @JoinColumn(name = "pet_id"),inverseJoinColumns = @JoinColumn(name = "allergy_id"))
+    @JoinTable ( name = "allergies",joinColumns = @JoinColumn(name = "p_id"),inverseJoinColumns = @JoinColumn(name = "al_id"))
     private List<Allergy> allergies;
 
     /**

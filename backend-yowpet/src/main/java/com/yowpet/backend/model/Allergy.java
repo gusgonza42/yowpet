@@ -38,6 +38,6 @@ public class Allergy {
 
     @ManyToMany(mappedBy = "allergies", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Pet> pet;
+    private List<Pet> p_id;
 
 }

@@ -36,7 +36,7 @@ public class Breed {
      * Reference to the animal category.
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "animalCategory", nullable = false)
     private Animal_Category animalCategory;
 
 }
