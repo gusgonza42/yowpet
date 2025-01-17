@@ -14,7 +14,7 @@ import java.util.Date;
 @Table ( name = "user" )
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue ( strategy = GenerationType.IDENTITY )
     @Column ( name = "u_id" )
     private Long u_id;
 
@@ -46,6 +46,7 @@ public class User {
     @Column ( name = "u_zip_code", length = 5 )
     private int u_zip_code;
 
+    // el genero de un usuario sera 1 = masculino, 0 = femenino, 2 = no binario, 3 = otros
     @Column ( name = "u_gender" )
     private String u_gender;
 

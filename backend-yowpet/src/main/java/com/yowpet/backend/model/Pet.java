@@ -15,7 +15,7 @@ import java.util.Date;
 public class Pet {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue ( strategy = GenerationType.IDENTITY )
     @Column ( name = "p_id" )
     private Long p_id;
 
@@ -26,24 +26,23 @@ public class Pet {
     @JoinColumn ( name = "p_owner_id", referencedColumnName = "u_id" )
     private User p_owner;
 
+    // por defecto el estado de una mascota sera 1 = activo, 0 = inactivo
     @Column ( name = "p_status" )
-    private String p_status;
+    private int p_status = 1;
 
     @Column ( name = "p_name", nullable = false )
     private String p_name;
 
     @Column ( name = "p_birth_date" )
-    @Temporal( TemporalType.DATE )
+    @Temporal ( TemporalType.DATE )
     private Date p_birth_date;
-
-    @Column ( name = "p_breed" )
-    private String p_breed;
 
     @Column ( name = "p_gender" )
     private String p_gender;
 
+    // el estado de una mascota sera 1 = esterilizado, 0 = no esterilizado, 2 = no aplica
     @Column ( name = "p_sterilized" )
-    private String p_sterilized;
+    private int p_sterilized;
 
     @Column ( name = "p_profile_picture" )
     private String p_profile_picture;

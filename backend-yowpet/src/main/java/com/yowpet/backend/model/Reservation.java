@@ -11,26 +11,26 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Reservation")
+@Table ( name = "Reservation" )
 public class Reservation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "r_id")
+    @GeneratedValue ( strategy = GenerationType.IDENTITY )
+    @Column ( name = "r_id" )
     private Long r_id;
 
     @ManyToOne
-    @JoinColumn(name = "r_user_id", referencedColumnName = "u_id")
+    @JoinColumn ( name = "r_user_id", referencedColumnName = "u_id" )
     private User r_user_id;
 
-    @OneToOne
-    @JoinColumn(name = "r_care_giver_id", referencedColumnName = "u_role")
+    @ManyToOne
+    @JoinColumn ( name = "r_care_giver_id", referencedColumnName = "u_id" )
     private User r_care_giver_id;
 
-    @Column(name = "r_reservation_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column ( name = "r_reservation_date" )
+    @Temporal ( TemporalType.TIMESTAMP )
     private Date r_reservation_date;
 
     // por defecto el estado de una reserva sera 1 = activo, 0 = cancelado, 2 = completado
-    @Column(name = "r_status")
+    @Column ( name = "r_status" )
     private int r_status = 1;
 }
