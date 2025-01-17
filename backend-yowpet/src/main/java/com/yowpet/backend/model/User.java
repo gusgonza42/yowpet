@@ -1,10 +1,12 @@
 package com.yowpet.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -145,6 +147,10 @@ public class User {
             u_created_at = new Date( );
         }
     }
+
+    @ManyToMany(mappedBy = "caretaker", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<User> caretaker;
 
     /**
      * Constructor para crear un nuevo usuario con el nombre, apellido, correo electrónico y contraseña especificados.
