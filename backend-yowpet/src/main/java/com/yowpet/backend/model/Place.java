@@ -3,6 +3,8 @@ package com.yowpet.backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,6 +23,9 @@ public class Place {
 
     @Column(length = 45, nullable = false)
     private String l_addresscode;
+
+    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Place_reviews> reviews;
 
     public int getL_id() {
         return l_id;
@@ -52,6 +57,14 @@ public class Place {
 
     public void setL_addresscode(String l_addresscode) {
         this.l_addresscode = l_addresscode;
+    }
+
+    public List<Place_reviews> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Place_reviews> reviews) {
+        this.reviews = reviews;
     }
 
     @Override
