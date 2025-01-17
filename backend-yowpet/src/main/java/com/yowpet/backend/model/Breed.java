@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 /**
- * Entity model to represent a relation between Allergy and pet.
+ * Entity model to represent the race of animal.
  * Uses JPA annotations to map the class to a database table.
  * <p>
  * Includes Lombok annotations to automatically generate getter, setter, constructors, and other methods.
@@ -15,34 +17,26 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "illness")
-public class Illness {
-
+@Table(name = "breed")
+public class Breed {
 
     /**
-     * Unique identifier for the Illness.
+     * Unique identifier for the animal.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private int r_id;
 
     /**
-     * the Allergy.
-     * <p>
-     * Many-to-one relationship with Allergy entity.
+     * Name of the animal.
      */
-
-    @ManyToOne
-    @JoinColumn(name = "al_id", nullable = false)
-    private Allergy allergy;
+    private String r_name;
 
     /**
-     *
-     * The pet.
+     * Reference to the animal category.
      */
-
-      @ManyToOne
-      @JoinColumn(name = "p_id", nullable = false)
-     private Pet pet;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Animal_Category animalCategory;
 
 }

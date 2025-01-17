@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -39,6 +40,11 @@ public class Pet {
     @ManyToOne
     @JoinColumn ( name = "p_owner_id", referencedColumnName = "u_id" )
     private User p_owner;
+
+
+    @ManyToMany
+    @JoinTable ( name = "allergies",joinColumns = @JoinColumn(name = "pet_id"),inverseJoinColumns = @JoinColumn(name = "allergy_id"))
+    private List<Allergy> allergies;
 
     /**
      * El estado de la mascota.

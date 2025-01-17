@@ -36,8 +36,8 @@ public class Allergy {
 
     private byte al_photo;
 
-    @OneToMany(mappedBy = "allergy", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "allergies", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Illness> illness;
+    private List<Pet> pet;
 
 }

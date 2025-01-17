@@ -36,5 +36,5 @@ public class Animal_Category {
      * List of animals in this category.
      */
     @OneToMany(mappedBy = "animalCategory", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Raca> animals;
+    private List<Breed> animals;
 }
