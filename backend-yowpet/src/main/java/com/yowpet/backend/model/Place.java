@@ -1,5 +1,6 @@
 package com.yowpet.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,52 +12,67 @@ import java.util.List;
 @Entity
 @Table(name = "places")
 public class Place {
+    public static int status_active = 1;
+    public static int status_deleted = 0;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int l_id;
+    private Long id;
 
     @Column(length = 100, nullable = false)
-    private String l_name;
+    private String name;
 
     @Column(length = 255, nullable = false)
-    private String l_address;
+    private String address;
 
     @Column(length = 45, nullable = false)
-    private String l_addresscode;
+    private String addresscode;
+
+    @Column(length = 45, nullable = false)
+    private int estado = status_active;
 
     @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Place_reviews> reviews;
 
-    public int getL_id() {
-        return l_id;
+    public Long getId() {
+        return id;
     }
 
-    public void setL_id(int l_id) {
-        this.l_id = l_id;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getL_name() {
-        return l_name;
+    public String getName() {
+        return name;
     }
 
-    public void setL_name(String l_name) {
-        this.l_name = l_name;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getL_address() {
-        return l_address;
+    public String getAddress() {
+        return address;
     }
 
-    public void setL_address(String l_address) {
-        this.l_address = l_address;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public String getL_addresscode() {
-        return l_addresscode;
+    public String getAddresscode() {
+        return addresscode;
     }
 
-    public void setL_addresscode(String l_addresscode) {
-        this.l_addresscode = l_addresscode;
+    public void setAddresscode(String addresscode) {
+        this.addresscode = addresscode;
+    }
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
     }
 
     public List<Place_reviews> getReviews() {
@@ -70,10 +86,11 @@ public class Place {
     @Override
     public String toString() {
         return "Place{" +
-                "l_id=" + l_id +
-                ", l_name='" + l_name + '\'' +
-                ", l_address='" + l_address + '\'' +
-                ", l_addresscode='" + l_addresscode + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", addresscode='" + addresscode + '\'' +
+                ", estado='" + estado + '\'' +
                 '}';
     }
 }
