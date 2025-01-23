@@ -80,6 +80,8 @@ public class UserService {
             if( optionalUser.isPresent( ) ) {
                 User user = optionalUser.get( );
                 user.setStatus( User.status_inactive );
+                user.setDeletedAt( new Date( ) );
+                user.setUpdatedAt( new Date( ) );
                 userRepository.save( user );
                 return ResponseEntity.status( HttpStatus.OK ).body( Constants.USUARIO_ELIMINADO_EXITOSAMENTE );
             } else {
