@@ -44,9 +44,9 @@ public class PlaceService {
     }
 
     //GET place by name
-    public ResponseEntity<List<Place>> searchPlace(String name) {
+    public ResponseEntity<List<Place>> searchPlace(String query) {
         try {
-            List<Place> places = placeRepository.findByNameContainingIgnoreCaseAndEstadoNot(name, 0);
+            List<Place> places = placeRepository.findByNameContainingIgnoreCaseOrAddressContainingIgnoreCaseAndEstadoNot(query, query, 0);
             if (places.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -77,7 +77,7 @@ public class PlaceService {
             Place placeToSave = existingPlace.get();
             placeToSave.setName(updatedPlace.getName());
             placeToSave.setAddress(updatedPlace.getAddress());
-            placeToSave.setAddress(updatedPlace.getAddress());
+            placeToSave.setAddresscode(updatedPlace.getAddresscode());
             placeToSave.setEstado(updatedPlace.getEstado());
             Place sacedPlace = placeRepository.save(placeToSave);
             return ResponseEntity.ok(sacedPlace);

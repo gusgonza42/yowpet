@@ -30,8 +30,8 @@ public class PlaceController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Place>> searchPlace(@RequestParam("name") String name) {
-        return placeService.searchPlace(id, name);
+    public ResponseEntity<List<Place>> searchPlace(@RequestParam("query") String query) {
+        return placeService.searchPlace(query);
     }
 
     @PostMapping("/create")

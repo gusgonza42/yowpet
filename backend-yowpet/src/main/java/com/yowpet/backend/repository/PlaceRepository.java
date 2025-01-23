@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface PlaceRepository extends JpaRepository<Place, Long> {
     List<Place> findAllByEstadoNot(int estado);
     Optional<Place> findByIdAndEstadoNot(Long id, int estado);
-    List<Place> findByNameContainingIgnoreCaseAndEstadoNot(String name, int estado);
+    List<Place> findByNameContainingIgnoreCaseOrAddressContainingIgnoreCaseAndEstadoNot(String name, String address, int estado);
 }
