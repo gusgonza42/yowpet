@@ -16,68 +16,90 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "pet")
+@Table ( name = "pet" )
 public class Pet {
+    public static final int STATUS_ACTIVE = 1;
+    public static final int STATUS_INACTIVE = 0;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "p_id")
-    private Long p_id;
+    @GeneratedValue ( strategy = GenerationType.IDENTITY )
+    @Column ( name = "id" )
+    private Long id;
 
-    @Column(name = "p_animal_id", nullable = false)
-    private String p_animal_id;
-
-    @ManyToOne
-    @JoinColumn(name = "p_owner_id", referencedColumnName = "u_id")
-    private User p_owner;
+    @Column ( name = "animalId" )
+    private String animalId;
 
     @ManyToOne
-    @JoinColumn(name = "p_breed_id", referencedColumnName = "b_id")
-    private Breed p_breed_id;
+    @JoinColumn ( name = "ownerId", referencedColumnName = "id" )
+    private User ownerId;
+
+    @ManyToOne
+    @JoinColumn ( name = "breedId", referencedColumnName = "id" )
+    private Breed breed;
 
     @ManyToMany
-    @JoinTable(
-            name = "pet_allergies",
-            joinColumns = @JoinColumn(name = "p_id"),
-            inverseJoinColumns = @JoinColumn(name = "al_id")
-    )
-    private List<Allergy> allergies;
+    @JoinTable ( name = "pet_allergies", joinColumns = @JoinColumn ( name = "pet_id" ), inverseJoinColumns = @JoinColumn ( name = "allergy_id" ) )
+    private List< Allergy > allergies;
 
-    @Column(name = "p_status", nullable = false)
-    private int p_status = 1;
+    @Column ( name = "status" )
+    private int status = STATUS_ACTIVE;
 
-    @Column(name = "p_name", nullable = false)
-    private String p_name;
+    @Column ( name = "name", nullable = false )
+    private String name;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "p_birth_date")
-    private Date p_birth_date;
+    @Temporal ( TemporalType.DATE )
+    @Column ( name = "birthDate" )
+    private Date birthDate;
 
-    @Column(name = "p_gender", nullable = false)
-    private String p_gender;
+    @Column ( name = "gender", nullable = false )
+    private String gender;
 
-    @Column(name = "p_sterilized", nullable = false)
-    private int p_sterilized;
+    @Column ( name = "sterilized", nullable = false )
+    private int sterilized;
 
-    @Column(name = "p_profile_picture")
-    private String p_profile_picture;
+    @Column ( name = "profilePicture" )
+    private String profilePicture;
 
-    @Column(name = "p_description")
-    private String p_description;
+    @Column ( name = "description" )
+    private String description;
 
-    @Column(name = "p_emergency_contact")
-    private String p_emergency_contact;
+    @Column ( name = "emergencyContact" )
+    private String emergencyContact;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Pet)) return false;
-        Pet pet = (Pet) o;
-        return Objects.equals(p_id, pet.p_id);
+    @Column ( name = "createdAt" )
+    @Temporal ( TemporalType.TIMESTAMP )
+    private Date createdAt;
+
+    @Column ( name = "updatedAt" )
+    @Temporal ( TemporalType.TIMESTAMP )
+    private Date updatedAt;
+
+    @Column ( name = "deletedAt" )
+    @Temporal ( TemporalType.TIMESTAMP )
+    private Date deletedAt;
+
+    /**
+     * Establece la fecha de registro al crear el objeto usuario.
+     */
+    @PrePersist
+    protected void onCreate( ) {
+        if( createdAt == null ) {
+            createdAt = new Date( );
+        }
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(p_id);
+    public boolean equals( Object o ) {
+        if( this == o )
+            return true;
+        if( ! ( o instanceof Pet ) )
+            return false;
+        Pet pet = ( Pet ) o;
+        return Objects.equals( id, pet.id );
+    }
+
+    @Override
+    public int hashCode( ) {
+        return Objects.hash( id );
     }
 }
