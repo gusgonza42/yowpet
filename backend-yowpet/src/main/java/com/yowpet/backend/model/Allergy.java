@@ -18,15 +18,15 @@ public class Allergy {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "al_id")
-    private Long al_id;
+    @Column(name = "id")
+    private Long id;
 
-    @Column(name = "al_name", nullable = false)
-    private String al_name;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Lob
-    @Column(name = "al_photo")
-    private byte[] al_photo;
+    @Column(name = "photo")
+    private byte[] photo;
 
     @ManyToMany(mappedBy = "allergies", fetch = FetchType.LAZY)
     @JsonIgnore

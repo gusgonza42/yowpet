@@ -25,12 +25,14 @@ public class Breed {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int b_id;
+    @Column(name = "id")
+    private int id;
 
     /**
      * Name of the animal.
      */
-    private String b_name;
+    @Column(name = "name")
+    private String name;
 
     /**
      * Reference to the animal category.

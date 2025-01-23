@@ -16,7 +16,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Reservation")
+@Table(name = "reservation")
 public class Reservation {
 
     /**
@@ -25,35 +25,35 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "r_id")
-    private Long r_id;
+    private Long id;
 
     /**
      * El usuario que hizo la reserva.
      */
     @ManyToOne
-    @JoinColumn(name = "r_user_id", referencedColumnName = "u_id")
-    private User r_user_id;
+    @JoinColumn(name = "r_user_id", referencedColumnName = "id")
+    private User user;
 
     /**
      * El cuidador asignado a la reserva.
      */
     @ManyToOne
-    @JoinColumn(name = "r_care_giver_id", referencedColumnName = "u_id")
-    private User r_care_giver_id;
+    @JoinColumn(name = "r_care_giver_id", referencedColumnName = "id")
+    private User careGiver;
 
     /**
      * La fecha y hora de la reserva.
      */
     @Column(name = "r_reservation_date")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date r_reservation_date;
+    private Date reservationDate;
 
     /**
      * El estado de la reserva.
      * Valores por defecto: 1 = activo, 0 = cancelado, 2 = completado.
      */
     @Column(name = "r_status")
-    private int r_status = 1;
+    private int status = 1;
 
     /**
      * Verifica si esta reserva es igual a otro objeto.
@@ -68,11 +68,11 @@ public class Reservation {
         if (o == null)
             return false;
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : getClass();
         if (thisEffectiveClass != oEffectiveClass)
             return false;
         Reservation that = (Reservation) o;
-        return getR_id() != null && Objects.equals(getR_id(), that.getR_id());
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     /**
