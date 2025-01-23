@@ -9,15 +9,21 @@ import lombok.*;
 @Entity
 @Table(name = "place_reviews")
 public class Place_reviews {
+    public static int status_active = 1;
+    public static int status_deleted = 0;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int pr_id;
+    private Long id;
 
     @Column(nullable = false)
     private int rating;
 
     @Column(columnDefinition = "TEXT")
     private String comment;
+
+    @Column(length = 45, nullable = false)
+    private int estado = status_active;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id", nullable = false)
@@ -27,12 +33,12 @@ public class Place_reviews {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public int getPr_id() {
-        return pr_id;
+    public Long getId() {
+        return id;
     }
 
-    public void setPr_id(int pr_id) {
-        this.pr_id = pr_id;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public int getRating() {
@@ -41,6 +47,14 @@ public class Place_reviews {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
     }
 
     public String getComment() {
@@ -70,9 +84,10 @@ public class Place_reviews {
     @Override
     public String toString() {
         return "Place_reviews{" +
-                "pr_id=" + pr_id +
+                "id=" + id +
                 ", rating=" + rating +
                 ", comment='" + comment + '\'' +
+                ", estado=" + estado +
                 ", place=" + place +
                 ", user=" + user +
                 '}';

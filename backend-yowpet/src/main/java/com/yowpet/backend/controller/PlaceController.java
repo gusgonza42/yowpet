@@ -3,7 +3,6 @@ package com.yowpet.backend.controller;
 import com.yowpet.backend.model.Place;
 import com.yowpet.backend.service.PlaceService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,11 +11,9 @@ import java.util.List;
 @RequestMapping("/yowpet/place")
 public class PlaceController {
     private final PlaceService placeService;
-    private final UserDetailsService userDetailsService;
 
-    public PlaceController(PlaceService placeService, UserDetailsService userDetailsService) {
+    public PlaceController(PlaceService placeService) {
         this.placeService = placeService;
-        this.userDetailsService = userDetailsService;
     }
 
     @GetMapping("/all")
