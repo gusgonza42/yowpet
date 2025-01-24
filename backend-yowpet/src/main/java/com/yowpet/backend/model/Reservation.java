@@ -18,6 +18,9 @@ import java.util.Objects;
 @Entity
 @Table(name = "reservation")
 public class Reservation {
+    public static final int STATUS_ACTIVE = 1;
+    public static final int STATUS_CANCELLED = 0;
+    public static final int STATUS_COMPLETED = 2;
 
     /**
      * El identificador único para la reserva.
@@ -48,12 +51,22 @@ public class Reservation {
     @Temporal(TemporalType.TIMESTAMP)
     private Date reservationDate;
 
+    @Column(name = "r_reservation_cancelled_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date reservationCancelledAt;
+
+    @Column(name = "r_reservation_completed_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date reservationCompletedAt;
+
+
+
     /**
      * El estado de la reserva.
      * Valores por defecto: 1 = activo, 0 = cancelado, 2 = completado.
      */
     @Column(name = "r_status")
-    private int status = 1;
+    private int status = STATUS_ACTIVE;
 
     /**
      * Verifica si esta reserva es igual a otro objeto.

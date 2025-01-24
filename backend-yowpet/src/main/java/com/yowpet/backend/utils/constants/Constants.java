@@ -13,6 +13,11 @@ public class Constants {
     public static final String PET_EXISTS = "La mascota con su nombre ya esta asignada a un usuario";
     public static final String PET_CREATED_SUCCESSFULLY = "La mascota fue creada con éxito";
     public static final String PET_DELETED_SUCCESSFULLY = "La mascota fue eliminada con éxito";
+    public static final String RESERVATION_DATE_EXISTENTE = "La fecha de reserva ya está ocupada";
+    public static final String RESERVATION_CREADO_EXITOSAMENTE = "Reserva creada con éxito";
+    public static final String RESERVATION_CANCELADO_EXITOSAMENTE = "Reserva cancelada con éxito";
+
+    ;
     // TODO: Constantes de mensajes de error
 
     // TODO: crear funcion para mensajes de print personalizados
