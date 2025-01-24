@@ -12,13 +12,13 @@ public class Constants {
     public static final String USUARIO_NO_ENCONTRADO = "Usuario no encontrado";
     public static final String PET_EXISTS = "La mascota con su nombre ya esta asignada a un usuario";
     public static final String PET_CREATED_SUCCESSFULLY = "La mascota fue creada con éxito";
-    public static final String PET_DELETED_SUCCESSFULLY = "La mascota fue eliminada con éxito";
-    public static final String RESERVATION_DATE_EXISTENTE = "La fecha de reserva ya está ocupada";
     public static final String RESERVATION_CREADO_EXITOSAMENTE = "Reserva creada con éxito";
     public static final String RESERVATION_CANCELADO_EXITOSAMENTE = "Reserva cancelada con éxito";
+    public static final String USUARIO_EXISTE_RESERVATION = "El usuario no existe (reservation)";
+    public static final String NO_ES_CUIDADOR = "El usuario no es un cuidador (RESERVATION)";
+    public static final String COINCIDENCIA_FECHAS_RESERVACION = "El cuidador ya tiene una reserva en esta fecha";
+    public static final String RESERVA_NO_ENCONTRADA = "Reserva no encontrada";
+    public static final String RESERVATION_COMPLETED_SUCCESSFULLY = "Reserva completada con éxito";
 
-    ;
-    // TODO: Constantes de mensajes de error
-
-    // TODO: crear funcion para mensajes de print personalizados
+    public static final String PET_DELETED_SUCCESSFULLY = "Mascota elimin;ada con éxito";
 }
