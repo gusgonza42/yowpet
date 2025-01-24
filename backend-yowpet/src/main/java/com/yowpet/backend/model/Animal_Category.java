@@ -1,19 +1,18 @@
 package com.yowpet.backend.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 /**
- * Entity model to represent a Animal Category.
- * Uses JPA annotations to map the class to a database table.
- *
- * Includes Lombok annotations to automatically generate getter, setter, constructors, and other methods.
+ * Modelo de entidad para representar una Categoría de Animal.
+ * Utiliza anotaciones JPA para mapear la clase a una tabla de base de datos.
+ * <p>
+ * Incluye anotaciones de Lombok para generar automáticamente getters, setters, constructores y otros métodos.
  */
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -21,20 +20,22 @@ import java.util.List;
 public class Animal_Category {
 
     /**
-     * Unique identifier for the Animal Category.
+     * Identificador único para la Categoría de Animal.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue ( strategy = GenerationType.IDENTITY )
+    private Long id;
 
     /**
-     * Name of the animal category.
+     * Nombre de la categoría de animal.
      */
+    @Column( name = "ac_name" )
     private String ac_name;
 
     /**
-     * List of animals in this category.
+     * Lista de animales en esta categoría.
      */
-    @OneToMany(mappedBy = "animalCategory", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Breed> animals;
+    @OneToMany ( mappedBy = "animalCategory", cascade = CascadeType.ALL, orphanRemoval = true )
+    @ToString.Exclude
+    private List< Breed > animals;
 }
