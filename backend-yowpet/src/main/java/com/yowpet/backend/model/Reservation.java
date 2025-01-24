@@ -2,10 +2,8 @@ package com.yowpet.backend.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * Representa una entidad de reserva en el sistema.
@@ -78,33 +76,4 @@ public class Reservation {
     @Column ( name = "r_status" )
     private int status = STATUS_ACTIVE;
 
-    /**
-     * Verifica si esta reserva es igual a otro objeto.
-     *
-     * @param o el objeto con el que comparar
-     * @return true si los objetos son iguales, false en caso contrario
-     */
-    @Override
-    public final boolean equals( Object o ) {
-        if( this == o )
-            return true;
-        if( o == null )
-            return false;
-        Class< ? > oEffectiveClass = o instanceof HibernateProxy ? ( ( HibernateProxy ) o ).getHibernateLazyInitializer( ).getPersistentClass( ) : o.getClass( );
-        Class< ? > thisEffectiveClass = this instanceof HibernateProxy ? ( ( HibernateProxy ) this ).getHibernateLazyInitializer( ).getPersistentClass( ) : getClass( );
-        if( thisEffectiveClass != oEffectiveClass )
-            return false;
-        Reservation that = ( Reservation ) o;
-        return getId( ) != null && Objects.equals( getId( ), that.getId( ) );
-    }
-
-    /**
-     * Devuelve el código hash de esta reserva.
-     *
-     * @return el código hash
-     */
-    @Override
-    public final int hashCode( ) {
-        return this instanceof HibernateProxy ? ( ( HibernateProxy ) this ).getHibernateLazyInitializer( ).getPersistentClass( ).hashCode( ) : getClass( ).hashCode( );
-    }
 }

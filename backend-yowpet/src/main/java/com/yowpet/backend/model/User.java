@@ -2,10 +2,8 @@ package com.yowpet.backend.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * Representa una entidad de usuario en el sistema.
@@ -35,13 +33,13 @@ public class User {
     /**
      * El nombre del usuario.
      */
-    @Column ( name = "firstName", nullable = false )
+    @Column ( name = "first_name", nullable = false )
     private String firstName;
 
     /**
      * El apellido del usuario.
      */
-    @Column ( name = "lastName", nullable = false )
+    @Column ( name = "last_name", nullable = false )
     private String lastName;
 
     /**
@@ -78,13 +76,13 @@ public class User {
     /**
      * El número de teléfono del usuario.
      */
-    @Column ( name = "phoneNumber", length = 9 )
+    @Column ( name = "phone_number", length = 9 )
     private int phoneNumber;
 
     /**
      * El código postal del usuario.
      */
-    @Column ( name = "zipCode", length = 5 )
+    @Column ( name = "zip_code", length = 5 )
     private int zipCode;
 
     /**
@@ -97,7 +95,7 @@ public class User {
     /**
      * La foto de perfil del usuario.
      */
-    @Column ( name = "profilePicture" )
+    @Column ( name = "profile_picture" )
     private String profilePicture;
 
     /**
@@ -110,34 +108,34 @@ public class User {
     /**
      * La fecha de nacimiento del usuario.
      */
-    @Column ( name = "birthDate" )
+    @Column ( name = "birth_date" )
     @Temporal ( TemporalType.DATE )
     private Date birthDate;
 
     /**
      * El metodo de pago del usuario.
      */
-    @Column ( name = "paymentMethod" )
+    @Column ( name = "payment_method" )
     private String paymentMethod;
 
     /**
      * La fecha de creación del usuario.
      */
-    @Column ( name = "createdAt" )
+    @Column ( name = "created_at" )
     @Temporal ( TemporalType.DATE )
     private Date createdAt;
 
     /**
      * La fecha de última actualización del usuario.
      */
-    @Column ( name = "updatedAt" )
+    @Column ( name = "updated_at" )
     @Temporal ( TemporalType.TIMESTAMP )
     private Date updatedAt;
 
     /**
      * La fecha de eliminación del usuario.
      */
-    @Column ( name = "deletedAt" )
+    @Column ( name = "deleted_at" )
     @Temporal ( TemporalType.TIMESTAMP )
     private Date deletedAt;
 
@@ -164,35 +162,5 @@ public class User {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-    }
-
-    /**
-     * Verifica si este usuario es igual a otro objeto.
-     *
-     * @param o el objeto con el que comparar
-     * @return true si los objetos son iguales, false en caso contrario
-     */
-    @Override
-    public final boolean equals( Object o ) {
-        if( this == o )
-            return true;
-        if( o == null )
-            return false;
-        Class< ? > oEffectiveClass = o instanceof HibernateProxy ? ( ( HibernateProxy ) o ).getHibernateLazyInitializer( ).getPersistentClass( ) : o.getClass( );
-        Class< ? > thisEffectiveClass = this instanceof HibernateProxy ? ( ( HibernateProxy ) this ).getHibernateLazyInitializer( ).getPersistentClass( ) : this.getClass( );
-        if( thisEffectiveClass != oEffectiveClass )
-            return false;
-        User user = ( User ) o;
-        return getId( ) != null && Objects.equals( getId( ), user.getId( ) );
-    }
-
-    /**
-     * Devuelve el código hash de este usuario.
-     *
-     * @return el código hash
-     */
-    @Override
-    public final int hashCode( ) {
-        return this instanceof HibernateProxy ? ( ( HibernateProxy ) this ).getHibernateLazyInitializer( ).getPersistentClass( ).hashCode( ) : getClass( ).hashCode( );
     }
 }

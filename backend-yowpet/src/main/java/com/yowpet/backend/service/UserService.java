@@ -12,15 +12,29 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Servicio para manejar las operaciones relacionadas con los usuarios.
+ */
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
 
+    /**
+     * Constructor para inyectar el repositorio de usuarios.
+     *
+     * @param userRepository el repositorio de usuarios
+     */
     public UserService( UserRepository userRepository ) {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Crea un nuevo usuario.
+     *
+     * @param user el usuario a crear
+     * @return una respuesta HTTP con el resultado de la operación
+     */
     public ResponseEntity< String > createUser( @RequestBody User user ) {
         try {
             if( userRepository.findByEmail( user.getEmail( ) ).isPresent( ) ) {
@@ -33,6 +47,11 @@ public class UserService {
         }
     }
 
+    /**
+     * Obtiene todos los usuarios activos.
+     *
+     * @return una respuesta HTTP con la lista de usuarios
+     */
     public ResponseEntity< List< User > > getAllUsers( ) {
         try {
             List< User > users = userRepository.findByStatus( User.status_active );
@@ -42,6 +61,12 @@ public class UserService {
         }
     }
 
+    /**
+     * Obtiene un usuario por su ID.
+     *
+     * @param id el ID del usuario
+     * @return una respuesta HTTP con el usuario encontrado
+     */
     public ResponseEntity< User > getUserById( Long id ) {
         try {
             User user = userRepository.findById( id ).orElse( null );
@@ -51,6 +76,13 @@ public class UserService {
         }
     }
 
+    /**
+     * Actualiza un usuario existente.
+     *
+     * @param id   el ID del usuario a actualizar
+     * @param user los nuevos datos del usuario
+     * @return una respuesta HTTP con el usuario actualizado
+     */
     public ResponseEntity< User > updateUser( Long id, User user ) {
         try {
             User userToUpdate = userRepository.findById( id ).orElse( null );
@@ -74,6 +106,12 @@ public class UserService {
         }
     }
 
+    /**
+     * Elimina (lógicamente) un usuario por su ID.
+     *
+     * @param id el ID del usuario a eliminar
+     * @return una respuesta HTTP con el resultado de la operación
+     */
     public ResponseEntity< String > deleteUser( Long id ) {
         try {
             Optional< User > optionalUser = userRepository.findById( id );

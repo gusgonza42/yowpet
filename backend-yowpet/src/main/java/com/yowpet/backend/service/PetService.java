@@ -10,15 +10,29 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Servicio para manejar las operaciones relacionadas con las mascotas.
+ */
 @Service
 public class PetService {
 
     private final PetRepository petRepository;
 
+    /**
+     * Constructor para inyectar el repositorio de mascotas.
+     *
+     * @param petRepository el repositorio de mascotas
+     */
     public PetService( PetRepository petRepository ) {
         this.petRepository = petRepository;
     }
 
+    /**
+     * Crea una nueva mascota.
+     *
+     * @param pet la mascota a crear
+     * @return una respuesta HTTP con el resultado de la operación
+     */
     public ResponseEntity< String > createPet( Pet pet ) {
         try {
             if( petRepository.existsPetByNameAndOwnerId( pet.getName( ), pet.getOwnerId( ) ) ) {
@@ -31,6 +45,11 @@ public class PetService {
         }
     }
 
+    /**
+     * Obtiene todas las mascotas activas.
+     *
+     * @return una respuesta HTTP con la lista de mascotas
+     */
     @Transactional
     public ResponseEntity< List< Pet > > getAllPets( ) {
         try {
@@ -42,6 +61,12 @@ public class PetService {
         }
     }
 
+    /**
+     * Obtiene una mascota por su ID.
+     *
+     * @param id el ID de la mascota
+     * @return una respuesta HTTP con la mascota encontrada
+     */
     @Transactional
     public ResponseEntity< Pet > getPetById( Long id ) {
         try {
@@ -56,6 +81,13 @@ public class PetService {
         }
     }
 
+    /**
+     * Actualiza una mascota existente.
+     *
+     * @param id  el ID de la mascota a actualizar
+     * @param pet los nuevos datos de la mascota
+     * @return una respuesta HTTP con la mascota actualizada
+     */
     public ResponseEntity< Pet > updatePet( Long id, Pet pet ) {
         try {
             Pet petToUpdate = petRepository.findById( id ).orElse( null );
@@ -81,6 +113,12 @@ public class PetService {
         }
     }
 
+    /**
+     * Elimina (lógicamente) una mascota por su ID.
+     *
+     * @param id el ID de la mascota a eliminar
+     * @return una respuesta HTTP con el resultado de la operación
+     */
     public ResponseEntity< String > deletePet( Long id ) {
         try {
             Pet pet = petRepository.findById( id ).orElse( null );
@@ -94,6 +132,5 @@ public class PetService {
         } catch ( Exception e ) {
             return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( null );
         }
-
     }
 }

@@ -7,28 +7,43 @@ import lombok.*;
 import java.util.List;
 
 /**
- * Entity model to represent an Allergy.
+ * Modelo de entidad para representar una Alergia.
  */
-@Data
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "allergies")
+@Table ( name = "allergies" )
 public class Allergy {
 
+    /**
+     * Identificador único para la alergia.
+     */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @GeneratedValue ( strategy = GenerationType.IDENTITY )
+    @Column ( name = "id" )
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    /**
+     * Nombre de la alergia.
+     */
+    @Column ( name = "name", nullable = false )
     private String name;
 
+    /**
+     * Foto de la alergia.
+     */
     @Lob
-    @Column(name = "photo")
+    @Column ( name = "photo" )
     private byte[] photo;
 
-    @ManyToMany(mappedBy = "allergies", fetch = FetchType.LAZY)
+    /**
+     * Lista de mascotas que tienen esta alergia.
+     */
+    @ManyToMany ( mappedBy = "allergies", fetch = FetchType.LAZY )
     @JsonIgnore
-    private List<Pet> pets;
+    @ToString.Exclude
+    private List< Pet > pets;
 }
