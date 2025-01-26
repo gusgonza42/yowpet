@@ -43,7 +43,7 @@ public class Place_reviewsService {
     //POST (create place_review)
     public ResponseEntity<Place_reviews> createPlace_review(Place_reviews place_reviews) {
         try {
-            place_reviews.setPr_id(null);
+            place_reviews.setId(null);
             Place_reviews newPlace_reviews = place_reviewsRepository.save(place_reviews);
             return ResponseEntity.status(HttpStatus.CREATED).body(newPlace_reviews);
         } catch (Exception e) {
@@ -59,7 +59,7 @@ public class Place_reviewsService {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
             Place_reviews place_reviewsToSave = existingPlace_reviews.get();
-            place_reviewsToSave.setPr_id(updatedPlace_reviews.getPr_id());
+            place_reviewsToSave.setId(updatedPlace_reviews.getId());
             place_reviewsToSave.setRating(updatedPlace_reviews.getRating());
             place_reviewsToSave.setComment(updatedPlace_reviews.getComment());
             place_reviewsToSave.setEstado(updatedPlace_reviews.getEstado());
