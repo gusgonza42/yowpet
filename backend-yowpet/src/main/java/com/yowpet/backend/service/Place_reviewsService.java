@@ -5,6 +5,7 @@ import com.yowpet.backend.repository.Place_reviewsRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,9 +41,26 @@ public class Place_reviewsService {
         }
     }
 
+    //GET place_reviews by rating
+    public ResponseEntity<List<Place_reviews>> searchPlace_reviews(double rating) {
+        try {
+            rating = Math.round(rating * 10.0) / 10.0;
+            List<Place_reviews> place_reviews = place_reviewsRepository.findByRoundedRatingAndEstadoNot(rating);
+            if (place_reviews.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            return ResponseEntity.ok(place_reviews);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     //POST (create place_review)
     public ResponseEntity<Place_reviews> createPlace_review(Place_reviews place_reviews) {
         try {
+            double rating = place_reviews.getRating();
+            rating = Math.round(rating * 10.0) / 10.0;
+            place_reviews.setRating(rating);
             place_reviews.setId(null);
             Place_reviews newPlace_reviews = place_reviewsRepository.save(place_reviews);
             return ResponseEntity.status(HttpStatus.CREATED).body(newPlace_reviews);
@@ -58,15 +76,12 @@ public class Place_reviewsService {
             if (existingPlace_reviews.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            Place_reviews place_reviewsToSave = existingPlace_reviews.get();
-            place_reviewsToSave.setId(updatedPlace_reviews.getId());
-            place_reviewsToSave.setRating(updatedPlace_reviews.getRating());
-            place_reviewsToSave.setComment(updatedPlace_reviews.getComment());
-            place_reviewsToSave.setEstado(updatedPlace_reviews.getEstado());
-            place_reviewsToSave.setPlace(updatedPlace_reviews.getPlace());
-            place_reviewsToSave.setUser(updatedPlace_reviews.getUser());
-            Place_reviews sacedPlace_reviews = place_reviewsRepository.save(place_reviewsToSave);
-            return ResponseEntity.ok(sacedPlace_reviews);
+            Place_reviews place_reviewToSave = existingPlace_reviews.get();
+            place_reviewToSave.setRating(updatedPlace_reviews.getRating());
+            place_reviewToSave.setComment(updatedPlace_reviews.getComment());
+            place_reviewToSave.setEstado(updatedPlace_reviews.getEstado());
+            Place_reviews savedPlace_reviews = place_reviewsRepository.save(place_reviewToSave);
+            return ResponseEntity.ok(savedPlace_reviews);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

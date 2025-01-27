@@ -1,5 +1,6 @@
 package com.yowpet.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +18,7 @@ public class Place_reviews {
     private Long id;
 
     @Column(nullable = false)
-    private int rating;
+    private double rating;
 
     @Column(columnDefinition = "TEXT")
     private String comment;
@@ -25,11 +26,11 @@ public class Place_reviews {
     @Column(length = 45, nullable = false)
     private int estado = status_active;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -41,20 +42,12 @@ public class Place_reviews {
         this.id = id;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(double rating) {
         this.rating = rating;
-    }
-
-    public int getEstado() {
-        return estado;
-    }
-
-    public void setEstado(int estado) {
-        this.estado = estado;
     }
 
     public String getComment() {
@@ -63,6 +56,14 @@ public class Place_reviews {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
     }
 
     public Place getPlace() {

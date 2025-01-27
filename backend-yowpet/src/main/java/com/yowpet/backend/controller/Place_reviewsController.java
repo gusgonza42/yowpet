@@ -26,6 +26,11 @@ public class Place_reviewsController {
         return place_reviewsService.getPlace_reviewById(id);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Place_reviews>> searchPlace_reviews(@RequestParam("rating") double rating) {
+        return place_reviewsService.searchPlace_reviews(rating);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<Place_reviews> createPlace_review(@RequestBody Place_reviews place_reviews) {
         return place_reviewsService.createPlace_review(place_reviews);
