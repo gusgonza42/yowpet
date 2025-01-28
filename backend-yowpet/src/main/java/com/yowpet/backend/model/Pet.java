@@ -5,75 +5,137 @@ import lombok.*;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
- * Represents a pet entity in the system.
+ * Representa una entidad de mascota en el sistema.
  */
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "pet")
+@Table ( name = "pet" )
 public class Pet {
+    public static final int STATUS_ACTIVE = 1;
+    public static final int STATUS_INACTIVE = 0;
 
+    /**
+     * El identificador único para la mascota.
+     */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "p_id")
-    private Long p_id;
+    @GeneratedValue ( strategy = GenerationType.IDENTITY )
+    @Column ( name = "id" )
+    private Long id;
 
-    @Column(name = "p_animal_id", nullable = false)
-    private String p_animal_id;
-
+    /**
+     * La categoría del animal a la que pertenece la mascota.
+     * Es una clave foránea que referencia a la entidad Animal_Category.
+     */
     @ManyToOne
-    @JoinColumn(name = "p_owner_id", referencedColumnName = "u_id")
-    private User p_owner;
+    @JoinColumn(name = "animal_category_id", referencedColumnName = "id")
+    private Animal_Category animalCategory;
 
+    /**
+     * El propietario de la mascota.
+     */
+    @ManyToOne
+    @JoinColumn ( name = "owner_id", referencedColumnName = "id" )
+    private User ownerId;
+
+    /**
+     * La raza de la mascota.
+     */
+    @ManyToOne
+    @JoinColumn ( name = "breed_id", referencedColumnName = "id" )
+    private Breed breed;
+
+    /**
+     * Las alergias de la mascota.
+     */
     @ManyToMany
-    @JoinTable(
-            name = "pet_allergies",
-            joinColumns = @JoinColumn(name = "p_id"),
-            inverseJoinColumns = @JoinColumn(name = "al_id")
-    )
-    private List<Allergy> allergies;
+    @JoinTable ( name = "pet_allergies", joinColumns = @JoinColumn ( name = "pet_id" ), inverseJoinColumns = @JoinColumn ( name = "allergy_id" ) )
+    private List< Allergy > allergies;
 
-    @Column(name = "p_status", nullable = false)
-    private int p_status = 1;
+    /**
+     * El estado de la mascota.
+     * Valor por defecto: 1 = activo, 0 = inactivo
+     */
+    @Column ( name = "status" )
+    private int status = STATUS_ACTIVE;
 
-    @Column(name = "p_name", nullable = false)
-    private String p_name;
+    /**
+     * El nombre de la mascota.
+     */
+    @Column ( name = "name", nullable = false )
+    private String name;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "p_birth_date")
-    private Date p_birth_date;
+    /**
+     * La fecha de nacimiento de la mascota.
+     */
+    @Temporal ( TemporalType.DATE )
+    @Column ( name = "birth_date" )
+    private Date birthDate;
 
-    @Column(name = "p_gender", nullable = false)
-    private String p_gender;
+    /**
+     * El género de la mascota.
+     */
+    @Column ( name = "gender", nullable = false )
+    private String gender;
 
-    @Column(name = "p_sterilized", nullable = false)
-    private int p_sterilized;
+    /**
+     * Indica si la mascota está esterilizada.
+     */
+    @Column ( name = "sterilized", nullable = false )
+    private int sterilized;
 
-    @Column(name = "p_profile_picture")
-    private String p_profile_picture;
+    /**
+     * La foto de perfil de la mascota.
+     */
+    @Column ( name = "profile_picture" )
+    private String profilePicture;
 
-    @Column(name = "p_description")
-    private String p_description;
+    /**
+     * La descripción de la mascota.
+     */
+    @Column ( name = "description" )
+    private String description;
 
-    @Column(name = "p_emergency_contact")
-    private String p_emergency_contact;
+    /**
+     * El contacto de emergencia de la mascota.
+     */
+    @Column ( name = "emergency_contact" )
+    private String emergencyContact;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Pet)) return false;
-        Pet pet = (Pet) o;
-        return Objects.equals(p_id, pet.p_id);
+    /**
+     * La fecha de creación de la mascota.
+     */
+    @Column ( name = "created_at" )
+    @Temporal ( TemporalType.TIMESTAMP )
+    private Date createdAt;
+
+    /**
+     * La fecha de última actualización de la mascota.
+     */
+    @Column ( name = "updated_at" )
+    @Temporal ( TemporalType.TIMESTAMP )
+    private Date updatedAt;
+
+    /**
+     * La fecha de eliminación de la mascota.
+     */
+    @Column ( name = "deleted_at" )
+    @Temporal ( TemporalType.TIMESTAMP )
+    private Date deletedAt;
+
+    /**
+     * Establece la fecha de registro al crear el objeto mascota.
+     */
+    @PrePersist
+    protected void onCreate( ) {
+        if( createdAt == null ) {
+            createdAt = new Date( );
+        }
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(p_id);
-    }
+
 }
