@@ -40,4 +40,9 @@ public class BreedController {
     public void deleteBreed(Long id) {
         breedService.deleteBreed(id);
     }
+
+    @GetMapping("/search")
+    public List<Breed> searchBreeds(@RequestParam("text") String text) {
+        return breedService.searchBreeds(text);
+    }
 }

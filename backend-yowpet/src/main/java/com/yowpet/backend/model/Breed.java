@@ -9,6 +9,7 @@ import lombok.*;
  * <p>
  * Incluye anotaciones de Lombok para generar automáticamente getters, setters, constructores y otros métodos.
  */
+@Data
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,14 +23,14 @@ public class Breed {
      */
     @Id
     @GeneratedValue ( strategy = GenerationType.IDENTITY )
-    @Column ( name = "id" )
-    private int id;
+    @Column(name = "id")
+    Long id;
 
     /**
      * Nombre de la raza.
      */
     @Column ( name = "name" )
-    private String name;
+    String name;
 
     /**
      * Referencia a la categoría del animal.
@@ -37,6 +38,6 @@ public class Breed {
     @ManyToOne ( fetch = FetchType.LAZY )
     @JoinColumn ( name = "animal_category", nullable = false )
     @ToString.Exclude
-    private Animal_Category animalCategory;
+    Animal_Category animalCategory;
 
 }

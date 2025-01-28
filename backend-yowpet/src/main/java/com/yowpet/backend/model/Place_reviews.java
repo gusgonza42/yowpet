@@ -1,6 +1,5 @@
 package com.yowpet.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,43 +9,37 @@ import lombok.*;
 @Entity
 @Table(name = "place_reviews")
 public class Place_reviews {
-    public static int status_active = 1;
-    public static int status_deleted = 0;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int pr_id;
 
     @Column(nullable = false)
-    private double rating;
+    private int rating;
 
     @Column(columnDefinition = "TEXT")
     private String comment;
 
-    @Column(length = 45, nullable = false)
-    private int estado = status_active;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Long getId() {
-        return id;
+    public int getPr_id() {
+        return pr_id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setPr_id(int pr_id) {
+        this.pr_id = pr_id;
     }
 
-    public double getRating() {
+    public int getRating() {
         return rating;
     }
 
-    public void setRating(double rating) {
+    public void setRating(int rating) {
         this.rating = rating;
     }
 
@@ -56,14 +49,6 @@ public class Place_reviews {
 
     public void setComment(String comment) {
         this.comment = comment;
-    }
-
-    public int getEstado() {
-        return estado;
-    }
-
-    public void setEstado(int estado) {
-        this.estado = estado;
     }
 
     public Place getPlace() {
@@ -85,10 +70,9 @@ public class Place_reviews {
     @Override
     public String toString() {
         return "Place_reviews{" +
-                "id=" + id +
+                "pr_id=" + pr_id +
                 ", rating=" + rating +
                 ", comment='" + comment + '\'' +
-                ", estado=" + estado +
                 ", place=" + place +
                 ", user=" + user +
                 '}';
