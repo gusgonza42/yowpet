@@ -25,7 +25,7 @@ public class UserService {
      *
      * @param userRepository el repositorio de usuarios
      */
-    public UserService( UserRepository userRepository ) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -35,15 +35,15 @@ public class UserService {
      * @param user el usuario a crear
      * @return una respuesta HTTP con el resultado de la operación
      */
-    public ResponseEntity< String > createUser( @RequestBody User user ) {
+    public ResponseEntity<String> createUser(@RequestBody User user) {
         try {
-            if( userRepository.findByEmail( user.getEmail( ) ).isPresent( ) ) {
-                return ResponseEntity.status( HttpStatus.CONFLICT ).body( Constants.EMAIL_EXISTENTE );
+            if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(Constants.EMAIL_EXISTENTE);
             }
-            userRepository.save( user );
-            return ResponseEntity.status( HttpStatus.CREATED ).body( Constants.USUARIO_CREADO_EXITOSAMENTE );
-        } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( Constants.ERROR_INTERNO_DEL_SERVIDOR );
+            userRepository.save(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(Constants.USUARIO_CREADO_EXITOSAMENTE);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Constants.ERROR_INTERNO_DEL_SERVIDOR);
         }
     }
 
@@ -52,12 +52,15 @@ public class UserService {
      *
      * @return una respuesta HTTP con la lista de usuarios
      */
-    public ResponseEntity< List< User > > getAllUsers( ) {
+    public ResponseEntity<List<User>> getAllUsers() {
         try {
-            List< User > users = userRepository.findByStatus( User.status_active );
-            return ResponseEntity.status( HttpStatus.OK ).body( users );
-        } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( null );
+            List<User> users = userRepository.findByStatus(User.status_active);
+            if (users.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(users);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -67,12 +70,15 @@ public class UserService {
      * @param id el ID del usuario
      * @return una respuesta HTTP con el usuario encontrado
      */
-    public ResponseEntity< User > getUserById( Long id ) {
+    public ResponseEntity<User> getUserById(Long id) {
         try {
-            User user = userRepository.findById( id ).orElse( null );
-            return ResponseEntity.status( HttpStatus.OK ).body( user );
-        } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( null );
+            User user = userRepository.findById(id).orElse(null);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -83,26 +89,26 @@ public class UserService {
      * @param user los nuevos datos del usuario
      * @return una respuesta HTTP con el usuario actualizado
      */
-    public ResponseEntity< User > updateUser( Long id, User user ) {
+    public ResponseEntity<User> updateUser(Long id, User user) {
         try {
-            User userToUpdate = userRepository.findById( id ).orElse( null );
-            if( userToUpdate == null ) {
-                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( null );
+            User userToUpdate = userRepository.findById(id).orElse(null);
+            if (userToUpdate == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
-            userToUpdate.setFirstName( user.getFirstName( ) );
-            userToUpdate.setLastName( user.getLastName( ) );
-            userToUpdate.setEmail( user.getEmail( ) );
-            userToUpdate.setPassword( user.getPassword( ) );
-            userToUpdate.setCity( user.getCity( ) );
-            userToUpdate.setGender( user.getGender( ) );
-            userToUpdate.setAddress( user.getAddress( ) );
-            userToUpdate.setPhoneNumber( user.getPhoneNumber( ) );
-            userToUpdate.setBirthDate( user.getBirthDate( ) );
-            userToUpdate.setUpdatedAt( new Date( ) );
-            User updatedUser = userRepository.save( userToUpdate );
-            return ResponseEntity.status( HttpStatus.OK ).body( updatedUser );
-        } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( null );
+            userToUpdate.setFirstName(user.getFirstName());
+            userToUpdate.setLastName(user.getLastName());
+            userToUpdate.setEmail(user.getEmail());
+            userToUpdate.setPassword(user.getPassword());
+            userToUpdate.setCity(user.getCity());
+            userToUpdate.setGender(user.getGender());
+            userToUpdate.setAddress(user.getAddress());
+            userToUpdate.setPhoneNumber(user.getPhoneNumber());
+            userToUpdate.setBirthDate(user.getBirthDate());
+            userToUpdate.setUpdatedAt(new Date());
+            User updatedUser = userRepository.save(userToUpdate);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -112,21 +118,21 @@ public class UserService {
      * @param id el ID del usuario a eliminar
      * @return una respuesta HTTP con el resultado de la operación
      */
-    public ResponseEntity< String > deleteUser( Long id ) {
+    public ResponseEntity<String> deleteUser(Long id) {
         try {
-            Optional< User > optionalUser = userRepository.findById( id );
-            if( optionalUser.isPresent( ) ) {
-                User user = optionalUser.get( );
-                user.setStatus( User.status_inactive );
-                user.setDeletedAt( new Date( ) );
-                user.setUpdatedAt( new Date( ) );
-                userRepository.save( user );
-                return ResponseEntity.status( HttpStatus.OK ).body( Constants.USUARIO_ELIMINADO_EXITOSAMENTE );
+            Optional<User> optionalUser = userRepository.findById(id);
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                user.setStatus(User.status_inactive);
+                user.setDeletedAt(new Date());
+                user.setUpdatedAt(new Date());
+                userRepository.save(user);
+                return ResponseEntity.status(HttpStatus.OK).body(Constants.USUARIO_ELIMINADO_EXITOSAMENTE);
             } else {
-                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( Constants.USUARIO_NO_ENCONTRADO );
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Constants.USUARIO_NO_ENCONTRADO);
             }
-        } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( Constants.ERROR_INTERNO_DEL_SERVIDOR );
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Constants.ERROR_INTERNO_DEL_SERVIDOR);
         }
     }
 }
