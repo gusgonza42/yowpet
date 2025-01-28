@@ -27,10 +27,18 @@ public class BreedService {
     }
 
     public void updateBreed(Long id, Breed breed) {
+        breed.setId(id);
+
+        System.out.println("Breed ID: " + breed.getId());
+
         repo.save(breed);
     }
 
     public void deleteBreed(Long id) {
         repo.deleteById(id);
+    }
+
+    public List<Breed> searchBreeds(String name) {
+        return repo.findByNameContaining(name);
     }
 }

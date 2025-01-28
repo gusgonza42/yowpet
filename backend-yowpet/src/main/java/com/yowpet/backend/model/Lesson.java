@@ -1,6 +1,5 @@
 package com.yowpet.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,12 +11,9 @@ import java.util.List;
 @Entity
 @Table(name = "lessons")
 public class Lesson {
-    public static int status_active = 1;
-    public static int status_deleted = 0;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int lesson_id;
 
     @Column(length = 255, nullable = false)
     private String title;
@@ -25,19 +21,15 @@ public class Lesson {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Column(length = 45, nullable = false)
-    private int estado = status_active;
-
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
     private List<Lesson_reviews> reviews;
 
-    public Long getId() {
-        return id;
+    public int getLesson_id() {
+        return lesson_id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setLesson_id(int lesson_id) {
+        this.lesson_id = lesson_id;
     }
 
     public String getTitle() {
@@ -56,14 +48,6 @@ public class Lesson {
         this.content = content;
     }
 
-    public int getEstado() {
-        return estado;
-    }
-
-    public void setEstado(int estado) {
-        this.estado = estado;
-    }
-
     public List<Lesson_reviews> getReviews() {
         return reviews;
     }
@@ -75,11 +59,9 @@ public class Lesson {
     @Override
     public String toString() {
         return "Lesson{" +
-                "id=" + id +
+                "lesson_id=" + lesson_id +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
-                ", estado=" + estado +
-                ", reviews=" + reviews +
                 '}';
     }
 }
