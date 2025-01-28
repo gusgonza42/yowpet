@@ -1,11 +1,26 @@
-# Use OpenJDK as the base image
-FROM openjdk:21-jdk-slim
+# Etapa 1: Construir la aplicación con Maven y Java 17
+FROM maven:3.8.4-openjdk-17-slim AS builder
 
-#Copy the built Jar File from the target directory to the container
-COPY target/backend-yowpet-0.0.1-SNAPSHOT.jar backend-yowpet-0.0.1-SNAPSHOT.jar
+# Establecer el directorio de trabajo
+WORKDIR /app
 
-#Expose the desired port
-EXPOSE 3000
+# Copiar los archivos del proyecto
+COPY . .
 
-# Run the HAR file
-ENTRYPOINT ["java", "-jar", "/backend-yowpet-0.0.1-SNAPSHOT.jar"]
+# Ejecutar Maven para construir la aplicación (sin ejecutar tests)
+RUN mvn clean install -DskipTests
+
+# Etapa 2: Crear la imagen de producción usando OpenJDK 17 JDK
+FROM openjdk:17-jdk-slim
+
+# Establecer el directorio de trabajo en la imagen de producción
+WORKDIR /app
+
+# Copiar el archivo JAR generado desde la etapa de construcción
+COPY --from=builder /app/target/*.jar app.jar
+
+# Exponer el puerto 8080 en el que Spring Boot escucha
+EXPOSE 8080
+
+# Comando para ejecutar la aplicación
+ENTRYPOINT ["java", "-jar", "app.jar"]
