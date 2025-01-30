@@ -79,4 +79,49 @@ public class UserController {
     public ResponseEntity< String > deleteUser( @PathVariable Long id ) {
         return userService.deleteUser( id );
     }
+
+    /**
+     * Activa un usuario como administrador por ID.
+     *
+     * @param id del ID del administrador que se activará
+     * @return una respuesta HTTP con el resultado de la operación
+     */
+    @PostMapping ( "/admin/activate/{id}" )
+    public ResponseEntity< String > activateAdmin( @PathVariable Long id ) {
+        return userService.activateAdmin( id );
+    }
+
+    /**
+     * Desactiva un usuario como administrador por ID y lo pasa a usuario.
+     *
+     * @param id del ID del administrador que se desactivará
+     * @return una respuesta HTTP con el resultado de la operación
+     */
+    @DeleteMapping ( "/admin/disabled/{id}" )
+    public ResponseEntity< String > disabledAdmin( @PathVariable Long id ) {
+        return userService.disabledAdmin( id );
+    }
+
+    /**
+     * Activa un usuario como cuidador por ID.
+     *
+     * @param id del ID del cuidador que se activará
+     * @return una respuesta HTTP con el resultado de la operación
+     */
+
+    @PostMapping ( "/caregiver/activate/{id}" )
+    public ResponseEntity< String > activateCaregiverWorker( @PathVariable Long id ) {
+        return userService.activateCaregiverWorker( id );
+    }
+
+    /**
+     * Desactiva un usuario como cuidador por ID.
+     *
+     * @param id del ID del cuidador que se desactivará
+     * @return una respuesta HTTP con el resultado de la operación
+     */
+    @DeleteMapping ( "/caregiver/disabled/{id}" )
+    public ResponseEntity< String > disabledCaregiverWorker( @PathVariable Long id ) {
+        return userService.disabledCaregiverWorker( id );
+    }
 }

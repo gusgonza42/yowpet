@@ -41,13 +41,6 @@ public class CaregiverWorker {
     private int experienceYears;
 
     /**
-     * Horario de disponibilidad del cuidador (por ejemplo, "9 AM - 5 PM").
-     */
-    @Column ( name = "availability" )
-    private String availability;
-
-
-    /**
      * Tarifa por hora del cuidador.
      */
     @Column ( name = "hourly_rate", precision = 10 )
@@ -55,7 +48,7 @@ public class CaregiverWorker {
 
 
     /**
-     * Calificación promedio del cuidador.
+     * Calificación promedio del cuidador mas la reseñas en el futuro.
      */
     @Column ( name = "rating", precision = 2 )
     private Double rating;
@@ -63,8 +56,16 @@ public class CaregiverWorker {
     /**
      * Descripción o biografía del cuidador.
      */
-    @Column ( name = "bio" )
-    private String bio;
+    @Column ( name = "description" )
+    private String description;
+
+
+    /**
+     * Servicios que ofrece como cuidado en casa de la mascota, en casa del cuidador, paseos de animales, visitas diarias/comidas.
+     */
+    @Column ( name = "service_worker" )
+    private String serviceWorker;
+
 
     /**
      * Fecha de creación del registro del cuidador.
@@ -80,11 +81,4 @@ public class CaregiverWorker {
         }
     }
 
-    /**
-     * Metodo para validar si el usuario es un cuidador activo.
-     * Este metodo podría ser usado a nivel de servicio antes de crear un perfil de cuidador.
-     */
-    public boolean isUserValidForCaregiver( ) {
-        return user != null && user.getStatus( ) == User.status_active && user.getRole( ) == User.role_caregiver;
-    }
 }

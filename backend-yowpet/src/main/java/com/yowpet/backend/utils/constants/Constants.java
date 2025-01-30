@@ -16,9 +16,13 @@ public class Constants {
     public static final String RESERVATION_CANCELADO_EXITOSAMENTE = "Reserva cancelada con éxito";
     public static final String USUARIO_EXISTE_RESERVATION = "El usuario no existe (reservation)";
     public static final String NO_ES_CUIDADOR = "El usuario no es un cuidador (RESERVATION)";
-    public static final String COINCIDENCIA_FECHAS_RESERVACION = "El cuidador ya tiene una reserva en esta fecha";
+    public static final String COINCIDENCIA_FECHAS_RESERVATION = "El cuidador ya tiene una reserva en esta fecha";
     public static final String RESERVA_NO_ENCONTRADA = "Reserva no encontrada";
     public static final String RESERVATION_COMPLETED_SUCCESSFULLY = "Reserva completada con éxito";
 
-    public static final String PET_DELETED_SUCCESSFULLY = "Mascota elimin;ada con éxito";
+    public static final String PET_DELETED_SUCCESSFULLY = "Mascota eliminada con éxito";
+    public static final String USUARIO_ACTIVADO_COMO_CUIDADOR = " Usuario activado como cuidador";
+    public static final String USUARIO_DESACTIVADO_COMO_CUIDADOR = "Usuario desactivado como cuidador";
+    public static final String USUARIO_ACTIVADO_COMO_ADMIN = "Usuario activado como administrador";
+    public static final String USUARIO_DESACTIVADO_COMO_ADMIN = "Usuario desactivado como administrador";
 }

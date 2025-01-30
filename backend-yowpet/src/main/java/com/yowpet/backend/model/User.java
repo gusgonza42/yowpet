@@ -113,6 +113,11 @@ public class User {
     private Date birthDate;
 
     /**
+     * Los idiomas que habla el usuario.
+     */
+    private String languages;
+
+    /**
      * El metodo de pago del usuario.
      */
     @Column ( name = "payment_method" )
