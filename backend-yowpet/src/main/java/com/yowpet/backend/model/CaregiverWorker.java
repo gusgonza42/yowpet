@@ -15,6 +15,8 @@ import java.util.Date;
 @Entity
 @Table ( name = "caregiver_worker" )
 public class CaregiverWorker {
+    public static final int status_active_work = 1;
+    public static final int status_inactive_work = 0;
 
     @Id
     @GeneratedValue ( strategy = GenerationType.IDENTITY )
@@ -53,6 +55,9 @@ public class CaregiverWorker {
     @Column ( name = "rating", precision = 2 )
     private Double rating;
 
+    @Column ( name = "review" )
+    private String review;
+
     /**
      * Descripción o biografía del cuidador.
      */
@@ -65,6 +70,9 @@ public class CaregiverWorker {
      */
     @Column ( name = "service_worker" )
     private String serviceWorker;
+
+    @Column ( name = "status" )
+    private int status = status_active_work;
 
 
     /**
