@@ -20,23 +20,18 @@ public class Animal_CategoryController {
     }
 
     @GetMapping("/{id}")
-    public Animal_Category getById(Long id) {
+    public  Animal_Category getById(@PathVariable Long id) {
         return service.getbyID(id);
 
     }
 
-    @PostMapping
-    public void create(Animal_Category category) {
+    @PostMapping("/create")
+    public void create(@RequestBody Animal_Category category) {
         service.create(category);
     }
 
-    @PutMapping("/{id}")
-    public void update(Long id, Animal_Category category) {
-        service.update(id, category);
-    }
-
     @DeleteMapping("/{id}")
-    public void delete(Long id) {
+    public void delete(@PathVariable Long id) {
         service.delete(id);
     }
 
@@ -44,4 +39,8 @@ public class Animal_CategoryController {
     public List<Animal_Category> search(@RequestParam("text") String text) {
         return service.search(text);
     }
+
+    @PutMapping("/update/{id}")
+    public  Animal_Category update(@RequestBody Animal_Category cat, @PathVariable long id)
+    {return service.update(id,cat);}
 }

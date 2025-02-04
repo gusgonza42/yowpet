@@ -9,37 +9,43 @@ import lombok.*;
 @Entity
 @Table(name = "lesson_reviews")
 public class Lesson_reviews {
+    public static int status_active = 1;
+    public static int status_deleted = 0;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int review_id;
+    private Long id;
 
     @Column(nullable = false)
-    private int rating;
+    private double rating;
 
     @Column(columnDefinition = "TEXT")
     private String comment;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(length = 45, nullable = false)
+    private int estado = status_active;
+
+    @ManyToOne
     @JoinColumn(name = "lesson_id", nullable = false)
     private Lesson lesson;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public int getReview_id() {
-        return review_id;
+    public Long getId() {
+        return id;
     }
 
-    public void setReview_id(int review_id) {
-        this.review_id = review_id;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
@@ -49,6 +55,14 @@ public class Lesson_reviews {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
     }
 
     public Lesson getLesson() {
@@ -69,10 +83,11 @@ public class Lesson_reviews {
 
     @Override
     public String toString() {
-        return "LessonReview{" +
-                "review_id=" + review_id +
+        return "Lesson_reviews{" +
+                "id=" + id +
                 ", rating=" + rating +
                 ", comment='" + comment + '\'' +
+                ", estado=" + estado +
                 ", lesson=" + lesson +
                 ", user=" + user +
                 '}';

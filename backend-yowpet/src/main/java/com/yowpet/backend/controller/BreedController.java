@@ -26,7 +26,7 @@ public class BreedController {
 
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public void createBreed(Breed breed) {
         breedService.createBreed(breed);
     }
