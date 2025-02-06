@@ -21,7 +21,7 @@ public class CaregiverWorkerService {
     public ResponseEntity< List< CaregiverWorker > > getAllCaregivers( ) {
         try {
             List< CaregiverWorker > caregiverWorkers = caregiverWorkerRepository.findAll( );
-            if( caregiverWorkers.isEmpty( ) ) {
+            if ( caregiverWorkers.isEmpty( ) ) {
                 return ResponseEntity.status( HttpStatus.NOT_FOUND ).build( );
             }
             return ResponseEntity.ok( caregiverWorkers );
@@ -35,33 +35,39 @@ public class CaregiverWorkerService {
     public ResponseEntity< CaregiverWorker > getCaregiverById( Long id ) {
         try {
             Optional< CaregiverWorker > caregiverWorker = caregiverWorkerRepository.findById( id );
-            return caregiverWorker.map( ResponseEntity :: ok ).orElseGet( ( ) -> ResponseEntity.status( HttpStatus.NOT_FOUND ).build( ) );
+            return caregiverWorker.map( ResponseEntity::ok ).orElseGet( ( ) -> ResponseEntity.status( HttpStatus.NOT_FOUND ).build( ) );
         } catch ( Exception e ) {
             return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).build( );
         }
     }
 
     //UPDATE caregiver
-    public ResponseEntity< CaregiverWorker > updateCaregiver( Long id, CaregiverWorker updatedCaregiver ) {
+    public ResponseEntity< CaregiverWorker > updateCaregiver( Long id , CaregiverWorker updatedCaregiver ) {
         try {
-            Optional< CaregiverWorker > existingCaregiver = caregiverWorkerRepository.findById( id );
-            if( existingCaregiver.isEmpty( ) ) {
+            Optional< CaregiverWorker > existingCaregiverOpt = caregiverWorkerRepository.findById( id );
+            if ( existingCaregiverOpt.isEmpty( ) ) {
                 return ResponseEntity.status( HttpStatus.NOT_FOUND ).build( );
             }
-            CaregiverWorker caregiverToSave = existingCaregiver.get( );
-            caregiverToSave.setSpecialty( updatedCaregiver.getSpecialty( ) );
-            caregiverToSave.setExperienceYears( updatedCaregiver.getExperienceYears( ) );
-            caregiverToSave.setHourlyRate( updatedCaregiver.getHourlyRate( ) );
-            caregiverToSave.setRating( updatedCaregiver.getRating( ) );
-            caregiverToSave.setReview( updatedCaregiver.getReview( ) );
-            caregiverToSave.setDescription( updatedCaregiver.getDescription( ) );
-            caregiverToSave.setServiceWorker( updatedCaregiver.getServiceWorker( ) );
-            caregiverToSave.setStatus( updatedCaregiver.getStatus( ) );
-            CaregiverWorker savedCaregiver = caregiverWorkerRepository.save( caregiverToSave );
+
+            CaregiverWorker existingCaregiver = existingCaregiverOpt.get( );
+            updateCaregiverDetails( existingCaregiver , updatedCaregiver );
+            CaregiverWorker savedCaregiver = caregiverWorkerRepository.save( existingCaregiver );
+
             return ResponseEntity.ok( savedCaregiver );
         } catch ( Exception e ) {
             return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).build( );
         }
+    }
+
+    private void updateCaregiverDetails( CaregiverWorker existingCaregiver , CaregiverWorker updatedCaregiver ) {
+        existingCaregiver.setSpecialty( updatedCaregiver.getSpecialty( ) );
+        existingCaregiver.setExperienceYears( updatedCaregiver.getExperienceYears( ) );
+        existingCaregiver.setHourlyRate( updatedCaregiver.getHourlyRate( ) );
+        existingCaregiver.setRating( updatedCaregiver.getRating( ) );
+        existingCaregiver.setReview( updatedCaregiver.getReview( ) );
+        existingCaregiver.setDescription( updatedCaregiver.getDescription( ) );
+        existingCaregiver.setServiceWorker( updatedCaregiver.getServiceWorker( ) );
+        existingCaregiver.setStatus( updatedCaregiver.getStatus( ) );
     }
 
 
@@ -69,7 +75,7 @@ public class CaregiverWorkerService {
     public ResponseEntity< List< CaregiverWorker > > getAvailableCaregivers( ) {
         try {
             List< CaregiverWorker > caregiverWorkers = caregiverWorkerRepository.findAllByStatus_active_workIsTrue( );
-            if( caregiverWorkers.isEmpty( ) ) {
+            if ( caregiverWorkers.isEmpty( ) ) {
                 return ResponseEntity.status( HttpStatus.NOT_FOUND ).build( );
             }
             return ResponseEntity.ok( caregiverWorkers );
@@ -78,10 +84,10 @@ public class CaregiverWorkerService {
         }
     }
 
-    public ResponseEntity< CaregiverWorker > rateCaregiver( Long id, CaregiverWorker caregiverWorker ) {
+    public ResponseEntity< CaregiverWorker > rateCaregiver( Long id , CaregiverWorker caregiverWorker ) {
         try {
             Optional< CaregiverWorker > existingCaregiver = caregiverWorkerRepository.findById( id );
-            if( existingCaregiver.isEmpty( ) ) {
+            if ( existingCaregiver.isEmpty( ) ) {
                 return ResponseEntity.status( HttpStatus.NOT_FOUND ).build( );
             }
             CaregiverWorker caregiverToRate = existingCaregiver.get( );
@@ -89,5 +95,6 @@ public class CaregiverWorkerService {
         } catch ( Exception e ) {
             return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).build( );
         }
+        return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).build( );
     }
 }
