@@ -79,4 +79,9 @@ public class PetController {
     public ResponseEntity< String > deletePet( @PathVariable Long id ) {
         return petService.deletePet( id );
     }
+
+//    @PostMapping("/illnes/{id}")
+//    public ResponseEntity< Pet > addIllnes( @PathVariable Long id,@RequestBody Pet pet ) {
+//        return petService.updatePet( id, pet );
+//    }
 }

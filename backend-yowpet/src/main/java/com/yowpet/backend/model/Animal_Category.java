@@ -1,5 +1,6 @@
 package com.yowpet.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,12 +31,13 @@ public class Animal_Category {
      * Nombre de la categoría de animal.
      */
     @Column( name = "ac_name" )
-    private String ac_name;
+    private String name;
 
     /**
      * Lista de animales en esta categoría.
      */
-    @OneToMany ( mappedBy = "animalCategory", cascade = CascadeType.ALL, orphanRemoval = true )
-    @ToString.Exclude
-    private List< Breed > animals;
+//    @OneToMany ( mappedBy = "animalCategory", cascade = CascadeType.ALL, orphanRemoval = true )
+//    @ToString.Exclude
+//    @JsonIgnore
+//    private List< Breed > animals;
 }

@@ -37,7 +37,7 @@ public class UserService {
      */
     public ResponseEntity< String > createUser( @RequestBody User user ) {
         try {
-            if( userRepository.findByEmail( user.getEmail( ) ).isPresent( ) ) {
+            if ( userRepository.findByEmail( user.getEmail( ) ).isPresent( ) ) {
                 return ResponseEntity.status( HttpStatus.CONFLICT ).body( Constants.EMAIL_EXISTENTE );
             }
             userRepository.save( user );
@@ -55,6 +55,9 @@ public class UserService {
     public ResponseEntity< List< User > > getAllUsers( ) {
         try {
             List< User > users = userRepository.findByStatus( User.status_active );
+            if ( users.isEmpty( ) ) {
+                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( null );
+            }
             return ResponseEntity.status( HttpStatus.OK ).body( users );
         } catch ( Exception e ) {
             return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( null );
@@ -70,6 +73,9 @@ public class UserService {
     public ResponseEntity< User > getUserById( Long id ) {
         try {
             User user = userRepository.findById( id ).orElse( null );
+            if ( user == null ) {
+                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( null );
+            }
             return ResponseEntity.status( HttpStatus.OK ).body( user );
         } catch ( Exception e ) {
             return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( null );
@@ -83,10 +89,10 @@ public class UserService {
      * @param user los nuevos datos del usuario
      * @return una respuesta HTTP con el usuario actualizado
      */
-    public ResponseEntity< User > updateUser( Long id, User user ) {
+    public ResponseEntity< User > updateUser( Long id , User user ) {
         try {
             User userToUpdate = userRepository.findById( id ).orElse( null );
-            if( userToUpdate == null ) {
+            if ( userToUpdate == null ) {
                 return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( null );
             }
             userToUpdate.setFirstName( user.getFirstName( ) );
@@ -115,7 +121,7 @@ public class UserService {
     public ResponseEntity< String > deleteUser( Long id ) {
         try {
             Optional< User > optionalUser = userRepository.findById( id );
-            if( optionalUser.isPresent( ) ) {
+            if ( optionalUser.isPresent( ) ) {
                 User user = optionalUser.get( );
                 user.setStatus( User.status_inactive );
                 user.setDeletedAt( new Date( ) );
@@ -129,4 +135,49 @@ public class UserService {
             return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( Constants.ERROR_INTERNO_DEL_SERVIDOR );
         }
     }
+
+    /**
+     * Activa un usuario como administrador.
+     *
+     * @param id el ID del usuario a activar
+     * @return una respuesta HTTP con el resultado de la operación
+     */
+    public ResponseEntity< String > activateAdmin( Long id ) {
+        try {
+            User user = userRepository.findById( id ).orElse( null );
+            if ( user == null ) {
+                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( Constants.USUARIO_NO_ENCONTRADO );
+            }
+            user.setRole( User.role_admin );
+            user.setUpdatedAt( new Date( ) );
+
+            userRepository.save( user );
+            return ResponseEntity.status( HttpStatus.ACCEPTED ).body( Constants.USUARIO_ACTIVADO_COMO_ADMIN );
+        } catch ( Exception e ) {
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( Constants.ERROR_INTERNO_DEL_SERVIDOR );
+        }
+    }
+
+    /**
+     * Desactiva un usuario como administrador.
+     *
+     * @param id el ID del usuario a desactivar
+     * @return una respuesta HTTP con el resultado de la operación
+     */
+    public ResponseEntity< String > disabledAdmin( Long id ) {
+        try {
+            User user = userRepository.findById( id ).orElse( null );
+            if ( user == null ) {
+                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( Constants.USUARIO_NO_ENCONTRADO );
+            }
+            user.setUpdatedAt( new Date( ) );
+            user.setRole( User.role_user );
+            userRepository.save( user );
+            return ResponseEntity.status( HttpStatus.ACCEPTED ).body( Constants.USUARIO_DESACTIVADO_COMO_ADMIN );
+        } catch ( Exception e ) {
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( Constants.ERROR_INTERNO_DEL_SERVIDOR );
+        }
+    }
+
+
 }

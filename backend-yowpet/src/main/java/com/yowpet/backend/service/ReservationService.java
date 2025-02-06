@@ -53,7 +53,7 @@ public class ReservationService {
 
             // Validar que no haya solapamiento de reservas para el caregiver
             if( reservationRepository.existsByCareGiverAndReservationDate( careGiver, reservation.getReservationDate( ) ) ) {
-                return ResponseEntity.status( HttpStatus.CONFLICT ).body( Constants.COINCIDENCIA_FECHAS_RESERVACION );
+                return ResponseEntity.status( HttpStatus.CONFLICT ).body( Constants.COINCIDENCIA_FECHAS_RESERVATION );
             }
 
             // Guardar la reserva
