@@ -21,23 +21,23 @@ public class BreedController {
     }
 
     @GetMapping("/{id}")
-    public Breed getBreedById(Long id) {
+    public Breed getBreedById(@PathVariable Long id) {
         return breedService.getbreedbyID(id);
 
     }
 
     @PostMapping("/create")
-    public void createBreed(Breed breed) {
+    public void createBreed(@RequestBody Breed breed) {
         breedService.createBreed(breed);
     }
 
     @PutMapping("/{id}")
-    public void updateBreed(Long id, Breed breed) {
+    public void updateBreed(@PathVariable Long id,@RequestBody Breed breed) {
         breedService.updateBreed(id, breed);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteBreed(Long id) {
+    public void deleteBreed(@PathVariable Long id) {
         breedService.deleteBreed(id);
     }
 

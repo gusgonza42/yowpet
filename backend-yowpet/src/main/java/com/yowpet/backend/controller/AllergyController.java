@@ -22,23 +22,23 @@ public class AllergyController {
     }
 
     @GetMapping("/{id}")
-    public Allergy getById(Long id) {
+    public Allergy getById(@PathVariable Long id) {
         return service.getbyID(id);
 
     }
 
     @PostMapping
-    public void create(Allergy allergy) {
+    public void create(@RequestBody Allergy allergy) {
         service.create(allergy);
     }
 
     @PutMapping("/{id}")
-    public void update(Long id, Allergy allergy) {
+    public void update(@PathVariable Long id,@RequestBody Allergy allergy) {
         service.update(id, allergy);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(Long id) {
+    public void delete(@PathVariable Long id) {
         service.delete(id);
     }
 
