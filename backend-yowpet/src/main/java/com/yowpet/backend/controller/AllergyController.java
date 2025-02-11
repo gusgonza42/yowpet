@@ -1,9 +1,9 @@
 package com.yowpet.backend.controller;
 
 import com.yowpet.backend.model.Allergy;
-import com.yowpet.backend.model.Animal_Category;
+import com.yowpet.backend.model.AnimalCategory;
 import com.yowpet.backend.service.AllergyService;
-import com.yowpet.backend.service.Animal_CategoryService;
+import com.yowpet.backend.service.AnimalCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +27,7 @@ public class AllergyController {
 
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public void create(@RequestBody Allergy allergy) {
         service.create(allergy);
     }

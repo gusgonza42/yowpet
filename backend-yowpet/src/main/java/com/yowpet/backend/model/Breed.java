@@ -1,5 +1,8 @@
 package com.yowpet.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,29 +18,29 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table ( name = "breed" )
+@Table(name = "breed")
 public class Breed {
 
     /**
      * Identificador único para la raza.
      */
     @Id
-    @GeneratedValue ( strategy = GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     Long id;
 
     /**
      * Nombre de la raza.
      */
-    @Column ( name = "name" )
+    @Column(name = "name")
     String name;
 
     /**
      * Referencia a la categoría del animal.
      */
-    @ManyToOne ( fetch = FetchType.LAZY )
-    @JoinColumn ( name = "animal_category", nullable = false )
-    @ToString.Exclude
-    Animal_Category animalCategory;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "animalCategory", nullable = false)
+   // @JsonManagedReference
+    @JsonBackReference
+    AnimalCategory animalCategory;
 }

@@ -2,7 +2,7 @@ package com.yowpet.backend.service;
 
 
 import com.yowpet.backend.model.Allergy;
-import com.yowpet.backend.model.Animal_Category;
+import com.yowpet.backend.model.AnimalCategory;
 import com.yowpet.backend.repository.AllergyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

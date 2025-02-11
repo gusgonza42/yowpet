@@ -28,6 +28,8 @@ public class BreedController {
 
     @PostMapping("/create")
     public void createBreed(@RequestBody Breed breed) {
+
+        System.out.println(breed);
         breedService.createBreed(breed);
     }
 

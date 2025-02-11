@@ -1,33 +1,33 @@
 package com.yowpet.backend.service;
 
-    import com.yowpet.backend.model.Animal_Category;
-    import com.yowpet.backend.repository.Animal_CategortRepository;
+    import com.yowpet.backend.model.AnimalCategory;
+    import com.yowpet.backend.repository.AnimalCategortRepository;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.stereotype.Service;
 
     import java.util.List;
 
     @Service
-    public class Animal_CategoryService {
+    public class AnimalCategoryService {
 
         @Autowired
-        private Animal_CategortRepository repo;
+        private AnimalCategortRepository repo;
 
-        public Animal_Category getbyID(long id) {
+        public AnimalCategory getbyID(long id) {
             return repo.findById(id).orElseThrow(() -> new RuntimeException("Animal Category not found"));
         }
 
-        public List<Animal_Category> getAll() {
+        public List<AnimalCategory> getAll() {
             return repo.findAll();
         }
 
-        public void create(Animal_Category category) {
+        public void create(AnimalCategory category) {
             repo.save(category);
         }
 
-        public Animal_Category update(Long id, Animal_Category category) {
+        public AnimalCategory update(Long id, AnimalCategory category) {
             category.setId(id);
-            System.out.println("Animal_Category ID: " + category.getId());
+            System.out.println("AnimalCategory ID: " + category.getId());
             repo.save(category);
         return category;
         }
@@ -36,7 +36,7 @@ package com.yowpet.backend.service;
             repo.deleteById(id);
         }
 
-        public List<Animal_Category> search(String acName) {
+        public List<AnimalCategory> search(String acName) {
             return repo.findByNameContaining(acName);
         }
     }

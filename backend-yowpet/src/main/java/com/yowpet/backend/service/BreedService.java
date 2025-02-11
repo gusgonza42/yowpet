@@ -5,6 +5,7 @@ import com.yowpet.backend.model.Breed;
 import com.yowpet.backend.repository.BreedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class BreedService {
         return repo.getById(id);
     };
 
+    @Transactional
     public List<Breed> getAllBreeds() {
         return repo.findAll();
     }

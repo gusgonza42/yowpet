@@ -29,11 +29,11 @@ public class Pet {
 
     /**
      * La categoría del animal a la que pertenece la mascota.
-     * Es una clave foránea que referencia a la entidad Animal_Category.
+     * Es una clave foránea que referencia a la entidad AnimalCategory.
      */
     @ManyToOne
-    @JoinColumn(name = "animal_category_id", referencedColumnName = "id")
-    private Animal_Category animalCategory;
+    @JoinColumn(name = "animalcategory_id", referencedColumnName = "id")
+    private AnimalCategory animalCategory;
 
     /**
      * El propietario de la mascota.
