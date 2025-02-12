@@ -1,6 +1,7 @@
 package com.yowpet.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -40,7 +41,6 @@ public class Breed {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "animalCategory", nullable = false)
-   // @JsonManagedReference
-    @JsonBackReference
-    AnimalCategory animalCategory;
+            @JsonIgnore
+            AnimalCategory animalCategory;
 }

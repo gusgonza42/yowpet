@@ -37,10 +37,9 @@ public class AnimalCategory {
     private String name;
 
 
-    @OneToMany(mappedBy = "animalCategory", cascade = CascadeType.ALL, orphanRemoval = true)
-  //  @JsonBackReference
+    /*@OneToMany(mappedBy = "animalCategory", cascade = CascadeType.ALL, orphanRemoval = true)
+
     @JsonIgnore
-    @JsonManagedReference
-    private List<Breed> breeds;
+    private List<Breed> breeds;*/
 }
 

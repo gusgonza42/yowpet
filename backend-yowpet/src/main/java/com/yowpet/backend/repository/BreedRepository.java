@@ -8,7 +8,5 @@ import java.util.List;
 
 public interface BreedRepository extends JpaRepository<Breed, Long>{
 
-       Breed getById(Long id);
-
        List<Breed> findByNameContaining(String name);
 }

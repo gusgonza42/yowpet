@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface AllergyRepository extends JpaRepository<Allergy, Long>{
 
-
         List<Allergy> findByNameContaining(String name);
 
-        Allergy getById(Long id);
 }

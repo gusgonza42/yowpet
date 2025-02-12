@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface AnimalCategortRepository extends JpaRepository<AnimalCategory, Long> {
     List<AnimalCategory> findByNameContaining(String acName);
-    AnimalCategory getById(Long id);
 }

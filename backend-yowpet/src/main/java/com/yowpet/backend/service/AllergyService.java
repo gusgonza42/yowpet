@@ -16,7 +16,7 @@ public class AllergyService {
     private AllergyRepository repo;
 
     public Allergy getbyID(long id){
-        return repo.getById(id);
+        return repo.findById(id).orElseThrow(() -> new RuntimeException("Allergy not found"));
     };
 
     public List<Allergy> getAll() {

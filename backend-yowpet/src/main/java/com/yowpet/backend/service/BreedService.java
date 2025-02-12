@@ -16,7 +16,7 @@ public class BreedService {
     private BreedRepository repo;
 
     public Breed getbreedbyID(long id){
-        return repo.getById(id);
+        return repo.findById(id).orElseThrow(() -> new RuntimeException("breed not found"));
     };
 
     @Transactional
