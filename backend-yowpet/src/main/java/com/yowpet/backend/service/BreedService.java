@@ -1,7 +1,9 @@
 package com.yowpet.backend.service;
 
 
+import com.yowpet.backend.model.AnimalCategory;
 import com.yowpet.backend.model.Breed;
+import com.yowpet.backend.repository.AnimalCategortRepository;
 import com.yowpet.backend.repository.BreedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ public class BreedService {
 
     @Autowired
     private BreedRepository repo;
+    private AnimalCategortRepository catrepo;
 
     public Breed getbreedbyID(long id){
         return repo.findById(id).orElseThrow(() -> new RuntimeException("breed not found"));
@@ -25,6 +28,8 @@ public class BreedService {
     }
 
     public void createBreed(Breed breed) {
+
+        System.out.println(breed);
         repo.save(breed);
     }
 
@@ -43,4 +48,14 @@ public class BreedService {
     public List<Breed> searchBreeds(String name) {
         return repo.findByNameContaining(name);
     }
+
+    public Breed getCatfrombreed(Long id){
+        return repo.fullbreed(id);
+    }
+    public AnimalCategory getAnimalCat(Long id){
+        AnimalCategory cat = repo.findWithBreeds(id);
+        System.out.println("AnimalCategory: " + cat);
+        return cat;
+    }
+
 }

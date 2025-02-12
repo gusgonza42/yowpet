@@ -37,9 +37,8 @@ public class AnimalCategory {
     private String name;
 
 
-    /*@OneToMany(mappedBy = "animalCategory", cascade = CascadeType.ALL, orphanRemoval = true)
-
+    @OneToMany(mappedBy = "animalCategory", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<Breed> breeds;*/
+    private List<Breed> breeds;
 }
 
