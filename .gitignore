@@ -4,6 +4,7 @@ Thumbs.db
 *.log
 *.tmp
 *.pid
+.vscode/
 
 # IntelliJ IDEA
 .idea/
