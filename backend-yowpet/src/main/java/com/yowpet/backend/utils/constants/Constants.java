@@ -5,6 +5,13 @@ package com.yowpet.backend.utils.constants;
  */
 public class Constants {
 
+    public Constants( ) {
+        throw new IllegalStateException( "Utility class" );
+    }
+
+    public static final String HELLO_FROM_YOWPET_PROJECT = "🔐 Hello from Yowpet!\n🚀 This endpoint doesn't require a token.\n🔑 Remember: all other endpoints require a valid token, except for login and register. 📝";
+
+
     public static final String EMAIL_EXISTENTE = "El correo electrónico ya está registrado";
     public static final String USUARIO_CREADO_EXITOSAMENTE = "Usuario creado con éxito";
     public static final String ERROR_INTERNO_DEL_SERVIDOR = "Error interno del servidor";

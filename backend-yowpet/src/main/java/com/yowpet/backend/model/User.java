@@ -33,15 +33,17 @@ public class User {
     /**
      * El nombre del usuario.
      */
-    @Column ( name = "first_name", nullable = false )
+    @Column ( name = "first_name")
     private String firstName;
 
     /**
      * El apellido del usuario.
      */
-    @Column ( name = "last_name", nullable = false )
+    @Column ( name = "last_name")
     private String lastName;
 
+    @Column ( name = "username", nullable = false, unique = true )
+    private String username;
     /**
      * El correo electrónico del usuario.
      */
@@ -77,7 +79,7 @@ public class User {
      * El número de teléfono del usuario.
      */
     @Column ( name = "phone_number", length = 9 )
-    private int phoneNumber;
+    private String phoneNumber;
 
     /**
      * El código postal del usuario.
@@ -123,6 +125,10 @@ public class User {
     @Column ( name = "payment_method" )
     private String paymentMethod;
 
+    @Column ( name = "token" )
+    private String token;
+
+
     /**
      * La fecha de creación del usuario.
      */
@@ -152,20 +158,5 @@ public class User {
         if( createdAt == null ) {
             createdAt = new Date( );
         }
-    }
-
-    /**
-     * Constructor para crear un nuevo usuario con el nombre, apellido, correo electrónico y contraseña especificados.
-     *
-     * @param firstName el nombre del usuario
-     * @param lastName  el apellido del usuario
-     * @param email     el correo electrónico del usuario
-     * @param password  la contraseña del usuario
-     */
-    public User( String firstName, String lastName, String email, String password ) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
     }
 }

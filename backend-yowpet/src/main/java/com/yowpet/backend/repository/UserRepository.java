@@ -28,4 +28,6 @@ public interface UserRepository extends JpaRepository< User, Long > {
      * @return una lista de usuarios con el estado especificado
      */
     List< User > findByStatus( int status );
+
+    User findByUsername( String username );
 }
