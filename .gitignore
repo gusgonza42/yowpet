@@ -4,12 +4,12 @@ Thumbs.db
 *.log
 *.tmp
 *.pid
-.vscode/
 
 # IntelliJ IDEA
 .idea/
 *.iml
 *.iws
+*.ipr
 
 # Java (Maven y Spring Boot)
 target/
@@ -27,10 +27,13 @@ application-*.yaml
 .mvn/
 !mvnw
 !mvnw.cmd
+!.mvn/wrapper/maven-wrapper.jar
 
 # Gradle (si lo usas)
 .gradle/
 build/
+!**/src/main/**/build/
+!**/src/test/**/build/
 
 # Docker
 .dockerignore
@@ -86,3 +89,22 @@ frontend/tsconfig.tsbuildinfo
 # Configuración de entornos
 frontend/.env*
 backend-yowpet/.env*
+
+# STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# VS Code
+.vscode/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
