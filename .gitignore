@@ -49,40 +49,40 @@ docker-compose.local.yaml
 database/
 
 # Node.js (para React Native con Expo)
-frontend-yowpet/node_modules/
-frontend-yowpet/npm-debug.log*
-frontend-yowpet/yarn-debug.log*
-frontend-yowpet/yarn-error.log*
+frontend/node_modules/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
 
 # React Native/Expo
-frontend-yowpet/.expo/
-frontend-yowpet/.expo-shared/
-frontend-yowpet/dist/
-frontend-yowpet/web-build/
-frontend-yowpet/android/
-frontend-yowpet/ios/
-frontend-yowpet/expo-env.d.ts
+frontend/.expo/
+frontend/.expo-shared/
+frontend/dist/
+frontend/web-build/
+frontend/android/
+frontend/ios/
+frontend/expo-env.d.ts
 
 # Expo specific files
-frontend-yowpet/.expo/
-frontend-yowpet/.expo-shared/
+frontend/.expo/
+frontend/.expo-shared/
 
 # Expo debugging
-frontend-yowpet/.metro-health-check*
+frontend/.metro-health-check*
 
 # React Native debugging
-frontend-yowpet/.react-native/
+frontend/.react-native/
 
 # Otros relacionados con React Native
-frontend-yowpet/assets/
-frontend-yowpet/*.jks
-frontend-yowpet/*.keystore
-frontend-yowpet/*.p8
-frontend-yowpet/*.p12
-frontend-yowpet/*.key
-frontend-yowpet/*.mobileprovision
-frontend-yowpet/tsconfig.tsbuildinfo
+frontend/assets/
+frontend/*.jks
+frontend/*.keystore
+frontend/*.p8
+frontend/*.p12
+frontend/*.key
+frontend/*.mobileprovision
+frontend/tsconfig.tsbuildinfo
 
 # Configuración de entornos
-frontend-yowpet/.env*
+frontend/.env*
 backend-yowpet/.env*
