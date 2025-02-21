@@ -2,7 +2,7 @@ package com.yowpet.backend.service;
 
 import com.yowpet.backend.model.Pet;
 import com.yowpet.backend.repository.PetRepository;
-import com.yowpet.backend.utils.constants.Constants;
+import com.yowpet.backend.utils.constants.YowPetConstants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -36,12 +36,12 @@ public class PetService {
     public ResponseEntity< String > createPet( Pet pet ) {
         try {
             if( petRepository.existsPetByNameAndOwnerId( pet.getName( ), pet.getOwnerId( ) ) ) {
-                return ResponseEntity.status( HttpStatus.CONFLICT ).body( Constants.PET_EXISTS );
+                return ResponseEntity.status( HttpStatus.CONFLICT ).body( YowPetConstants.PET_EXISTS );
             }
             petRepository.save( pet );
-            return ResponseEntity.status( HttpStatus.CREATED ).body( Constants.PET_CREATED_SUCCESSFULLY );
+            return ResponseEntity.status( HttpStatus.CREATED ).body( YowPetConstants.PET_CREATED_SUCCESSFULLY );
         } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( Constants.ERROR_INTERNO_DEL_SERVIDOR );
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( YowPetConstants.ERROR_INTERNO_DEL_SERVIDOR );
         }
     }
 
@@ -128,7 +128,7 @@ public class PetService {
             pet.setStatus( Pet.STATUS_INACTIVE );
             pet.setDeletedAt( pet.getUpdatedAt( ) );
             petRepository.save( pet );
-            return ResponseEntity.status( HttpStatus.OK ).body( Constants.PET_DELETED_SUCCESSFULLY );
+            return ResponseEntity.status( HttpStatus.OK ).body( YowPetConstants.PET_DELETED_SUCCESSFULLY );
         } catch ( Exception e ) {
             return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( null );
         }

@@ -22,7 +22,7 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ResponseEntity< LoginResponseDTO > login( LoginRequestDTO loginRequestDTO ) {
+    public ResponseEntity< ? > login( LoginRequestDTO loginRequestDTO ) {
         User user = userRepository.findByUsername( loginRequestDTO.getUsername( ) );
         if ( user != null && passwordEncoder.matches( loginRequestDTO.getPassword( ) , user.getPassword( ) ) ) {
             LoginResponseDTO responseDTO = new LoginResponseDTO( );

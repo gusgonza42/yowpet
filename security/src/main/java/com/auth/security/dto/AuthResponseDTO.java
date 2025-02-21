@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class AuthResponse {
+public class AuthResponseDTO {
 
     /**
      * Token JWT generado tras la autenticación.
@@ -22,7 +22,7 @@ public class AuthResponse {
      *
      * @param token el token JWT generado tras la autenticación
      */
-    public AuthResponse( String token ) {
+    public AuthResponseDTO(String token ) {
         this.token = token;
     }
 }

@@ -1,7 +1,7 @@
 package com.auth.security.service;
 
-import com.auth.security.dto.AuthRequest;
-import com.auth.security.dto.AuthResponse;
+import com.auth.security.dto.AuthRequestDTO;
+import com.auth.security.dto.AuthResponseDTO;
 import com.auth.security.model.Message;
 import com.auth.security.model.User;
 import com.auth.security.repository.UserRepository;
@@ -18,7 +18,7 @@ import static com.auth.security.util.Utils.printMssg;
  * Servicio para la gestión de Authentication.
  */
 @Service
-public class AuthService {
+public class AuthServiceJWT {
     private final JwtTokenUtils jwtTokenUtils;
     private final UserRepository userRepository;
 
@@ -29,7 +29,7 @@ public class AuthService {
      * @param userRepository Repositorio de usuarios.
      */
     @Autowired
-    public AuthService( JwtTokenUtils jwtTokenUtils , UserRepository userRepository ) {
+    public AuthServiceJWT(JwtTokenUtils jwtTokenUtils , UserRepository userRepository ) {
         this.jwtTokenUtils = jwtTokenUtils;
         this.userRepository = userRepository;
     }
@@ -47,28 +47,28 @@ public class AuthService {
     /**
      * Endpoint para iniciar sesión.
      *
-     * @param authRequest Solicitud de autenticación con credenciales del usuario.
+     * @param authRequestDTO Solicitud de autenticación con credenciales del usuario.
      * @return ResponseEntity con el token JWT o un mensaje de error.
      */
-    public ResponseEntity< ? > login( AuthRequest authRequest ) {
+    public ResponseEntity< ? > login( AuthRequestDTO authRequestDTO) {
         try {
-            if ( ( authRequest.getUsername( ) == null || authRequest.getUsername( ).isEmpty( ) ) &&
-                    ( authRequest.getEmail( ) == null || authRequest.getEmail( ).isEmpty( ) ) ) {
+            if ( ( authRequestDTO.getUsername( ) == null || authRequestDTO.getUsername( ).isEmpty( ) ) &&
+                    ( authRequestDTO.getEmail( ) == null || authRequestDTO.getEmail( ).isEmpty( ) ) ) {
                 return ResponseEntity.status( HttpStatus.BAD_REQUEST ).body( new Message( AuthConstants.CREDENTIALS_REQUIRED ) );
             }
 
             User user;
-            if ( authRequest.getUsername( ) != null && ! authRequest.getUsername( ).isEmpty( ) ) {
-                user = userRepository.findByUsername( authRequest.getUsername( ) );
+            if ( authRequestDTO.getUsername( ) != null && ! authRequestDTO.getUsername( ).isEmpty( ) ) {
+                user = userRepository.findByUsername( authRequestDTO.getUsername( ) );
             } else {
-                user = userRepository.findByEmail( authRequest.getEmail( ) );
+                user = userRepository.findByEmail( authRequestDTO.getEmail( ) );
             }
 
             if ( user == null ) {
                 return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( new Message( AuthConstants.USER_NOT_EXISTS ) );
             }
 
-            if ( ! user.getPassword( ).equals( authRequest.getPassword( ) ) ) {
+            if ( ! user.getPassword( ).equals( authRequestDTO.getPassword( ) ) ) {
                 return ResponseEntity.status( HttpStatus.UNAUTHORIZED ).body( new Message( AuthConstants.INVALID_CREDENTIALS ) );
             }
 
@@ -82,7 +82,7 @@ public class AuthService {
 
             printMssg( user.getUsername( ) + " logged in" );
 
-            return ResponseEntity.status( HttpStatus.OK ).body( new AuthResponse( token ) );
+            return ResponseEntity.status( HttpStatus.OK ).body( new AuthResponseDTO( token ) );
         } catch ( Exception e ) {
             printMssg( e.getMessage( ) );
             return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( new Message( AuthConstants.INTERNAL_SERVER_ERROR ) );
@@ -92,32 +92,32 @@ public class AuthService {
     /**
      * Endpoint para registrar un nuevo usuario.
      *
-     * @param authRequest Solicitud de autenticación con credenciales del usuario.
+     * @param authRequestDTO Solicitud de autenticación con credenciales del usuario.
      * @return ResponseEntity con el token JWT o un mensaje de error.
      */
-    public ResponseEntity< ? > register( AuthRequest authRequest ) {
-        User userByEmail = userRepository.findByEmail( authRequest.getEmail( ) );
+    public ResponseEntity< ? > register( AuthRequestDTO authRequestDTO) {
+        User userByEmail = userRepository.findByEmail( authRequestDTO.getEmail( ) );
         if ( userByEmail != null ) {
             return ResponseEntity.status( HttpStatus.CONFLICT )
                     .body( new Message( AuthConstants.EMAIL_ALREADY_EXISTS ) );
         }
 
-        User userByUsername = userRepository.findByUsername( authRequest.getUsername( ) );
+        User userByUsername = userRepository.findByUsername( authRequestDTO.getUsername( ) );
         if ( userByUsername != null ) {
             return ResponseEntity.status( HttpStatus.CONFLICT )
                     .body( new Message( AuthConstants.USERNAME_ALREADY_EXISTS ) );
         }
 
 
-        String token = jwtTokenUtils.generateToken( authRequest.getUsername( ) );
+        String token = jwtTokenUtils.generateToken( authRequestDTO.getUsername( ) );
         User user = new User( );
-        user.setUsername( authRequest.getUsername( ) );
-        user.setEmail( authRequest.getEmail( ) );
-        user.setPassword( authRequest.getPassword( ) );
+        user.setUsername( authRequestDTO.getUsername( ) );
+        user.setEmail( authRequestDTO.getEmail( ) );
+        user.setPassword( authRequestDTO.getPassword( ) );
         user.setToken( token );
         userRepository.save( user );
 
         printMssg( user.getUsername( ) + " registered" );
-        return ResponseEntity.status( HttpStatus.CREATED ).body( new AuthResponse( token ) );
+        return ResponseEntity.status( HttpStatus.CREATED ).body( new AuthResponseDTO( token ) );
     }
 }

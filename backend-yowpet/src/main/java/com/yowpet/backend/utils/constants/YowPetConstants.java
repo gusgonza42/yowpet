@@ -3,9 +3,9 @@ package com.yowpet.backend.utils.constants;
 /**
  * Clase que contiene las constantes de mensajes del sistema.
  */
-public class Constants {
+public class YowPetConstants {
 
-    public Constants( ) {
+    public YowPetConstants( ) {
         throw new IllegalStateException( "Utility class" );
     }
 

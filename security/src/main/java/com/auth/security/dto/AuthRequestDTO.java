@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotBlank;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AuthRequest {
+public class AuthRequestDTO {
 
     /**
      * Nombre de usuario para la autenticación.

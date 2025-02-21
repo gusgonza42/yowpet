@@ -3,7 +3,7 @@ package com.yowpet.backend.service;
 import com.yowpet.backend.model.Reservation;
 import com.yowpet.backend.model.User;
 import com.yowpet.backend.repository.ReservationRepository;
-import com.yowpet.backend.utils.constants.Constants;
+import com.yowpet.backend.utils.constants.YowPetConstants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -42,25 +42,25 @@ public class ReservationService {
             // Validar que el usuario exista
             User user = userService.getUserById( reservation.getUser( ).getId( ) ).getBody( );
             if( user == null ) {
-                return ResponseEntity.status( HttpStatus.BAD_REQUEST ).body( Constants.USUARIO_EXISTE_RESERVATION );
+                return ResponseEntity.status( HttpStatus.BAD_REQUEST ).body( YowPetConstants.USUARIO_EXISTE_RESERVATION );
             }
 
             // Validar que el caregiver exista y tenga el rol adecuado
             User careGiver = userService.getUserById( reservation.getCareGiver( ).getId( ) ).getBody( );
             if( careGiver == null || careGiver.getRole( ) != 1 ) {
-                return ResponseEntity.status( HttpStatus.BAD_REQUEST ).body( Constants.NO_ES_CUIDADOR );
+                return ResponseEntity.status( HttpStatus.BAD_REQUEST ).body( YowPetConstants.NO_ES_CUIDADOR );
             }
 
             // Validar que no haya solapamiento de reservas para el caregiver
             if( reservationRepository.existsByCareGiverAndReservationDate( careGiver, reservation.getReservationDate( ) ) ) {
-                return ResponseEntity.status( HttpStatus.CONFLICT ).body( Constants.COINCIDENCIA_FECHAS_RESERVATION );
+                return ResponseEntity.status( HttpStatus.CONFLICT ).body( YowPetConstants.COINCIDENCIA_FECHAS_RESERVATION );
             }
 
             // Guardar la reserva
             reservationRepository.save( reservation );
-            return ResponseEntity.status( HttpStatus.CREATED ).body( Constants.RESERVATION_CREADO_EXITOSAMENTE );
+            return ResponseEntity.status( HttpStatus.CREATED ).body( YowPetConstants.RESERVATION_CREADO_EXITOSAMENTE );
         } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( Constants.ERROR_INTERNO_DEL_SERVIDOR );
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( YowPetConstants.ERROR_INTERNO_DEL_SERVIDOR );
         }
     }
 
@@ -133,14 +133,14 @@ public class ReservationService {
         try {
             Reservation reservation = reservationRepository.findById( id ).orElse( null );
             if( reservation == null ) {
-                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( Constants.RESERVA_NO_ENCONTRADA );
+                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( YowPetConstants.RESERVA_NO_ENCONTRADA );
             }
 
             reservation.setStatus( Reservation.STATUS_CANCELLED );
             reservationRepository.save( reservation );
-            return ResponseEntity.status( HttpStatus.ACCEPTED ).body( Constants.RESERVATION_CANCELADO_EXITOSAMENTE );
+            return ResponseEntity.status( HttpStatus.ACCEPTED ).body( YowPetConstants.RESERVATION_CANCELADO_EXITOSAMENTE );
         } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( Constants.ERROR_INTERNO_DEL_SERVIDOR );
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( YowPetConstants.ERROR_INTERNO_DEL_SERVIDOR );
         }
     }
 
@@ -154,16 +154,16 @@ public class ReservationService {
         try {
             Reservation reservation = reservationRepository.findById( id ).orElse( null );
             if( reservation == null ) {
-                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( Constants.RESERVA_NO_ENCONTRADA );
+                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( YowPetConstants.RESERVA_NO_ENCONTRADA );
             }
 
             // Cambiar el estado a completada
             reservation.setStatus( Reservation.STATUS_COMPLETED );
             reservationRepository.save( reservation );
 
-            return ResponseEntity.status( HttpStatus.ACCEPTED ).body( Constants.RESERVATION_COMPLETED_SUCCESSFULLY );
+            return ResponseEntity.status( HttpStatus.ACCEPTED ).body( YowPetConstants.RESERVATION_COMPLETED_SUCCESSFULLY );
         } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( Constants.ERROR_INTERNO_DEL_SERVIDOR );
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( YowPetConstants.ERROR_INTERNO_DEL_SERVIDOR );
         }
     }
 

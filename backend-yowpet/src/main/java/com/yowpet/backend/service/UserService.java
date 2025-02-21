@@ -2,7 +2,7 @@ package com.yowpet.backend.service;
 
 import com.yowpet.backend.model.User;
 import com.yowpet.backend.repository.UserRepository;
-import com.yowpet.backend.utils.constants.Constants;
+import com.yowpet.backend.utils.constants.YowPetConstants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -38,12 +38,12 @@ public class UserService {
     public ResponseEntity< String > createUser( @RequestBody User user ) {
         try {
             if ( userRepository.findByEmail( user.getEmail( ) ).isPresent( ) ) {
-                return ResponseEntity.status( HttpStatus.CONFLICT ).body( Constants.EMAIL_EXISTENTE );
+                return ResponseEntity.status( HttpStatus.CONFLICT ).body( YowPetConstants.EMAIL_EXISTENTE );
             }
             userRepository.save( user );
-            return ResponseEntity.status( HttpStatus.CREATED ).body( Constants.USUARIO_CREADO_EXITOSAMENTE );
+            return ResponseEntity.status( HttpStatus.CREATED ).body( YowPetConstants.USUARIO_CREADO_EXITOSAMENTE );
         } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( Constants.ERROR_INTERNO_DEL_SERVIDOR );
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( YowPetConstants.ERROR_INTERNO_DEL_SERVIDOR );
         }
     }
 
@@ -127,12 +127,12 @@ public class UserService {
                 user.setDeletedAt( new Date( ) );
                 user.setUpdatedAt( new Date( ) );
                 userRepository.save( user );
-                return ResponseEntity.status( HttpStatus.OK ).body( Constants.USUARIO_ELIMINADO_EXITOSAMENTE );
+                return ResponseEntity.status( HttpStatus.OK ).body( YowPetConstants.USUARIO_ELIMINADO_EXITOSAMENTE );
             } else {
-                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( Constants.USUARIO_NO_ENCONTRADO );
+                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( YowPetConstants.USUARIO_NO_ENCONTRADO );
             }
         } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( Constants.ERROR_INTERNO_DEL_SERVIDOR );
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( YowPetConstants.ERROR_INTERNO_DEL_SERVIDOR );
         }
     }
 
@@ -146,15 +146,15 @@ public class UserService {
         try {
             User user = userRepository.findById( id ).orElse( null );
             if ( user == null ) {
-                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( Constants.USUARIO_NO_ENCONTRADO );
+                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( YowPetConstants.USUARIO_NO_ENCONTRADO );
             }
             user.setRole( User.role_admin );
             user.setUpdatedAt( new Date( ) );
 
             userRepository.save( user );
-            return ResponseEntity.status( HttpStatus.ACCEPTED ).body( Constants.USUARIO_ACTIVADO_COMO_ADMIN );
+            return ResponseEntity.status( HttpStatus.ACCEPTED ).body( YowPetConstants.USUARIO_ACTIVADO_COMO_ADMIN );
         } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( Constants.ERROR_INTERNO_DEL_SERVIDOR );
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( YowPetConstants.ERROR_INTERNO_DEL_SERVIDOR );
         }
     }
 
@@ -168,14 +168,14 @@ public class UserService {
         try {
             User user = userRepository.findById( id ).orElse( null );
             if ( user == null ) {
-                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( Constants.USUARIO_NO_ENCONTRADO );
+                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( YowPetConstants.USUARIO_NO_ENCONTRADO );
             }
             user.setUpdatedAt( new Date( ) );
             user.setRole( User.role_user );
             userRepository.save( user );
-            return ResponseEntity.status( HttpStatus.ACCEPTED ).body( Constants.USUARIO_DESACTIVADO_COMO_ADMIN );
+            return ResponseEntity.status( HttpStatus.ACCEPTED ).body( YowPetConstants.USUARIO_DESACTIVADO_COMO_ADMIN );
         } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( Constants.ERROR_INTERNO_DEL_SERVIDOR );
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( YowPetConstants.ERROR_INTERNO_DEL_SERVIDOR );
         }
     }
 
