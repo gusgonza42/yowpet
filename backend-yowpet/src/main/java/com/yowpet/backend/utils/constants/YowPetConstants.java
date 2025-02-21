@@ -5,6 +5,8 @@ package com.yowpet.backend.utils.constants;
  */
 public class YowPetConstants {
 
+    public static final String LOGIN_SUCCESSFUL =  "🔐 ¡Inicio de sesión exitoso! 🚀";
+
     public YowPetConstants( ) {
         throw new IllegalStateException( "Utility class" );
     }

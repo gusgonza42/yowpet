@@ -13,4 +13,6 @@ public class RegisterResponseDTO {
     private Long id;
     private String username;
     private String email;
+
+
 }

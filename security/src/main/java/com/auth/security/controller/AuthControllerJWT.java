@@ -1,6 +1,8 @@
 package com.auth.security.controller;
 
-import com.auth.security.dto.AuthRequestDTO;
+import com.auth.security.dto.AuthLoginRequestDTO;
+import com.auth.security.dto.AuthRegisterRequestDTO;
+import com.auth.security.dto.AuthRegisterResponseDTO;
 import com.auth.security.service.AuthServiceJWT;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  * Controlador para manejar las solicitudes de autenticación.
  */
 @RestController
-@RequestMapping( "/auth" )
+@RequestMapping("/auth")
 public class AuthControllerJWT {
     private final AuthServiceJWT authServiceJWT;
 
@@ -30,30 +32,30 @@ public class AuthControllerJWT {
      *
      * @return una respuesta HTTP con un mensaje del estado del proyecto.
      */
-    @GetMapping( "/hello" )
-    public ResponseEntity< String > getHello( ) {
-        return authServiceJWT.getHello( );
+    @GetMapping("/hello")
+    public ResponseEntity<String> getHello() {
+        return authServiceJWT.getHello();
     }
 
     /**
      * Endpoint para iniciar sesión.
      *
-     * @param authRequestDTO la solicitud de autenticación
+     * @param authLoginRequestDTO la solicitud de autenticación
      * @return una respuesta HTTP con el resultado del inicio de sesión
      */
-    @PostMapping( "/login" )
-    public ResponseEntity< ? > login( @Valid @RequestBody AuthRequestDTO authRequestDTO) {
-        return authServiceJWT.login(authRequestDTO);
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody AuthLoginRequestDTO authLoginRequestDTO) {
+        return authServiceJWT.login(authLoginRequestDTO);
     }
 
     /**
      * Endpoint para registrar un nuevo usuario.
      *
-     * @param authRequestDTO la solicitud de registro
+     * @param authRegisterRequestDTO la solicitud de registro
      * @return una respuesta HTTP con el resultado del registro
      */
-    @PostMapping( "/register" )
-    public ResponseEntity< ? > register( @Valid @RequestBody AuthRequestDTO authRequestDTO) {
-        return authServiceJWT.register(authRequestDTO);
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody AuthRegisterRequestDTO authRegisterRequestDTO) {
+        return authServiceJWT.register(authRegisterRequestDTO);
     }
 }

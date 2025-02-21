@@ -1,11 +1,10 @@
 package com.auth.security.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Date;
 
 /**
  * Entidad que representa un usuario en el sistema.
@@ -20,7 +19,7 @@ public class User {
      * Generado automáticamente por la base de datos.
      */
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -42,4 +41,19 @@ public class User {
      * Token JWT del usuario.
      */
     private String token;
+
+    /**
+     * Rol del usuario.
+     */
+    private int role;
+
+    /**
+     * Estado del usuario.
+     */
+    private int status;
+
+    /**
+     * Fecha de creación del usuario.
+     */
+    private Date createdAt;
 }

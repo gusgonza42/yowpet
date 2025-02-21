@@ -31,7 +31,7 @@ public class AuthController {
     }
 
     @PostMapping( "/register" )
-    public ResponseEntity< RegisterResponseDTO > register( @Valid @RequestBody RegisterRequestDTO registerRequestDTO ) {
+    public ResponseEntity< ? > register( @Valid @RequestBody RegisterRequestDTO registerRequestDTO ) {
         return authService.register( registerRequestDTO );
     }
 
