@@ -1,11 +1,13 @@
 package com.yowpet.backend.controller.test;
 
 import com.yowpet.backend.service.test.TestService;
+import com.yowpet.backend.utils.constants.Constants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.List;
  * REST Controller to handle test-related requests.
  */
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/yowpet")
 public class TestController {
 
     private final TestService testService;
@@ -26,6 +28,11 @@ public class TestController {
      */
     public TestController(TestService testService) {
         this.testService = testService;
+    }
+
+    @GetMapping("/hello")
+    public ResponseEntity<?> helloYowpet() {
+        return ResponseEntity.ok(Constants.HELLO_PROYECT);
     }
 
     /**

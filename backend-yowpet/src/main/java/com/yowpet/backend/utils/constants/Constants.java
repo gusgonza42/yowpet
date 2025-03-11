@@ -25,4 +25,5 @@ public class Constants {
     public static final String USUARIO_DESACTIVADO_COMO_CUIDADOR = "Usuario desactivado como cuidador";
     public static final String USUARIO_ACTIVADO_COMO_ADMIN = "Usuario activado como administrador";
     public static final String USUARIO_DESACTIVADO_COMO_ADMIN = "Usuario desactivado como administrador";
+    public static final String HELLO_PROYECT = "Hello Proyect";
 }

@@ -123,6 +123,7 @@ public class User {
     @Column ( name = "payment_method" )
     private String paymentMethod;
 
+    private String token;
     /**
      * La fecha de creación del usuario.
      */
