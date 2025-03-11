@@ -3,7 +3,6 @@ package com.yowpet.backend.controller;
 import com.yowpet.backend.model.CaregiverWorker;
 import com.yowpet.backend.model.User;
 import com.yowpet.backend.repository.CaregiverWorkerRepository;
-import com.yowpet.backend.repository.UserRepository;
 import com.yowpet.backend.service.CaregiverWorkerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
