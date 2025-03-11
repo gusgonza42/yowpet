@@ -20,7 +20,7 @@ public class AnimalCategoryController {
     }
 
     @GetMapping("/{id}")
-    public  AnimalCategory getById(@PathVariable Long id) {
+    public  AnimalCategory getById(@PathVariable int id) {
         return service.getbyID(id);
 
     }
@@ -31,7 +31,7 @@ public class AnimalCategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable int id) {
         service.delete(id);
     }
 
@@ -41,6 +41,6 @@ public class AnimalCategoryController {
     }
 
     @PutMapping("/update/{id}")
-    public  AnimalCategory update(@RequestBody AnimalCategory cat, @PathVariable long id)
+    public  AnimalCategory update(@RequestBody AnimalCategory cat, @PathVariable int id)
     {return service.update(id,cat);}
 }

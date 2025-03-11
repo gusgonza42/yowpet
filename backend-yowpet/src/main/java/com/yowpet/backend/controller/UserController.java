@@ -53,7 +53,7 @@ public class UserController {
      * @return una respuesta HTTP con el usuario encontrado
      */
     @GetMapping( "/{id}" )
-    public ResponseEntity< User > getUserById( @PathVariable Long id ) {
+    public ResponseEntity< User > getUserById( @PathVariable int id ) {
         return userService.getUserById( id );
     }
 
@@ -65,7 +65,7 @@ public class UserController {
      * @return una respuesta HTTP con el usuario actualizado
      */
     @PutMapping( "/update/{id}" )
-    public ResponseEntity< User > updateUser( @PathVariable Long id , @RequestBody User user ) {
+    public ResponseEntity< User > updateUser( @PathVariable int id , @RequestBody User user ) {
         return userService.updateUser( id , user );
     }
 
@@ -76,7 +76,7 @@ public class UserController {
      * @return una respuesta HTTP con el resultado de la operación
      */
     @DeleteMapping( "/delete/{id}" )
-    public ResponseEntity< String > deleteUser( @PathVariable Long id ) {
+    public ResponseEntity< String > deleteUser( @PathVariable int id ) {
         return userService.deleteUser( id );
     }
 
@@ -87,7 +87,7 @@ public class UserController {
      * @return una respuesta HTTP con el resultado de la operación
      */
     @PostMapping( "/admin/activate/{id}" )
-    public ResponseEntity< String > activateAdmin( @PathVariable Long id ) {
+    public ResponseEntity< String > activateAdmin( @PathVariable int id ) {
         return userService.activateAdmin( id );
     }
 
@@ -98,7 +98,7 @@ public class UserController {
      * @return una respuesta HTTP con el resultado de la operación
      */
     @DeleteMapping( "/admin/disabled/{id}" )
-    public ResponseEntity< String > disabledAdmin( @PathVariable Long id ) {
+    public ResponseEntity< String > disabledAdmin( @PathVariable int id ) {
         return userService.disabledAdmin( id );
     }
 

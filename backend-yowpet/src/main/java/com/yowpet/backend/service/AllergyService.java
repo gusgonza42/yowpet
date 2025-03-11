@@ -2,8 +2,7 @@ package com.yowpet.backend.service;
 
 
 import com.yowpet.backend.model.Allergy;
-import com.yowpet.backend.model.AnimalCategory;
-import com.yowpet.backend.repository.AllergyRepository;
+import com.yowpet.backend.repository.AllergyRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,33 +12,34 @@ import java.util.List;
 public class AllergyService {
 
     @Autowired
-    private AllergyRepository repo;
+    private AllergyRepo repo;
 
-    public Allergy getbyID(long id){
-        return repo.findById(id).orElseThrow(() -> new RuntimeException("Allergy not found"));
+    public Allergy getbyID(int id){
+        return repo.getAllergy(id);
     };
 
     public List<Allergy> getAll() {
-        return repo.findAll();
+        return repo.getAllergies();
     }
 
     public void create(Allergy allergy) {
-        repo.save(allergy);
+
+        repo.createAllergy(allergy.getId(),allergy.getName());
     }
 
-    public void update(Long id, Allergy allergy) {
+    public void update(int id, Allergy allergy) {
         allergy.setId(id);
 
         System.out.println("Allergy ID: " + allergy.getId());
 
-        repo.save(allergy);
+        repo.updateAllergy(allergy.getId(), allergy.getName());
     }
 
-    public void delete(Long id) {
-        repo.deleteById(id);
+    public void delete(int id) {
+        repo.deleteAllergy(id);
     }
 
     public List<Allergy> search(String name) {
-        return repo.findByNameContaining(name);
+        return repo.searchAllergies(name);
     }
 }

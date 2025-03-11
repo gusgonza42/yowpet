@@ -22,7 +22,7 @@ public class AllergyController {
     }
 
     @GetMapping("/{id}")
-    public Allergy getById(@PathVariable Long id) {
+    public Allergy getById(@PathVariable int id) {
         return service.getbyID(id);
 
     }
@@ -33,12 +33,12 @@ public class AllergyController {
     }
 
     @PutMapping("/{id}")
-    public void update(@PathVariable Long id,@RequestBody Allergy allergy) {
+    public void update(@PathVariable int id,@RequestBody Allergy allergy) {
         service.update(id, allergy);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable int id) {
         service.delete(id);
     }
 
