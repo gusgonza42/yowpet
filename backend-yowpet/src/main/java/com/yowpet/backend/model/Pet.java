@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Representa una entidad de mascota en el sistema.
@@ -13,8 +12,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table ( name = "pet" )
+@ToString
 public class Pet {
     public static final int STATUS_ACTIVE = 1;
     public static final int STATUS_INACTIVE = 0;
@@ -22,109 +20,78 @@ public class Pet {
     /**
      * El identificador único para la mascota.
      */
-    @Id
-    @GeneratedValue ( strategy = GenerationType.IDENTITY )
-    @Column ( name = "id" )
-    private Long id;
+    private int id;
 
     /**
      * La categoría del animal a la que pertenece la mascota.
      * Es una clave foránea que referencia a la entidad AnimalCategory.
      */
-    @ManyToOne
-    @JoinColumn(name = "animalcategory_id", referencedColumnName = "id")
-    private AnimalCategory animalCategory;
+    private int animalCategory;
 
     /**
      * El propietario de la mascota.
      */
-    @ManyToOne
-    @JoinColumn ( name = "owner_id", referencedColumnName = "id" )
-    private User ownerId;
+    private int ownerId;
 
     /**
      * La raza de la mascota.
      */
-    @ManyToOne
-    @JoinColumn ( name = "breed_id", referencedColumnName = "id" )
-    private Breed breed;
-
-    /**
-     * Las alergias de la mascota.
-     */
-    @ManyToMany
-    @JoinTable ( name = "pet_allergies", joinColumns = @JoinColumn ( name = "pet_id" ), inverseJoinColumns = @JoinColumn ( name = "allergy_id" ) )
-    private List< Allergy > allergies;
+    private int breed;
 
     /**
      * El estado de la mascota.
      * Valor por defecto: 1 = activo, 0 = inactivo
      */
-    @Column ( name = "status" )
     private int status = STATUS_ACTIVE;
 
     /**
      * El nombre de la mascota.
      */
-    @Column ( name = "name", nullable = false )
     private String name;
 
     /**
      * La fecha de nacimiento de la mascota.
      */
-    @Temporal ( TemporalType.DATE )
-    @Column ( name = "birth_date" )
     private Date birthDate;
 
     /**
      * El género de la mascota.
      */
-    @Column ( name = "gender", nullable = false )
     private String gender;
 
     /**
      * Indica si la mascota está esterilizada.
      */
-    @Column ( name = "sterilized", nullable = false )
     private int sterilized;
 
     /**
      * La foto de perfil de la mascota.
      */
-    @Column ( name = "profile_picture" )
     private String profilePicture;
 
     /**
      * La descripción de la mascota.
      */
-    @Column ( name = "description" )
     private String description;
 
     /**
      * El contacto de emergencia de la mascota.
      */
-    @Column ( name = "emergency_contact" )
     private String emergencyContact;
 
     /**
      * La fecha de creación de la mascota.
      */
-    @Column ( name = "created_at" )
-    @Temporal ( TemporalType.TIMESTAMP )
     private Date createdAt;
 
     /**
      * La fecha de última actualización de la mascota.
      */
-    @Column ( name = "updated_at" )
-    @Temporal ( TemporalType.TIMESTAMP )
     private Date updatedAt;
 
     /**
      * La fecha de eliminación de la mascota.
      */
-    @Column ( name = "deleted_at" )
-    @Temporal ( TemporalType.TIMESTAMP )
     private Date deletedAt;
 
     /**

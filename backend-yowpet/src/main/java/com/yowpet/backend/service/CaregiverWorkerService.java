@@ -2,7 +2,10 @@ package com.yowpet.backend.service;
 
 import com.yowpet.backend.model.CaregiverWorker;
 import com.yowpet.backend.model.User;
-import com.yowpet.backend.repository.CaregiverWorkerRepository;
+import com.yowpet.backend.repository.CareGiverRepo;
+import com.yowpet.backend.repository.UserRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,8 +19,11 @@ import java.util.Optional;
  */
 @Service
 public class CaregiverWorkerService {
-    private final CaregiverWorkerRepository caregiverWorkerRepository;
-    private final UserRepository userRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(CaregiverWorkerService.class);
+
+    private final CareGiverRepo caregiverWorkerRepository;
+    private final UserRepo userRepository;
 
     /**
      * Constructor del CaregiverWorkerService.
@@ -25,7 +31,7 @@ public class CaregiverWorkerService {
      * @param caregiverWorkerRepository el repositorio de trabajadores cuidadores
      * @param userRepository            el repositorio de usuarios
      */
-    public CaregiverWorkerService( CaregiverWorkerRepository caregiverWorkerRepository , UserRepository userRepository ) {
+    public CaregiverWorkerService(CareGiverRepo caregiverWorkerRepository, UserRepo userRepository) {
         this.caregiverWorkerRepository = caregiverWorkerRepository;
         this.userRepository = userRepository;
     }
@@ -36,197 +42,174 @@ public class CaregiverWorkerService {
      * @param id el ID del cuidador a activar
      * @return la entidad de respuesta con el usuario activado
      */
-    public ResponseEntity< User > activateCaregiver( Long id ) {
+    public ResponseEntity<User> activateCaregiver(int id) {
         try {
-            User user = userRepository.findById( id ).orElse( null );
-            if ( user == null ) {
-                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( null );
+            Optional<User> userOpt = Optional.ofNullable(userRepository.getUser(id));
+            if (userOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            user.setRole( User.role_caregiver );
-            userRepository.save( user );
-            return ResponseEntity.status( HttpStatus.ACCEPTED ).body( user );
-        } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( null );
+            User user = userOpt.get();
+            user.setRole(User.role_caregiver);
+            userRepository.updateUser(
+                    user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getCity(),
+                    user.getAddress(), user.getPhoneNumber(), user.getZipCode(), user.getGender(),
+                    user.getProfilePicture(), user.getRole(), user.getLanguages(),
+                    user.getPaymentMethod(), user.getBirthDate()
+            );
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            logger.error("Error activating caregiver with ID {}: ", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     /**
      * Crea un nuevo cuidador.
-     *
-     * @param caregiverWorker los detalles del cuidador a crear
-     * @return la entidad de respuesta con el cuidador creado
      */
-    public ResponseEntity< CaregiverWorker > createCaregiver( CaregiverWorker caregiverWorker ) {
+    public ResponseEntity<CaregiverWorker> createCaregiver(CaregiverWorker caregiverWorker) {
         try {
-            User user = userRepository.findById( caregiverWorker.getUser( ).getId( ) ).orElse( null );
-            if ( user == null ) {
-                return ResponseEntity.status( HttpStatus.FORBIDDEN ).build( );
+            Optional<User> userOpt = Optional.ofNullable(userRepository.getUser(caregiverWorker.getUser()));
+            if (userOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
-            user.setUpdatedAt( new Date( ) );
-            user.setRole( User.role_caregiver );
-            caregiverWorker.setUser( user );
-            CaregiverWorker savedCaregiver = caregiverWorkerRepository.save( caregiverWorker );
-            return ResponseEntity.ok( savedCaregiver );
-        } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).build( );
+            User user = userOpt.get();
+            user.setUpdatedAt(new Date());
+            user.setRole(User.role_caregiver);
+
+            caregiverWorker.setUser(user.getId());
+            caregiverWorkerRepository.createCaregiverWorker(caregiverWorker);
+
+            return ResponseEntity.ok(caregiverWorker);
+        } catch (Exception e) {
+            logger.error("Error creating caregiver: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     /**
      * Recupera todos los cuidadores.
-     *
-     * @return la entidad de respuesta con la lista de todos los cuidadores
      */
-    public ResponseEntity< List< CaregiverWorker > > getAllCaregivers( ) {
+    public ResponseEntity<List<CaregiverWorker>> getAllCaregivers() {
         try {
-            List< CaregiverWorker > caregiverWorkers = caregiverWorkerRepository.findAll( );
-            if ( caregiverWorkers.isEmpty( ) ) {
-                return ResponseEntity.status( HttpStatus.NOT_FOUND ).build( );
+            List<CaregiverWorker> caregivers = caregiverWorkerRepository.getAllCaregiverWorkers();
+            if (caregivers.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             }
-            return ResponseEntity.ok( caregiverWorkers );
-        } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).build( );
+            return ResponseEntity.ok(caregivers);
+        } catch (Exception e) {
+            logger.error("Error fetching all caregivers: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     /**
      * Recupera un cuidador por ID.
-     *
-     * @param id el ID del cuidador a recuperar
-     * @return la entidad de respuesta con los detalles del cuidador
      */
-    public ResponseEntity< CaregiverWorker > getCaregiverById( Long id ) {
+    public ResponseEntity<CaregiverWorker> getCaregiverById(int id) {
         try {
-            Optional< CaregiverWorker > caregiverWorker = caregiverWorkerRepository.findById( id );
-            return caregiverWorker.map( ResponseEntity::ok ).orElseGet( ( ) -> ResponseEntity.status( HttpStatus.NOT_FOUND ).build( ) );
-        } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).build( );
+            CaregiverWorker caregiverWorker = caregiverWorkerRepository.getCaregiverWorker(id);
+            if (caregiverWorker == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            return ResponseEntity.ok(caregiverWorker);
+        } catch (Exception e) {
+            logger.error("Error fetching caregiver by ID {}: ", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     /**
      * Actualiza los detalles de un cuidador.
-     *
-     * @param id               el ID del cuidador a actualizar
-     * @param updatedCaregiver los detalles actualizados del cuidador
-     * @return la entidad de respuesta con el cuidador actualizado
      */
-    public ResponseEntity< CaregiverWorker > updateCaregiver( Long id , CaregiverWorker updatedCaregiver ) {
+    public ResponseEntity<CaregiverWorker> updateCaregiver(int id, CaregiverWorker updatedCaregiver) {
         try {
-            Optional< CaregiverWorker > existingCaregiverOpt = caregiverWorkerRepository.findById( id );
-            if ( existingCaregiverOpt.isEmpty( ) ) {
-                return ResponseEntity.status( HttpStatus.NOT_FOUND ).build( );
+            CaregiverWorker existingCaregiver = caregiverWorkerRepository.getCaregiverWorker(id);
+            if (existingCaregiver == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
 
-            CaregiverWorker existingCaregiver = existingCaregiverOpt.get( );
-            updateCaregiverDetails( existingCaregiver , updatedCaregiver );
-            CaregiverWorker savedCaregiver = caregiverWorkerRepository.save( existingCaregiver );
+            updateCaregiverDetails(existingCaregiver, updatedCaregiver);
+            caregiverWorkerRepository.updateCaregiverWorker(existingCaregiver);
 
-            return ResponseEntity.ok( savedCaregiver );
-        } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).build( );
+            return ResponseEntity.ok(existingCaregiver);
+        } catch (Exception e) {
+            logger.error("Error updating caregiver with ID {}: ", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    /**
-     * Actualiza los detalles de un cuidador existente con los detalles de un cuidador actualizado.
-     *
-     * @param existingCaregiver el cuidador existente
-     * @param updatedCaregiver  el cuidador actualizado
-     */
-    private void updateCaregiverDetails( CaregiverWorker existingCaregiver , CaregiverWorker updatedCaregiver ) {
-        existingCaregiver.setSpeciality( updatedCaregiver.getSpeciality( ) );
-        existingCaregiver.setExperienceYears( updatedCaregiver.getExperienceYears( ) );
-        existingCaregiver.setHourlyRate( updatedCaregiver.getHourlyRate( ) );
-        existingCaregiver.setRating( updatedCaregiver.getRating( ) );
-        existingCaregiver.setReview( updatedCaregiver.getReview( ) );
-        existingCaregiver.setDescription( updatedCaregiver.getDescription( ) );
-        existingCaregiver.setServiceWorker( updatedCaregiver.getServiceWorker( ) );
+    private void updateCaregiverDetails(CaregiverWorker existing, CaregiverWorker updated) {
+        existing.setSpeciality(updated.getSpeciality());
+        existing.setExperienceYears(updated.getExperienceYears());
+        existing.setHourlyRate(updated.getHourlyRate());
+        existing.setRating(updated.getRating());
+        existing.setReview(updated.getReview());
+        existing.setDescription(updated.getDescription());
+        existing.setServiceWorker(updated.getServiceWorker());
     }
 
     /**
      * Desactiva un cuidador.
-     *
-     * @param id el ID del cuidador a desactivar tanto el activeStatusWork como su rol de cuidador
-     * @return la entidad de respuesta con el usuario desactivado
      */
-    public ResponseEntity< User > disabledCaregiver( Long id ) {
+    public ResponseEntity<User> disableCaregiver(int id) {
         try {
-            User user = userRepository.findById( id ).orElse( null );
-            if ( user == null ) {
-                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( null );
+            Optional<User> userOpt = Optional.ofNullable(userRepository.getUser(id));
+            if (userOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            user.setRole( User.role_user );
-            userRepository.save( user );
+            User user = userOpt.get();
+            user.setRole(User.role_user);
+            userRepository.updateUser(
+                    user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getCity(),
+                    user.getAddress(), user.getPhoneNumber(), user.getZipCode(), user.getGender(),
+                    user.getProfilePicture(), user.getRole(), user.getLanguages(),
+                    user.getPaymentMethod(), user.getBirthDate()
+            );
 
-            Optional< CaregiverWorker > caregiverWorkerOpt = caregiverWorkerRepository.findByUser_Id( id );
-            if ( caregiverWorkerOpt.isPresent( ) ) {
-                CaregiverWorker caregiverWorker = caregiverWorkerOpt.get( );
-                caregiverWorker.setStatusActiveWork( false );
-                caregiverWorkerRepository.save( caregiverWorker );
+            CaregiverWorker caregiverWorker = caregiverWorkerRepository.getCaregiverWorkersByUser(id);
+            if (caregiverWorker != null) {
+                caregiverWorker.setStatusActiveWork(false);
+                caregiverWorkerRepository.updateCaregiverWorker(caregiverWorker);
             }
 
-            return ResponseEntity.status( HttpStatus.ACCEPTED ).body( user );
-        } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( null );
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            logger.error("Error disabling caregiver with ID {}: ", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     /**
      * Recupera cuidadores disponibles por especialidad.
-     *
-     * @param speciality la especialidad para filtrar cuidadores disponibles
-     * @return la entidad de respuesta con la lista de cuidadores disponibles en la especialidad especificada
      */
-    public ResponseEntity< List< CaregiverWorker > > getAvailableCaregiversBySpeciality( String speciality ) {
+    public ResponseEntity<List<CaregiverWorker>> getAvailableCaregiversBySpeciality(String speciality) {
         try {
-            List< CaregiverWorker > caregiverWorkers = caregiverWorkerRepository.findAllBySpecialityAndStatusActiveWorkTrue( speciality );
-            if ( caregiverWorkers.isEmpty( ) ) {
-                return ResponseEntity.status( HttpStatus.NOT_FOUND ).build( );
+            List<CaregiverWorker> caregivers = caregiverWorkerRepository.getCaregiverWorkersBySpeciality(speciality);
+            if (caregivers.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             }
-            return ResponseEntity.ok( caregiverWorkers );
-        } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).build( );
-        }
-    }
-
-    /**
-     * Recupera todos los cuidadores disponibles.
-     *
-     * @return la entidad de respuesta con la lista de todos los cuidadores disponibles
-     */
-    public ResponseEntity< List< CaregiverWorker > > getAvailableCaregivers( ) {
-        try {
-            List< CaregiverWorker > caregiverWorkers = caregiverWorkerRepository.findAllByStatusActiveWorkTrue( );
-            if ( caregiverWorkers.isEmpty( ) ) {
-                return ResponseEntity.status( HttpStatus.NOT_FOUND ).build( );
-            }
-
-            return ResponseEntity.ok( caregiverWorkers );
-        } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).build( );
+            return ResponseEntity.ok(caregivers);
+        } catch (Exception e) {
+            logger.error("Error fetching caregivers by speciality {}: ", speciality, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     /**
      * Califica a un cuidador.
-     *
-     * @param id              el ID del usuario que tiene el rol de cuidador a calificar
-     * @param caregiverWorker los detalles de la calificación del cuidador
-     * @return la entidad de respuesta con el cuidador calificado
      */
-    public ResponseEntity< CaregiverWorker > rateCaregiver( Long id , CaregiverWorker caregiverWorker ) {
+    public ResponseEntity<CaregiverWorker> rateCaregiver(int id, CaregiverWorker caregiverWorker) {
         try {
-            Optional< CaregiverWorker > existingCaregiver = caregiverWorkerRepository.findByUser_Id( id );
-            if ( existingCaregiver.isEmpty( ) ) {
-                return ResponseEntity.status( HttpStatus.NOT_FOUND ).build( );
+            CaregiverWorker caregiverToRate = caregiverWorkerRepository.getCaregiverWorker(id);
+            if (caregiverToRate == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            CaregiverWorker caregiverToRate = existingCaregiver.get( );
-            caregiverToRate.setRating( caregiverWorker.getRating( ) );
-            caregiverWorkerRepository.save( caregiverToRate );
-            return ResponseEntity.ok( caregiverToRate );
-        } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).build( );
+            caregiverToRate.setRating(caregiverWorker.getRating());
+            caregiverWorkerRepository.updateCaregiverWorker(caregiverToRate);
+            return ResponseEntity.ok(caregiverToRate);
+        } catch (Exception e) {
+            logger.error("Error rating caregiver with ID {}: ", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

@@ -1,24 +1,76 @@
+DELIMITER $$
+
+-- Drop existing procedures if they exist
+DROP PROCEDURE IF EXISTS createbreed;
+DROP PROCEDURE IF EXISTS updatebreed;
+DROP PROCEDURE IF EXISTS deletebreed;
+DROP PROCEDURE IF EXISTS createallergy;
+DROP PROCEDURE IF EXISTS updateallergy;
+DROP PROCEDURE IF EXISTS deleteallergy;
+DROP PROCEDURE IF EXISTS getallergy;
+DROP PROCEDURE IF EXISTS searchallergy;
+DROP PROCEDURE IF EXISTS createAnimalCategory;
+DROP PROCEDURE IF EXISTS updateAnimalCategory;
+DROP PROCEDURE IF EXISTS deleteAnimalCategory;
+DROP PROCEDURE IF EXISTS getAnimalCategory;
+DROP PROCEDURE IF EXISTS getAnimalCategories;
+DROP PROCEDURE IF EXISTS searchAnimalCategory;
+DROP PROCEDURE IF EXISTS createUser;
+DROP PROCEDURE IF EXISTS updateUser;
+DROP PROCEDURE IF EXISTS deleteUser;
+DROP PROCEDURE IF EXISTS getUser;
+DROP PROCEDURE IF EXISTS getUsers;
+DROP PROCEDURE IF EXISTS createCaregiverWorker;
+DROP PROCEDURE IF EXISTS updateCaregiverWorker;
+DROP PROCEDURE IF EXISTS deleteCaregiverWorker;
+DROP PROCEDURE IF EXISTS getCaregiverWorker;
+DROP PROCEDURE IF EXISTS getAllCaregiverWorkers;
+DROP PROCEDURE IF EXISTS getCaregiverWorkersByCategory;
+DROP PROCEDURE IF EXISTS searchCaregiverWorkers;
+DROP PROCEDURE IF EXISTS getCaregiverWorkersByUser;
+DROP PROCEDURE IF EXISTS getCaregiverWorkersBySpeciality;
+DROP PROCEDURE IF EXISTS getCaregiverWorkersByRating;
+DROP PROCEDURE IF EXISTS createLesson;
+DROP PROCEDURE IF EXISTS updateLesson;
+DROP PROCEDURE IF EXISTS deleteLesson;
+DROP PROCEDURE IF EXISTS getLesson;
+DROP PROCEDURE IF EXISTS getAllLessons;
+DROP PROCEDURE IF EXISTS searchLessons;
+DROP PROCEDURE IF EXISTS getLessonsByEstado;
+DROP PROCEDURE IF EXISTS GetAllLessonReviews;
+DROP PROCEDURE IF EXISTS GetLessonReviewById;
+DROP PROCEDURE IF EXISTS SearchLessonReviewsByRating;
+DROP PROCEDURE IF EXISTS CreateLessonReview;
+DROP PROCEDURE IF EXISTS UpdateLessonReview;
+DROP PROCEDURE IF EXISTS SoftDeleteLessonReview;
+DROP PROCEDURE IF EXISTS createPet;
+DROP PROCEDURE IF EXISTS updatePet;
+DROP PROCEDURE IF EXISTS deletePet;
+DROP PROCEDURE IF EXISTS getPet;
+DROP PROCEDURE IF EXISTS getAllPets;
+DROP PROCEDURE IF EXISTS searchPets;
+DROP PROCEDURE IF EXISTS getPetsByStatus;
+
+
+
 -- ----------------------------------- Breed Procedures --------------------------------- --
 
-DELIMITER 
 CREATE PROCEDURE createbreed(
     IN p_animalCatId INT,
     IN p_breedName VARCHAR(255)
 )
 BEGIN
-    INSERT INTO breeds (animal_category_id, name) 
+    INSERT INTO breed (animal_category_id, name) 
     VALUES (p_animalCatId, p_breedName);
-END ;
+END $$
 
 CREATE PROCEDURE updatebreed(
     IN p_breedId INT,
-    IN p_breedName VARCHAR(255),
-    IN p_CatID INT
+    IN p_breedName VARCHAR(255)
 )
 BEGIN
-    UPDATE breeds 
-    SET name = p_breedName,
-    
+    UPDATE breed 
+    SET name = p_breedName
     WHERE id = p_breedId;
 END $$
 
@@ -26,137 +78,126 @@ CREATE PROCEDURE deletebreed(
     IN p_breedId INT
 )
 BEGIN
-    DELETE FROM breeds 
+    DELETE FROM breed 
     WHERE id = p_breedId;
 END $$
-DELIMITER ;
 
 -- ----------------------------------- Allergy Procedures --------------------------------- --
 
-DELIMITER $$
-
--- 1. Create an Allergy
+-- Create an Allergy
 CREATE PROCEDURE createallergy(
     IN p_id INT,
     IN p_name VARCHAR(255)
 )
 BEGIN
-    INSERT INTO Allergy (id, name) 
+    INSERT INTO allergies (id, name) 
     VALUES (p_id, p_name);
 END $$
 
--- 2. Update an Allergy
+-- Update an Allergy
 CREATE PROCEDURE updateallergy(
     IN p_allergyId INT,
     IN p_allergyName VARCHAR(255)
 )
 BEGIN
-    UPDATE Allergy 
+    UPDATE allergies 
     SET name = p_allergyName
     WHERE id = p_allergyId;
 END $$
 
--- 3. Delete an Allergy
+-- Delete an Allergy
 CREATE PROCEDURE deleteallergy(
     IN p_allergyId INT
 )
 BEGIN
-    DELETE FROM Allergy WHERE id = p_allergyId;
+    DELETE FROM allergies WHERE id = p_allergyId;
 END $$
 
--- 4. Get a Single Allergy by ID
+-- Get a Single Allergy by ID
 CREATE PROCEDURE getallergy(
     IN p_allergyId INT
 )
 BEGIN
-    SELECT id, name, photo 
-    FROM Allergy 
+    SELECT id, name 
+    FROM allergies 
     WHERE id = p_allergyId;
 END $$
 
--- 5. Get All Allergies
-CREATE PROCEDURE getallergys()
+-- Get All Allergies
+CREATE PROCEDURE getallergies()
 BEGIN
-    SELECT id, name, photo FROM Allergy;
+    SELECT id, name FROM allergies;
 END $$
 
--- 6. Search Allergies by Name
-CREATE PROCEDURE Searchallergy(
+-- Search Allergies by Name
+CREATE PROCEDURE searchallergy(
     IN p_searchTerm VARCHAR(255)
 )
 BEGIN
-    SELECT id, name, photo 
-    FROM Allergy 
+    SELECT id, name 
+    FROM allergies 
     WHERE name LIKE CONCAT('%', p_searchTerm, '%');
 END $$
 
-DELIMITER ;
+-- ----------------------------------- Animal Category Procedures --------------------------------- --
 
--- ----------------------------------- AnimalCategories Procedures --------------------------------- --
-
-DELIMITER $$
-
--- 1. Create an Animal Category
+-- Create an Animal Category
 CREATE PROCEDURE createAnimalCategory(
     IN p_name VARCHAR(255)
 )
 BEGIN
-    INSERT INTO AnimalCategory (name) 
+    INSERT INTO animalcategory (name) 
     VALUES (p_name);
 END $$
 
--- 2. Update an Animal Category
+-- Update an Animal Category
 CREATE PROCEDURE updateAnimalCategory(
     IN p_animalCategId INT,
     IN p_animalCategName VARCHAR(255)
 )
 BEGIN
-    UPDATE AnimalCategory 
+    UPDATE animalcategory 
     SET name = p_animalCategName
     WHERE id = p_animalCategId;
 END $$
 
--- 3. Delete an Animal Category
+-- Delete an Animal Category
 CREATE PROCEDURE deleteAnimalCategory(
     IN p_animalCategId INT
 )
 BEGIN
-    DELETE FROM AnimalCategory WHERE id = p_animalCategId;
+    DELETE FROM animalcategory WHERE id = p_animalCategId;
 END $$
 
--- 4. Get a Single Animal Category by ID
+-- Get a Single Animal Category by ID
 CREATE PROCEDURE getAnimalCategory(
     IN p_animalCategId INT
 )
 BEGIN
     SELECT id, name
-    FROM AnimalCategory 
+    FROM animalcategory 
     WHERE id = p_animalCategId;
 END $$
 
--- 5. Get All Animal Categories
+-- Get All Animal Categories
 CREATE PROCEDURE getAnimalCategories()
 BEGIN
-    SELECT id, name FROM AnimalCategory;
+    SELECT id, name FROM animalcategory;
 END $$
 
--- 6. Search Animal Categories by Name
+-- Search Animal Categories by Name
 CREATE PROCEDURE searchAnimalCategory(
     IN p_searchTerm VARCHAR(255)
 )
 BEGIN
     SELECT id, name 
-    FROM AnimalCategory 
+    FROM animalcategory 
     WHERE name LIKE CONCAT('%', p_searchTerm, '%');
 END $$
 
-DELIMITER ;
-
 -- ----------------------------------- User Procedures --------------------------------- --
 
-DELIMITER $$
-
--- 1. Create a User
+-- Create a User
 CREATE PROCEDURE createUser(
     IN p_first_name VARCHAR(255),
     IN p_last_name VARCHAR(255),
@@ -164,7 +205,7 @@ CREATE PROCEDURE createUser(
     IN p_password VARCHAR(255),
     IN p_city VARCHAR(255),
     IN p_address VARCHAR(255),
-    IN p_phone_number INT,
+    IN p_phone_number VARCHAR(20),
     IN p_zip_code INT,
     IN p_gender VARCHAR(50),
     IN p_profile_picture VARCHAR(255),
@@ -174,11 +215,11 @@ CREATE PROCEDURE createUser(
     IN p_birth_date DATE
 )
 BEGIN
-    INSERT INTO Users (first_name, last_name, email, password, city, address, phone_number, zip_code, gender, profile_picture, role, languages, payment_method, birth_date, created_at)
+    INSERT INTO user (first_name, last_name, email, password, city, address, phone_number, zip_code, gender, profile_picture, role, languages, payment_method, birth_date, created_at)
     VALUES (p_first_name, p_last_name, p_email, p_password, p_city, p_address, p_phone_number, p_zip_code, p_gender, p_profile_picture, p_role, p_languages, p_payment_method, p_birth_date, NOW());
 END $$
 
--- 2. Update a User
+-- Update a User
 CREATE PROCEDURE updateUser(
     IN p_user_id INT,
     IN p_first_name VARCHAR(255),
@@ -186,7 +227,7 @@ CREATE PROCEDURE updateUser(
     IN p_email VARCHAR(255),
     IN p_city VARCHAR(255),
     IN p_address VARCHAR(255),
-    IN p_phone_number INT,
+    IN p_phone_number VARCHAR(20),
     IN p_zip_code INT,
     IN p_gender VARCHAR(50),
     IN p_profile_picture VARCHAR(255),
@@ -196,7 +237,7 @@ CREATE PROCEDURE updateUser(
     IN p_birth_date DATE
 )
 BEGIN
-    UPDATE Users 
+    UPDATE user 
     SET first_name = p_first_name,
         last_name = p_last_name,
         email = p_email,
@@ -214,61 +255,426 @@ BEGIN
     WHERE id = p_user_id;
 END $$
 
--- 3. Delete a User
+-- Delete a User
 CREATE PROCEDURE deleteUser(
     IN p_user_id INT
 )
 BEGIN
-    UPDATE users 
+    UPDATE user 
     SET status = 0,  -- Assuming 0 means inactive
         deleted_at = NOW(),
         updated_at = NOW()
     WHERE id = p_user_id;
 END $$
 
--- 4. Get a Single User by ID
+-- Get a Single User by ID
 CREATE PROCEDURE getUser(
     IN p_user_id INT
 )
 BEGIN
-    SELECT * FROM Users WHERE id = p_user_id;
+    SELECT * FROM user WHERE id = p_user_id;
 END $$
 
--- 5. Get All Users
+-- Get All Users
 CREATE PROCEDURE getUsers()
 BEGIN
     SELECT * FROM user;
 END $$
 
--- 6. Search Users by Name
-CREATE PROCEDURE searchUser(
-    IN p_searchTerm VARCHAR(255)
+-- ----------------------------------- Caregiver Worker Procedures --------------------------------- --
+
+-- Procedure to create a new caregiver worker
+DELIMITER //
+CREATE PROCEDURE createCaregiverWorker(
+    IN p_user_id INT,
+    IN p_speciality VARCHAR(255),
+    IN p_experience_years INT,
+    IN p_hourly_rate DECIMAL(10,2),
+    IN p_rating DECIMAL(3,2),
+    IN p_review TEXT,
+    IN p_description TEXT,
+    IN p_service_worker VARCHAR(255),
+    IN p_status_active_work BOOLEAN
 )
 BEGIN
-    SELECT * 
-    FROM user 
-    WHERE first_name LIKE CONCAT('%', p_searchTerm, '%')
-       OR last_name LIKE CONCAT('%', p_searchTerm, '%')
-       OR email LIKE CONCAT('%', p_searchTerm, '%');
-END $$
-
-CREATE PROCEDURE getUserByEmail(
-IN  p_email VARCHAR(255)
-)
-BEGIN
-SELECT *
-FROM Users
-WHERE email = p_email;
-END$$
-
-CREATE PROCEDURE toAdmin(
-IN p_id int
-)
-BEGIN
-UPDATE user
-SET role = 0
-where id = p_id;
-
-
+    INSERT INTO caregiver_worker (
+        user_id, speciality, experience_years, hourly_rate, rating, review, 
+        description, service_worker, status_active_work
+    ) VALUES (
+        p_user_id, p_speciality, p_experience_years, p_hourly_rate, p_rating, 
+        p_review, p_description, p_service_worker, p_status_active_work
+    );
+END //
 DELIMITER ;
+
+-- Procedure to update an existing caregiver worker
+DELIMITER //
+CREATE PROCEDURE updateCaregiverWorker(
+    IN p_id INT,
+    IN p_user_id INT,
+    IN p_speciality VARCHAR(255),
+    IN p_experience_years INT,
+    IN p_hourly_rate DECIMAL(10,2),
+    IN p_rating DECIMAL(3,2),
+    IN p_review TEXT,
+    IN p_description TEXT,
+    IN p_service_worker VARCHAR(255),
+    IN p_status_active_work BOOLEAN
+)
+BEGIN
+    UPDATE caregiver_worker
+    SET 
+        user_id = p_user_id,
+        speciality = p_speciality,
+        experience_years = p_experience_years,
+        hourly_rate = p_hourly_rate,
+        rating = p_rating,
+        review = p_review,
+        description = p_description,
+        service_worker = p_service_worker,
+        status_active_work = p_status_active_work
+    WHERE id = p_id;
+END //
+DELIMITER ;
+
+-- Procedure to delete a caregiver worker by ID
+DELIMITER //
+CREATE PROCEDURE deleteCaregiverWorker(
+    IN p_id INT
+)
+BEGIN
+    DELETE FROM caregiver_worker WHERE id = p_id;
+END //
+DELIMITER ;
+
+-- Procedure to get a caregiver worker by ID
+DELIMITER //
+CREATE PROCEDURE getCaregiverWorker(
+    IN p_id INT
+)
+BEGIN
+    SELECT * FROM caregiver_worker WHERE id = p_id;
+END //
+DELIMITER ;
+
+-- Procedure to get all caregiver workers
+DELIMITER //
+CREATE PROCEDURE getAllCaregiverWorkers()
+BEGIN
+    SELECT * FROM caregiver_worker;
+END //
+DELIMITER ;
+
+-- Procedure to get caregivers by category (assuming there's a related table)
+DELIMITER //
+CREATE PROCEDURE getCaregiverWorkersByCategory(
+    IN p_animal_cat_id INT
+)
+BEGIN
+    SELECT cw.* FROM caregiver_worker cw
+    JOIN caregiver_worker_category cwc ON cw.id = cwc.caregiver_id
+    WHERE cwc.category_id = p_animal_cat_id;
+END //
+DELIMITER ;
+
+-- Procedure to search caregiver workers by a keyword in name, speciality, or description
+DELIMITER //
+CREATE PROCEDURE searchCaregiverWorkers(
+    IN p_search_term VARCHAR(255)
+)
+BEGIN
+    SELECT * FROM caregiver_worker 
+    WHERE speciality LIKE p_search_term 
+       OR description LIKE p_search_term
+       OR service_worker LIKE p_search_term;
+END //
+DELIMITER ;
+
+-- Procedure to get a caregiver worker by user ID
+DELIMITER //
+CREATE PROCEDURE getCaregiverWorkersByUser(
+    IN p_user_id INT
+)
+BEGIN
+    SELECT * FROM caregiver_worker WHERE user_id = p_user_id;
+END //
+DELIMITER ;
+
+-- Procedure to get caregiver workers by speciality
+DELIMITER //
+CREATE PROCEDURE getCaregiverWorkersBySpeciality(
+    IN p_speciality VARCHAR(255)
+)
+BEGIN
+    SELECT * FROM caregiver_worker WHERE speciality = p_speciality;
+END //
+DELIMITER ;
+
+-- Procedure to get caregiver workers by rating
+DELIMITER //
+CREATE PROCEDURE getCaregiverWorkersByRating(
+    IN p_rating DECIMAL(3,2)
+)
+BEGIN
+    SELECT * FROM caregiver_worker WHERE rating >= p_rating ORDER BY rating DESC;
+END //
+DELIMITER ;
+
+-- ----------------------------------- Lesson Procedures --------------------------------- --
+
+-- Procedure to create a new lesson
+DELIMITER //
+CREATE PROCEDURE createLesson(
+    IN p_title VARCHAR(255),
+    IN p_content TEXT,
+    IN p_estado INT
+)
+BEGIN
+    INSERT INTO lesson (title, content, estado)
+    VALUES (p_title, p_content, p_estado);
+END //
+DELIMITER ;
+
+-- Procedure to update an existing lesson
+DELIMITER //
+CREATE PROCEDURE updateLesson(
+    IN p_id INT,
+    IN p_title VARCHAR(255),
+    IN p_content TEXT,
+    IN p_estado INT
+)
+BEGIN
+    UPDATE lesson
+    SET title = p_title,
+        content = p_content,
+        estado = p_estado
+    WHERE id = p_id;
+END //
+DELIMITER ;
+
+-- Procedure to delete a lesson by ID
+DELIMITER //
+CREATE PROCEDURE deleteLesson(
+    IN p_id INT
+)
+BEGIN
+    DELETE FROM lesson WHERE id = p_id;
+END //
+DELIMITER ;
+
+-- Procedure to get a single lesson by ID
+DELIMITER //
+CREATE PROCEDURE getLesson(
+    IN p_id INT
+)
+BEGIN
+    SELECT * FROM lesson WHERE id = p_id;
+END //
+DELIMITER ;
+
+-- Procedure to get all lessons
+DELIMITER //
+CREATE PROCEDURE getAllLessons()
+BEGIN
+    SELECT * FROM lesson;
+END //
+DELIMITER ;
+
+-- Procedure to search lessons by title or content
+DELIMITER //
+CREATE PROCEDURE searchLessons(
+    IN p_search_term VARCHAR(255)
+)
+BEGIN
+    SELECT * FROM lesson
+    WHERE title LIKE p_search_term
+       OR content LIKE p_search_term;
+END //
+DELIMITER ;
+
+-- Procedure to get lessons by estado
+DELIMITER //
+CREATE PROCEDURE getLessonsByEstado(
+    IN p_estado INT
+)
+BEGIN
+    SELECT * FROM lesson WHERE estado = p_estado;
+END //
+DELIMITER ;
+
+-- ----------------------------------- Lesson Reviews Procedures --------------------------------- --
+
+-- Procedure to get all lesson reviews (excluding deleted ones)
+DELIMITER //
+CREATE PROCEDURE GetAllLessonReviews()
+BEGIN
+    SELECT * FROM lesson_reviews WHERE estado <> 0;
+END //
+DELIMITER ;
+
+-- Procedure to get a lesson review by ID
+DELIMITER //
+CREATE PROCEDURE GetLessonReviewById(IN review_id BIGINT)
+BEGIN
+    SELECT * FROM lesson_reviews WHERE id = review_id AND estado <> 0;
+END //
+DELIMITER ;
+
+-- Procedure to search lesson reviews by rounded rating
+DELIMITER //
+CREATE PROCEDURE SearchLessonReviewsByRating(IN review_rating DOUBLE)
+BEGIN
+    SELECT * FROM lesson_reviews WHERE ROUND(rating, 1) = review_rating AND estado <> 0;
+END //
+DELIMITER ;
+
+-- Procedure to create a lesson review
+DELIMITER //
+CREATE PROCEDURE CreateLessonReview(
+    IN p_lesson_id BIGINT,
+    IN p_user_id BIGINT,
+    IN p_rating DOUBLE,
+    IN p_comment TEXT
+)
+BEGIN
+    INSERT INTO lesson_reviews (lesson_id, user_id, rating, comment, estado)
+    VALUES (p_lesson_id, p_user_id, ROUND(p_rating, 1), p_comment, 1);
+END //
+DELIMITER ;
+
+-- Procedure to update a lesson review
+DELIMITER //
+CREATE PROCEDURE UpdateLessonReview(
+    IN review_id BIGINT,
+    IN new_rating DOUBLE,
+    IN new_comment TEXT,
+    IN new_estado INT
+)
+BEGIN
+    UPDATE lesson_reviews
+    SET rating = ROUND(new_rating, 1),
+        comment = new_comment,
+        estado = new_estado
+    WHERE id = review_id;
+END //
+DELIMITER ;
+
+-- Procedure to soft delete a lesson review
+DELIMITER //
+CREATE PROCEDURE SoftDeleteLessonReview(IN review_id BIGINT)
+BEGIN
+    UPDATE lesson_reviews SET estado = 0 WHERE id = review_id;
+END //
+DELIMITER ;
+
+
+-- ----------------------------------- Pet Procedures --------------------------------- --
+
+-- Create Pet
+DELIMITER //
+CREATE PROCEDURE createPet(
+    IN p_name VARCHAR(255),
+    IN p_birthDate DATE,
+    IN p_gender VARCHAR(10),
+    IN p_sterilized INT,
+    IN p_profilePicture VARCHAR(255),
+    IN p_ownerId INT,
+    IN p_breed INT,
+    IN p_status INT,
+    IN p_description TEXT,
+    IN p_emergencyContact VARCHAR(255),
+    IN p_updatedAt TIMESTAMP
+)
+BEGIN
+    INSERT INTO pets (name, birth_date, gender, sterilized, profile_picture, owner_id, breed, status,
+                      description, emergency_contact, updated_at, created_at)
+    VALUES (p_name, p_birthDate, p_gender, p_sterilized, p_profilePicture, p_ownerId, p_breed,
+            p_status, p_description, p_emergencyContact, p_updatedAt, NOW());
+END;
+//
+DELIMITER ;
+
+-- Update Pet
+DELIMITER //
+CREATE PROCEDURE updatePet(
+    IN p_id INT,
+    IN p_name VARCHAR(255),
+    IN p_birthDate DATE,
+    IN p_gender VARCHAR(10),
+    IN p_sterilized INT,
+    IN p_profilePicture VARCHAR(255),
+    IN p_ownerId INT,
+    IN p_breed INT,
+    IN p_status INT,
+    IN p_description TEXT,
+    IN p_emergencyContact VARCHAR(255),
+    IN p_updatedAt TIMESTAMP
+)
+BEGIN
+    UPDATE pets
+    SET name = p_name, birth_date = p_birthDate, gender = p_gender, sterilized = p_sterilized,
+        profile_picture = p_profilePicture, owner_id = p_ownerId, breed = p_breed,
+        status = p_status, description = p_description, emergency_contact = p_emergencyContact,
+        updated_at = p_updatedAt
+    WHERE id = p_id;
+END;
+//
+DELIMITER ;
+
+-- Delete Pet (Soft Delete)
+DELIMITER //
+CREATE PROCEDURE deletePet(IN p_id INT)
+BEGIN
+    UPDATE pets
+    SET status = 0, deleted_at = NOW()
+    WHERE id = p_id;
+END;
+//
+DELIMITER ;
+
+-- Get Pet by ID
+DELIMITER //
+CREATE PROCEDURE getPet(IN p_id INT)
+BEGIN
+    SELECT * FROM pets WHERE id = p_id;
+END;
+//
+DELIMITER ;
+
+-- Get All Pets (Only Active)
+DELIMITER //
+CREATE PROCEDURE getAllPets()
+BEGIN
+    SELECT * FROM pets WHERE status = 1;
+END;
+//
+DELIMITER ;
+
+-- Search Pets by Name
+DELIMITER //
+CREATE PROCEDURE searchPets(IN p_search VARCHAR(255))
+BEGIN
+    SELECT * FROM pets WHERE name LIKE CONCAT('%', p_search, '%') AND status = 1;
+END;
+//
+DELIMITER ;
+
+-- Get Pets by Status
+DELIMITER //
+CREATE PROCEDURE getPetsByStatus(IN p_status INT)
+BEGIN
+    SELECT * FROM pets WHERE status = p_status;
+END;
+//
+DELIMITER ;
+
+-- ----------------------------------- Place Procedures --------------------------------- --
+
+
+
+-- ----------------------------------- Place-review Procedures --------------------------------- --
+
+
+
+-- ----------------------------------- Reseervation Procedures --------------------------------- --
 
