@@ -50,7 +50,30 @@ DROP PROCEDURE IF EXISTS getPet;
 DROP PROCEDURE IF EXISTS getAllPets;
 DROP PROCEDURE IF EXISTS searchPets;
 DROP PROCEDURE IF EXISTS getPetsByStatus;
-
+DROP PROCEDURE IF EXISTS updatePlace;
+DROP PROCEDURE IF EXISTS deletePlace;
+DROP PROCEDURE IF EXISTS getPlace;
+DROP PROCEDURE IF EXISTS getAllPlaces;
+DROP PROCEDURE IF EXISTS searchPlaces;
+DROP PROCEDURE IF EXISTS getPlacesByStatus;
+DROP PROCEDURE IF EXISTS createPlaceReview;
+DROP PROCEDURE IF EXISTS updatePlaceReview;
+DROP PROCEDURE IF EXISTS deletePlaceReview;
+DROP PROCEDURE IF EXISTS getPlaceReview;
+DROP PROCEDURE IF EXISTS getAllPlaceReviews;
+DROP PROCEDURE IF EXISTS searchPlaceReviews;
+DROP PROCEDURE IF EXISTS getPlaceReviewsByPlace;
+DROP PROCEDURE IF EXISTS getPlaceReviewsByUser;
+DROP PROCEDURE IF EXISTS getPlaceReviewsByPlaceAndUser;
+DROP PROCEDURE IF EXISTS getPlaceReviewsByIdandEstado;
+DROP PROCEDURE IF EXISTS createReservation;
+DROP PROCEDURE IF EXISTS updateReservation;
+DROP PROCEDURE IF EXISTS deleteReservation;
+DROP PROCEDURE IF EXISTS getReservationById;
+DROP PROCEDURE IF EXISTS getReservationsByUser;
+DROP PROCEDURE IF EXISTS getReservationsByCareGiver;
+DROP PROCEDURE IF EXISTS getReservationsByStatus;
+DROP PROCEDURE IF EXISTS completeReservation;
 
 
 -- ----------------------------------- Breed Procedures --------------------------------- --
@@ -420,6 +443,17 @@ BEGIN
 END //
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE disableCaregiverWorker(
+    IN p_id INT
+)
+BEGIN
+    UPDATE caregiver_worker
+    SET status_active_work = 0
+    WHERE id = p_id;
+END //
+DELIMITER ;
+
 -- ----------------------------------- Lesson Procedures --------------------------------- --
 
 -- Procedure to create a new lesson
@@ -670,11 +704,277 @@ DELIMITER ;
 
 -- ----------------------------------- Place Procedures --------------------------------- --
 
+DELIMITER //
+
+-- Create Place
+CREATE PROCEDURE createPlace(
+    IN p_name VARCHAR(255),
+    IN p_address VARCHAR(255),
+    IN p_addresscode VARCHAR(50)
+)
+BEGIN
+    INSERT INTO places (name, address, addresscode, estado)
+    VALUES (p_name, p_address, p_addresscode, 1);
+END //
+
+-- Update Place
+CREATE PROCEDURE updatePlace(
+    IN p_id INT,
+    IN p_name VARCHAR(255),
+    IN p_address VARCHAR(255),
+    IN p_addresscode VARCHAR(50)
+)
+BEGIN
+    UPDATE places
+    SET name = p_name, address = p_address, addresscode = p_addresscode, updated_at = NOW()
+    WHERE id = p_id AND estado <> 0;
+END //
+
+-- Soft Delete Place
+CREATE PROCEDURE deletePlace(
+    IN p_id INT
+)
+BEGIN
+    UPDATE places
+    SET estado = 0, updated_at = NOW()
+    WHERE id = p_id;
+END //
+
+-- Get Place by ID
+CREATE PROCEDURE getPlace(
+    IN p_id INT
+)
+BEGIN
+    SELECT * FROM places WHERE id = p_id AND estado <> 0;
+END //
+
+-- Get All Active Places
+CREATE PROCEDURE getAllPlaces()
+BEGIN
+    SELECT * FROM places WHERE estado <> 0;
+END //
+
+-- Search Places by Name or Address
+CREATE PROCEDURE searchPlaces(
+    IN p_searchTerm VARCHAR(255)
+)
+BEGIN
+    SELECT * FROM places
+    WHERE (name LIKE CONCAT('%', p_searchTerm, '%') OR address LIKE CONCAT('%', p_searchTerm, '%'))
+    AND estado <> 0;
+END //
+
+-- Get Places by Status
+CREATE PROCEDURE getPlacesByStatus(
+    IN p_status INT
+)
+BEGIN
+    SELECT * FROM places WHERE estado = p_status;
+END //
+
+DELIMITER ;
 
 
 -- ----------------------------------- Place-review Procedures --------------------------------- --
 
+-- Create Place Review
+DELIMITER $$
+CREATE PROCEDURE createPlaceReview(
+    IN p_rating DOUBLE,
+    IN p_comment VARCHAR(255),
+    IN p_place INT,
+    IN p_user INT
+)
+BEGIN
+    INSERT INTO place_reviews (rating, comment, estado, place, user)
+    VALUES (ROUND(p_rating, 1), p_comment, 1, p_place, p_user);
+END$$
+DELIMITER ;
+
+-- Update Place Review
+DELIMITER $$
+CREATE PROCEDURE updatePlaceReview(
+    IN p_id INT,
+    IN p_rating DOUBLE,
+    IN p_comment VARCHAR(255)
+)
+BEGIN
+    UPDATE place_reviews
+    SET rating = ROUND(p_rating, 1), comment = p_comment
+    WHERE id = p_id AND estado != 0;
+END$$
+DELIMITER ;
+
+-- Soft Delete Place Review
+DELIMITER $$
+CREATE PROCEDURE deletePlaceReview(
+    IN p_id INT
+)
+BEGIN
+    UPDATE place_reviews
+    SET estado = 0
+    WHERE id = p_id;
+END$$
+DELIMITER ;
+
+-- Get Place Review by ID
+DELIMITER $$
+CREATE PROCEDURE getPlaceReview(
+    IN p_id INT
+)
+BEGIN
+    SELECT * FROM place_reviews
+    WHERE id = p_id AND estado != 0;
+END$$
+DELIMITER ;
+
+-- Get All Active Place Reviews
+DELIMITER $$
+CREATE PROCEDURE getAllPlaceReviews()
+BEGIN
+    SELECT * FROM place_reviews WHERE estado != 0;
+END$$
+DELIMITER ;
+
+-- Search Place Reviews by Rating
+DELIMITER $$
+CREATE PROCEDURE searchPlaceReviews(
+    IN p_rating DOUBLE
+)
+BEGIN
+    SELECT * FROM place_reviews
+    WHERE ROUND(rating, 1) = ROUND(p_rating, 1) AND estado != 0;
+END$$
+DELIMITER ;
+
+-- Get Place Reviews by Place
+DELIMITER $$
+CREATE PROCEDURE getPlaceReviewsByPlace(
+    IN p_place INT
+)
+BEGIN
+    SELECT * FROM place_reviews WHERE place = p_place AND estado != 0;
+END$$
+DELIMITER ;
+
+-- Get Place Reviews by User
+DELIMITER $$
+CREATE PROCEDURE getPlaceReviewsByUser(
+    IN p_user INT
+)
+BEGIN
+    SELECT * FROM place_reviews WHERE user = p_user AND estado != 0;
+END$$
+DELIMITER ;
+
+-- Get Place Reviews by Place and User
+DELIMITER $$
+CREATE PROCEDURE getPlaceReviewsByPlaceAndUser(
+    IN p_place INT,
+    IN p_user INT
+)
+BEGIN
+    SELECT * FROM place_reviews WHERE place = p_place AND user = p_user AND estado != 0;
+END$$
+DELIMITER ;
+
+-- Get Place Reviews by ID and Estado
+DELIMITER $$
+CREATE PROCEDURE getPlaceReviewsByIdandEstado(
+    IN p_id INT,
+    IN p_estado INT
+)
+BEGIN
+    SELECT * FROM place_reviews WHERE id = p_id AND estado = p_estado;
+END$$
+DELIMITER ;
 
 
 -- ----------------------------------- Reseervation Procedures --------------------------------- --
 
+-- Create Reservation
+DELIMITER $$
+CREATE PROCEDURE createReservation(
+    IN p_user_id INT,
+    IN p_caregiver_id INT,
+    IN p_reservation_date DATE,
+    IN p_details VARCHAR(255)
+)
+BEGIN
+    INSERT INTO reservations (user_id, caregiver_id, reservation_date, details, status)
+    VALUES (p_user_id, p_caregiver_id, p_reservation_date, p_details, 1);
+END$$
+DELIMITER ;
+
+-- Update Reservation
+DELIMITER $$
+CREATE PROCEDURE updateReservation(
+    IN p_id INT,
+    IN p_reservation_date DATE,
+    IN p_details VARCHAR(255)
+)
+BEGIN
+    UPDATE reservations
+    SET reservation_date = p_reservation_date, details = p_details
+    WHERE id = p_id;
+END$$
+DELIMITER ;
+
+-- Delete Reservation (Soft Delete)
+DELIMITER $$
+CREATE PROCEDURE deleteReservation(
+    IN p_id INT
+)
+BEGIN
+    UPDATE reservations SET status = 0 WHERE id = p_id;
+END$$
+DELIMITER ;
+
+-- Get Reservation by ID
+DELIMITER $$
+CREATE PROCEDURE getReservationById(
+    IN p_id INT
+)
+BEGIN
+    SELECT * FROM reservations WHERE id = p_id AND status != 0;
+END$$
+DELIMITER ;
+
+-- Get Reservations by User
+DELIMITER $$
+CREATE PROCEDURE getReservationsByUser(
+    IN p_user_id INT
+)
+BEGIN
+    SELECT * FROM reservations WHERE user_id = p_user_id AND status = 1;
+END$$
+DELIMITER ;
+
+-- Get Reservations by Caregiver
+DELIMITER $$
+CREATE PROCEDURE getReservationsByCareGiver(
+    IN p_caregiver_id INT
+)
+BEGIN
+    SELECT * FROM reservations WHERE caregiver_id = p_caregiver_id AND status = 1;
+END$$
+DELIMITER ;
+
+-- Get Reservations by Status
+DELIMITER $$
+CREATE PROCEDURE getReservationsByStatus(
+    IN p_status INT
+)
+BEGIN
+    SELECT * FROM reservations WHERE status = p_status;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE completeReservation (
+    IN p_id INT
+)
+BEGIN
+update reservations set status = 2 where id = p_id;
+END $$
+DELIMITER ;

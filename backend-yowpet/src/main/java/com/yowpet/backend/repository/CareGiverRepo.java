@@ -2,6 +2,7 @@ package com.yowpet.backend.repository;
 
 import com.yowpet.backend.model.CaregiverWorker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -83,4 +84,12 @@ public class CareGiverRepo {
         String sql = "CALL getCaregiverWorkersByRating(?)";
         return template.query(sql, new Object[]{rating}, CareGiverRowMapper);
     }
+
+public CaregiverWorker disableCaregiver(int id){
+
+    String sql = "CALL disableCaregiverWorker(?)";
+    return template.queryForObject(sql, new Object[]{id}, CareGiverRowMapper);
+}
+
+
 }

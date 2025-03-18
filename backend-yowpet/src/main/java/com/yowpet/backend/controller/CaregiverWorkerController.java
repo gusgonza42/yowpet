@@ -63,20 +63,19 @@ public class CaregiverWorkerController {
         user.setUpdatedAt( new Date( ) );
         caregiverWorker.setUser( user.getId() );
 
-        Optional< CaregiverWorker > existingCaregiverOpt = caregiverWorkerRepository.findByUser_Id( id );
-        if ( existingCaregiverOpt.isPresent( ) ) {
-            CaregiverWorker existingCaregiver = existingCaregiverOpt.get( );
-            if ( ! existingCaregiver.isStatusActiveWork( ) ) {
-                existingCaregiver.setStatusActiveWork( true );
-                existingCaregiver.setSpeciality( caregiverWorker.getSpeciality( ) );
-                existingCaregiver.setExperienceYears( caregiverWorker.getExperienceYears( ) );
-                existingCaregiver.setHourlyRate( caregiverWorker.getHourlyRate( ) );
-                existingCaregiver.setRating( caregiverWorker.getRating( ) );
-                existingCaregiver.setReview( caregiverWorker.getReview( ) );
-                existingCaregiver.setDescription( caregiverWorker.getDescription( ) );
-                existingCaregiver.setServiceWorker( caregiverWorker.getServiceWorker( ) );
-                existingCaregiver.setCreatedAt( new Date( ) );
-                return caregiverWorkerService.createCaregiver( existingCaregiver );
+         CaregiverWorker  existingCaregiverOpt = caregiverWorkerRepository.getCaregiverWorkersByUser( id );
+        if ( existingCaregiverOpt == null ) {
+            if ( ! existingCaregiverOpt.isStatusActiveWork( ) ) {
+                existingCaregiverOpt.setStatusActiveWork( true );
+                existingCaregiverOpt.setSpeciality( caregiverWorker.getSpeciality( ) );
+                existingCaregiverOpt.setExperienceYears( caregiverWorker.getExperienceYears( ) );
+                existingCaregiverOpt.setHourlyRate( caregiverWorker.getHourlyRate( ) );
+                existingCaregiverOpt.setRating( caregiverWorker.getRating( ) );
+                existingCaregiverOpt.setReview( caregiverWorker.getReview( ) );
+                existingCaregiverOpt.setDescription( caregiverWorker.getDescription( ) );
+                existingCaregiverOpt.setServiceWorker( caregiverWorker.getServiceWorker( ) );
+                existingCaregiverOpt.setCreatedAt( new Date( ) );
+                return caregiverWorkerService.createCaregiver( existingCaregiverOpt );
             }
         }
 
