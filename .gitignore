@@ -39,14 +39,6 @@ docker-compose.local.yml
 docker-compose.local.yaml
 .docker/
 
-# MySQL y otros archivos relacionados con bases de datos
-*.sql~
-*.sql.bak
-*.sql.gz
-*.sql.zip
-*.sql.tar.gz
-database/
-
 # Node.js (para React Native con Expo)
 frontend-yowpet/node_modules/
 frontend-yowpet/npm-debug.log*
