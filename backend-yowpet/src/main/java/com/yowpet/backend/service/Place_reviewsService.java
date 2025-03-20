@@ -33,11 +33,11 @@ public class Place_reviewsService {
     //GET place_review by ID
     public ResponseEntity<Place_reviews> getPlace_reviewById(int id) {
         try {
-            Place_reviews place_reviews = place_reviewsRepository.findByIdAndEstadoNot(id, 0);
-            if(place_reviews == null){
+           Optional<Place_reviews> place_reviews = Optional.ofNullable(place_reviewsRepository.findByIdAndEstadoNot(id, 0));
+            if(place_reviews.isEmpty()){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            return ResponseEntity.ok(place_reviews);
+            return ResponseEntity.ok(place_reviews.get());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -74,15 +74,16 @@ public class Place_reviewsService {
     //PUT update place_review
     public ResponseEntity<Place_reviews> updatePlace_review(int id, Place_reviews  updatedPlace_reviews) {
         try {
-            Place_reviews existingPlace_reviews = place_reviewsRepository.getPlace_review(id);
-            if (existingPlace_reviews == null) {
+            Optional<Place_reviews> existingPlace_reviews = Optional.ofNullable(place_reviewsRepository.getPlace_review(id));
+            if (existingPlace_reviews.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            existingPlace_reviews.setRating(updatedPlace_reviews.getRating());
-            existingPlace_reviews.setComment(updatedPlace_reviews.getComment());
-            existingPlace_reviews.setEstado(updatedPlace_reviews.getEstado());
-          place_reviewsRepository.updatePlace_reviews(existingPlace_reviews);
-            return ResponseEntity.ok(existingPlace_reviews);
+            Place_reviews place_reviews = existingPlace_reviews.get();
+            place_reviews.setRating(updatedPlace_reviews.getRating());
+            place_reviews.setComment(updatedPlace_reviews.getComment());
+            place_reviews.setEstado(updatedPlace_reviews.getEstado());
+          place_reviewsRepository.updatePlace_reviews(place_reviews);
+            return ResponseEntity.ok(place_reviews);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -91,12 +92,12 @@ public class Place_reviewsService {
     //DELETE place_review
     public ResponseEntity<Place_reviews> deletePlace_review(int id) {
         try {
-           Place_reviews existingPlace_reviews = place_reviewsRepository.getPlace_review(id);
-            if (existingPlace_reviews == null) {
+           Optional<Place_reviews> existingPlace_reviews = Optional.ofNullable(place_reviewsRepository.getPlace_review(id));
+            if (existingPlace_reviews.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            existingPlace_reviews.setEstado(0);
-            place_reviewsRepository.updatePlace_reviews(existingPlace_reviews);
+            existingPlace_reviews.get().setEstado(0);
+            place_reviewsRepository.updatePlace_reviews(existingPlace_reviews.get());
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

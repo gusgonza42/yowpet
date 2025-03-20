@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Servicio para manejar las operaciones relacionadas con las mascotas.
@@ -33,8 +34,8 @@ public class PetService {
 
     public ResponseEntity<List<Pet>> getAllPets() {
         try {
-            List<Pet> pets = petRepo.getAllPets();
-            return ResponseEntity.status(HttpStatus.OK).body(pets);
+            Optional<List<Pet>> pets = Optional.ofNullable(petRepo.getAllPets());
+            return ResponseEntity.status(HttpStatus.OK).body(pets.get());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
@@ -42,11 +43,11 @@ public class PetService {
 
     public ResponseEntity<Pet> getPetById(int id) {
         try {
-            Pet pet = petRepo.getPet(id);
-            if (pet == null) {
+            Optional<Pet> pet = Optional.ofNullable(petRepo.getPet(id));
+            if (pet.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
-            return ResponseEntity.status(HttpStatus.OK).body(pet);
+            return ResponseEntity.status(HttpStatus.OK).body(pet.get());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }

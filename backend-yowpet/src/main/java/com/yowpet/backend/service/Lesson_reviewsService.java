@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class Lesson_reviewsService {
@@ -62,8 +63,8 @@ public class Lesson_reviewsService {
 
     public ResponseEntity<Lesson_reviews> updateLessonReview(int id, Lesson_reviews updatedReview) {
         try {
-            Lesson_reviews existingReview = lessonReviewsRepository.getLessonReviewById(id);
-            if (existingReview == null) {
+           Optional<Lesson_reviews> existingReview = Optional.ofNullable(lessonReviewsRepository.getLessonReviewById(id));
+            if (existingReview.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
             updatedReview.setId(id);
@@ -76,8 +77,8 @@ public class Lesson_reviewsService {
 
     public ResponseEntity<Void> deleteLessonReview(int id) {
         try {
-            Lesson_reviews existingReview = lessonReviewsRepository.getLessonReviewById(id);
-            if (existingReview == null) {
+           Optional<Lesson_reviews> existingReview = Optional.ofNullable(lessonReviewsRepository.getLessonReviewById(id));
+            if (existingReview.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
             lessonReviewsRepository.deleteLessonReview(id);

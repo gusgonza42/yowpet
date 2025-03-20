@@ -107,11 +107,11 @@ public class CaregiverWorkerService {
      */
     public ResponseEntity<CaregiverWorker> getCaregiverById(int id) {
         try {
-            CaregiverWorker caregiverWorker = caregiverWorkerRepository.getCaregiverWorker(id);
-            if (caregiverWorker == null) {
+            Optional<CaregiverWorker> caregiverWorker = Optional.ofNullable(caregiverWorkerRepository.getCaregiverWorker(id));
+            if (caregiverWorker.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            return ResponseEntity.ok(caregiverWorker);
+            return ResponseEntity.ok(caregiverWorker.get());
         } catch (Exception e) {
             logger.error("Error fetching caregiver by ID {}: ", id, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -123,15 +123,15 @@ public class CaregiverWorkerService {
      */
     public ResponseEntity<CaregiverWorker> updateCaregiver(int id, CaregiverWorker updatedCaregiver) {
         try {
-            CaregiverWorker existingCaregiver = caregiverWorkerRepository.getCaregiverWorker(id);
-            if (existingCaregiver == null) {
+           Optional<CaregiverWorker> existingCaregiver = Optional.ofNullable(caregiverWorkerRepository.getCaregiverWorker(id));
+            if (existingCaregiver.isEmpty() ) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
 
-            updateCaregiverDetails(existingCaregiver, updatedCaregiver);
-            caregiverWorkerRepository.updateCaregiverWorker(existingCaregiver);
+            updateCaregiverDetails(existingCaregiver.get(), updatedCaregiver);
+            caregiverWorkerRepository.updateCaregiverWorker(existingCaregiver.get());
 
-            return ResponseEntity.ok(existingCaregiver);
+            return ResponseEntity.ok(existingCaregiver.get());
         } catch (Exception e) {
             logger.error("Error updating caregiver with ID {}: ", id, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -200,13 +200,13 @@ public class CaregiverWorkerService {
      */
     public ResponseEntity<CaregiverWorker> rateCaregiver(int id, CaregiverWorker caregiverWorker) {
         try {
-            CaregiverWorker caregiverToRate = caregiverWorkerRepository.getCaregiverWorker(id);
-            if (caregiverToRate == null) {
+           Optional<CaregiverWorker> caregiverToRate = Optional.ofNullable(caregiverWorkerRepository.getCaregiverWorker(id));
+            if (caregiverToRate.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            caregiverToRate.setRating(caregiverWorker.getRating());
-            caregiverWorkerRepository.updateCaregiverWorker(caregiverToRate);
-            return ResponseEntity.ok(caregiverToRate);
+            caregiverToRate.get().setRating(caregiverWorker.getRating());
+            caregiverWorkerRepository.updateCaregiverWorker(caregiverToRate.get());
+            return ResponseEntity.ok(caregiverToRate.get());
         } catch (Exception e) {
             logger.error("Error rating caregiver with ID {}: ", id, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

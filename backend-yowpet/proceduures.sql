@@ -36,6 +36,8 @@ DROP PROCEDURE IF EXISTS searchUsers;
 DROP PROCEDURE IF EXISTS getUserByEmail;
 DROP PROCEDURE IF EXISTS updateUserProfile;
 DROP PROCEDURE IF EXISTS getActiveUsers;
+DROP PROCEDURE IF EXISTS toAdmin;
+DROP PROCEDURE IF EXISTS unadmin;
 
 -- ----------------- Drop CareGiverWorker if exist ----------------- --
 
@@ -111,6 +113,10 @@ DROP PROCEDURE IF EXISTS getReservationsByUser;
 DROP PROCEDURE IF EXISTS getReservationsByCareGiver;
 DROP PROCEDURE IF EXISTS getReservationsByStatus;
 DROP PROCEDURE IF EXISTS completeReservation;
+
+
+
+
 
 
 -- ----------------------------------- Breed Procedures --------------------------------- --
@@ -396,6 +402,23 @@ CREATE PROCEDURE getActiveUsers(
 )
 BEGIN
     SELECT * FROM user WHERE status = 1;
+END $$
+
+CREATE PROCEDURE toAdmin(
+    IN p_user_id INT
+)
+BEGIN
+    UPDATE user
+    SET role = 1
+    WHERE id = p_user_id;
+END $$
+CREATE PROCEDURE unadmin(
+    IN p_user_id INT
+)
+BEGIN
+    UPDATE user
+    SET role = 0
+    WHERE id = p_user_id;
 END $$
 
 
