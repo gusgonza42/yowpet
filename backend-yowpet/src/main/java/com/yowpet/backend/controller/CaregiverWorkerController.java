@@ -123,7 +123,7 @@ public class CaregiverWorkerController {
      */
     @DeleteMapping( "/disabled/{id}" )
     public ResponseEntity< User > disabledCaregiver( @PathVariable int id ) {
-        return caregiverWorkerService.disabledCaregiver( id );
+        return caregiverWorkerService.disableCaregiver( id );
     }
 
     /**

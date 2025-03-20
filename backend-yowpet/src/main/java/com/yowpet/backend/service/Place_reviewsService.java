@@ -33,8 +33,11 @@ public class Place_reviewsService {
     //GET place_review by ID
     public ResponseEntity<Place_reviews> getPlace_reviewById(int id) {
         try {
-            Optional<Place_reviews> place_reviews = place_reviewsRepository.findByIdAndEstadoNot(id, 0);
-            return place_reviews.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+            Place_reviews place_reviews = place_reviewsRepository.findByIdAndEstadoNot(id, 0);
+            if(place_reviews == null){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            return ResponseEntity.ok(place_reviews);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

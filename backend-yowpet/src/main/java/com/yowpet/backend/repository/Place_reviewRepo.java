@@ -83,6 +83,17 @@ public class Place_reviewRepo {
     public List<Place_reviews> getPlace_reviewsbyidandEstado(int Id , int estado){
 
         String sql = "CALL getPlaceReviewsByIdandEstado(?, ?)";
-        return template.query(sql, new Object[]{Id, estado}, placeRowMapper);
+        return template.query(sql, new Object[]{ estado}, placeRowMapper);
+    }
+
+    public List<Place_reviews> findAllByEstadoNot(int estado) {
+        String sql = "CALL getPlaceReviewsByEstadoNot(?)";
+        return template.query(sql, new Object[]{estado}, placeRowMapper);
+    }
+
+    public Place_reviews findByIdAndEstadoNot(int id, int estado) {
+        String sql = "CALL getPlaceReviewByIdAndEstadoNot(?, ?)";
+        List<Place_reviews> result = template.query(sql, new Object[]{id, estado}, placeRowMapper);
+        return result.isEmpty() ? null : result.get(0);
     }
 }

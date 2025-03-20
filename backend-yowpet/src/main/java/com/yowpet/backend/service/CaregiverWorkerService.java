@@ -213,5 +213,17 @@ public class CaregiverWorkerService {
         }
     }
 
-  //  public
+    public ResponseEntity<List<CaregiverWorker>> getAvailableCaregivers() {
+        try {
+            List<CaregiverWorker> caregivers = caregiverWorkerRepository.getAvailableCaregiverWorkers();
+            if (caregivers.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            }
+            return ResponseEntity.ok(caregivers);
+        } catch (Exception e) {
+            logger.error("Error fetching available caregivers: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }

@@ -75,7 +75,7 @@ public class CareGiverRepo {
         return template.queryForObject(sql, new Object[]{userId}, CareGiverRowMapper);
     }
 
-    public  List<CaregiverWorker> getCaregiverWorkersBySpeciality(String speciality) {
+    public List<CaregiverWorker> getCaregiverWorkersBySpeciality(String speciality) {
         String sql = "CALL getCaregiverWorkersBySpeciality(?)";
         return template.query(sql, new Object[]{speciality}, CareGiverRowMapper);
     }
@@ -85,11 +85,21 @@ public class CareGiverRepo {
         return template.query(sql, new Object[]{rating}, CareGiverRowMapper);
     }
 
-public CaregiverWorker disableCaregiver(int id){
+    public CaregiverWorker disableCaregiver(int id) {
 
-    String sql = "CALL disableCaregiverWorker(?)";
-    return template.queryForObject(sql, new Object[]{id}, CareGiverRowMapper);
-}
+        String sql = "CALL disableCaregiverWorker(?)";
+        return template.queryForObject(sql, new Object[]{id}, CareGiverRowMapper);
+    }
 
+    public CaregiverWorker enableCaregiver(int id) {
+
+        String sql = "CALL enableCaregiverWorker(?)";
+        return template.queryForObject(sql, new Object[]{id}, CareGiverRowMapper);
+    }
+
+    public List<CaregiverWorker> getAvailableCaregiverWorkers() {
+        String sql = "CALL getAvailableCaregiverWorkers()";
+        return template.query(sql, CareGiverRowMapper);
+    }
 
 }

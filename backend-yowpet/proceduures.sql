@@ -30,6 +30,7 @@ DROP PROCEDURE IF EXISTS searchCaregiverWorkers;
 DROP PROCEDURE IF EXISTS getCaregiverWorkersByUser;
 DROP PROCEDURE IF EXISTS getCaregiverWorkersBySpeciality;
 DROP PROCEDURE IF EXISTS getCaregiverWorkersByRating;
+DROP PROCEDURE IF EXISTS getAvailableCaregiverWorkers;
 DROP PROCEDURE IF EXISTS createLesson;
 DROP PROCEDURE IF EXISTS updateLesson;
 DROP PROCEDURE IF EXISTS deleteLesson;
@@ -453,6 +454,17 @@ BEGIN
     WHERE id = p_id;
 END //
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE getAvailableCaregiverWorkers(
+    IN p_status_active_work BOOLEAN
+)
+BEGIN
+    SELECT * FROM caregiver_worker WHERE status_active_work = p_status_active_work;
+END //
+DELIMITER ;
+
 
 -- ----------------------------------- Lesson Procedures --------------------------------- --
 
