@@ -89,9 +89,9 @@ public class UserRepo {
         template.update(sql, userId, newPassword);
     }
 
-    public List<User> getActiveUsers(int state) {
-        String sql = "CALL getActiveUsers(?)";
-        return template.query(sql, userRowMapper, state);
+    public List<User> getActiveUsers() {
+        String sql = "CALL getActiveUsers()";
+        return template.query(sql, userRowMapper);
     }
 
     public void toAdmin(int userId) {

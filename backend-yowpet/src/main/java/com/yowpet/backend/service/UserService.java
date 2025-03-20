@@ -38,8 +38,10 @@ public class UserService {
      */
     public ResponseEntity< String > createUser( @RequestBody User user ) {
         try {
-            User usuario = userRepository.getUserByEmail( user.getEmail( ) );
-            if ( usuario.getEmail() == user.getEmail()) {
+
+            Optional<User> usuario = Optional.ofNullable(userRepository.getUserByEmail(user.getEmail()));
+
+            if (usuario.isPresent()) {
                 return ResponseEntity.status( HttpStatus.CONFLICT ).body( Constants.EMAIL_EXISTENTE );
             }
             userRepository.createUser(
@@ -70,11 +72,11 @@ public class UserService {
      */
     public ResponseEntity< List< User > > getAllUsers( ) {
         try {
-            List< User > users = userRepository.getActiveUsers( User.status_active );
+           Optional< List< User > > users = Optional.ofNullable(userRepository.getActiveUsers());
             if ( users.isEmpty( ) ) {
                 return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( null );
             }
-            return ResponseEntity.status( HttpStatus.OK ).body( users );
+            return ResponseEntity.status( HttpStatus.OK ).body( users.get() );
         } catch ( Exception e ) {
             return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( null );
         }

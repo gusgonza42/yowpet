@@ -1,25 +1,44 @@
-DELIMITER $$
 
 -- Drop existing procedures if they exist
+
+-- ----------------- Drop Breed if exist ----------------- --
+
 DROP PROCEDURE IF EXISTS createbreed;
 DROP PROCEDURE IF EXISTS updatebreed;
 DROP PROCEDURE IF EXISTS deletebreed;
+
+-- ----------------- Drop allergy if exist ----------------- --
+
 DROP PROCEDURE IF EXISTS createallergy;
 DROP PROCEDURE IF EXISTS updateallergy;
 DROP PROCEDURE IF EXISTS deleteallergy;
 DROP PROCEDURE IF EXISTS getallergy;
 DROP PROCEDURE IF EXISTS searchallergy;
+DROP PROCEDURE IF EXISTS getallergies;
+
+-- ----------------- Drop AnimalCategory if exist ----------------- --
+
 DROP PROCEDURE IF EXISTS createAnimalCategory;
 DROP PROCEDURE IF EXISTS updateAnimalCategory;
 DROP PROCEDURE IF EXISTS deleteAnimalCategory;
 DROP PROCEDURE IF EXISTS getAnimalCategory;
 DROP PROCEDURE IF EXISTS getAnimalCategories;
 DROP PROCEDURE IF EXISTS searchAnimalCategory;
+
+-- ----------------- Drop User if exist ----------------- --
+
 DROP PROCEDURE IF EXISTS createUser;
 DROP PROCEDURE IF EXISTS updateUser;
 DROP PROCEDURE IF EXISTS deleteUser;
 DROP PROCEDURE IF EXISTS getUser;
 DROP PROCEDURE IF EXISTS getUsers;
+DROP PROCEDURE IF EXISTS searchUsers;
+DROP PROCEDURE IF EXISTS getUserByEmail;
+DROP PROCEDURE IF EXISTS updateUserProfile;
+DROP PROCEDURE IF EXISTS getActiveUsers;
+
+-- ----------------- Drop CareGiverWorker if exist ----------------- --
+
 DROP PROCEDURE IF EXISTS createCaregiverWorker;
 DROP PROCEDURE IF EXISTS updateCaregiverWorker;
 DROP PROCEDURE IF EXISTS deleteCaregiverWorker;
@@ -31,6 +50,10 @@ DROP PROCEDURE IF EXISTS getCaregiverWorkersByUser;
 DROP PROCEDURE IF EXISTS getCaregiverWorkersBySpeciality;
 DROP PROCEDURE IF EXISTS getCaregiverWorkersByRating;
 DROP PROCEDURE IF EXISTS getAvailableCaregiverWorkers;
+DROP PROCEDURE IF EXISTS disableCaregiverWorker;
+
+-- ----------------- Drop Lesson if exist ----------------- --
+
 DROP PROCEDURE IF EXISTS createLesson;
 DROP PROCEDURE IF EXISTS updateLesson;
 DROP PROCEDURE IF EXISTS deleteLesson;
@@ -44,6 +67,9 @@ DROP PROCEDURE IF EXISTS SearchLessonReviewsByRating;
 DROP PROCEDURE IF EXISTS CreateLessonReview;
 DROP PROCEDURE IF EXISTS UpdateLessonReview;
 DROP PROCEDURE IF EXISTS SoftDeleteLessonReview;
+
+-- ----------------- Drop Pet if exist ----------------- --
+
 DROP PROCEDURE IF EXISTS createPet;
 DROP PROCEDURE IF EXISTS updatePet;
 DROP PROCEDURE IF EXISTS deletePet;
@@ -51,11 +77,18 @@ DROP PROCEDURE IF EXISTS getPet;
 DROP PROCEDURE IF EXISTS getAllPets;
 DROP PROCEDURE IF EXISTS searchPets;
 DROP PROCEDURE IF EXISTS getPetsByStatus;
+
+-- ----------------- Drop Place if exist ----------------- --
+
+DROP PROCEDURE IF EXISTS createPlace;
 DROP PROCEDURE IF EXISTS updatePlace;
 DROP PROCEDURE IF EXISTS deletePlace;
 DROP PROCEDURE IF EXISTS getPlace;
 DROP PROCEDURE IF EXISTS getAllPlaces;
 DROP PROCEDURE IF EXISTS searchPlaces;
+
+-- ----------------- Drop PlaceReview if exist ----------------- --
+
 DROP PROCEDURE IF EXISTS getPlacesByStatus;
 DROP PROCEDURE IF EXISTS createPlaceReview;
 DROP PROCEDURE IF EXISTS updatePlaceReview;
@@ -67,6 +100,9 @@ DROP PROCEDURE IF EXISTS getPlaceReviewsByPlace;
 DROP PROCEDURE IF EXISTS getPlaceReviewsByUser;
 DROP PROCEDURE IF EXISTS getPlaceReviewsByPlaceAndUser;
 DROP PROCEDURE IF EXISTS getPlaceReviewsByIdandEstado;
+
+-- ----------------- Drop Reservation if exist ----------------- --
+
 DROP PROCEDURE IF EXISTS createReservation;
 DROP PROCEDURE IF EXISTS updateReservation;
 DROP PROCEDURE IF EXISTS deleteReservation;
@@ -78,7 +114,7 @@ DROP PROCEDURE IF EXISTS completeReservation;
 
 
 -- ----------------------------------- Breed Procedures --------------------------------- --
-
+DELIMITER $$
 CREATE PROCEDURE createbreed(
     IN p_animalCatId INT,
     IN p_breedName VARCHAR(255)
@@ -304,6 +340,64 @@ CREATE PROCEDURE getUsers()
 BEGIN
     SELECT * FROM user;
 END $$
+
+-- Search Users by Name, Last Name, or Email
+CREATE PROCEDURE searchUsers(
+    IN p_searchTerm VARCHAR(255)
+)
+BEGIN
+    SELECT * FROM user
+    WHERE first_name LIKE CONCAT('%', p_searchTerm, '%')
+       OR last_name LIKE CONCAT('%', p_searchTerm, '%')
+       OR email LIKE CONCAT('%', p_searchTerm, '%');
+END $$
+
+CREATE PROCEDURE updateUserProfile(
+    IN p_user_id INT,
+    IN p_first_name VARCHAR(255),
+    IN p_last_name VARCHAR(255),
+    IN p_email VARCHAR(255),
+    IN p_city VARCHAR(255),
+    IN p_address VARCHAR(255),
+    IN p_phone_number VARCHAR(20),
+    IN p_zip_code INT,
+    IN p_gender VARCHAR(50),
+    IN p_profile_picture VARCHAR(255),
+    IN p_languages TEXT,
+    IN p_payment_method VARCHAR(255),
+    IN p_birth_date DATE
+)
+BEGIN
+    UPDATE user
+    SET first_name = p_first_name,
+        last_name = p_last_name,
+        email = p_email,
+        city = p_city,
+        address = p_address,
+        phone_number = p_phone_number,
+        zip_code = p_zip_code,
+        gender = p_gender,
+        profile_picture = p_profile_picture,
+        languages = p_languages,
+        payment_method = p_payment_method,
+        birth_date = p_birth_date,
+        updated_at = NOW()
+    WHERE id = p_user_id;
+END $$
+
+CREATE  PROCEDURE getUserByEmail(
+    IN p_email VARCHAR(255)
+)
+BEGIN
+    SELECT * FROM user WHERE email = p_email;
+END $$
+
+CREATE PROCEDURE getActiveUsers(
+)
+BEGIN
+    SELECT * FROM user WHERE status = 1;
+END $$
+
 
 -- ----------------------------------- Caregiver Worker Procedures --------------------------------- --
 
