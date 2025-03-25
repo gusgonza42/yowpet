@@ -1,31 +1,45 @@
 package com.yowpet.backend.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.reactive.function.client.WebClient;
 
-/**
- * Security configuration for the application.
- * Allows public access to all routes and disables CSRF.
- */
+import com.yowpet.backend.security.JwtAuthenticationFilter;
+
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
-    /**
-     * Defines the security filter chain.
-     *
-     * @param http the HttpSecurity object to configure HTTP security
-     * @return the configured security filter chain
-     * @throws Exception if an error occurs during the configuration
-     */
+    @Value("${auth.service.url}")
+    private String authServiceUrl;
+
     @Bean
-    public SecurityFilterChain securityFilterChain( HttpSecurity http ) throws Exception {
-        http.authorizeHttpRequests( authorize -> authorize.anyRequest( ).permitAll( ) // Allows public access to all routes
-        ).csrf( csrf -> csrf.disable( ) ); // Disables CSRF to simplify requests
-        return http.build( );
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/yowpet/login", "/yowpet/register").permitAll()
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(webClientBuilder(), authServiceUrl);
+    }
+
     @Bean
     public WebClient.Builder webClientBuilder() {
         return WebClient.builder();
