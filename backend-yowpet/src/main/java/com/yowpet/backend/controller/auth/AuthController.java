@@ -2,6 +2,7 @@ package com.yowpet.backend.controller.auth;
 
 import com.yowpet.backend.dto.AuthRequestDTO;
 import com.yowpet.backend.service.auth.AuthService;
+import com.yowpet.backend.utils.constants.Constants;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,11 @@ public class AuthController {
 
     public AuthController(AuthService authService) {
         this.authService = authService;
+    }
+
+    @GetMapping("/hello")
+    public ResponseEntity<?> helloYowpet() {
+        return ResponseEntity.ok(Constants.HELLO_PROYECT);
     }
 
     @PostMapping("/login")
