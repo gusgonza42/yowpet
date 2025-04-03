@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "YowPet",
+    "slug": "YowPet",
+    "scheme": "yowpet",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "description": "Aplicación para gestión y cuidado de mascotas",
+    "primaryColor": "#4CAF50",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png",
+      "name": "YowPet - Gestión de Mascotas"
+    },
+    "plugins": ["expo-router", "expo-secure-store", "expo-file-system"],
+    "assetBundlePatterns": ["**/*"],
+    "experiments": {
+      "tsconfigPaths": true
+    }
+  }
+}
