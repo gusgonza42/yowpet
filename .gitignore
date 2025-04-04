@@ -4,11 +4,13 @@ Thumbs.db
 *.log
 *.tmp
 *.pid
+HELP.md
 
 # IntelliJ IDEA
 .idea/
 *.iml
 *.iws
+*.ipr
 
 # Java (Maven y Spring Boot)
 target/
@@ -21,15 +23,40 @@ target/
 *.db.trace
 application-*.yml
 application-*.yaml
+!**/src/main/**/target/
+!**/src/test/**/target/
 
 # Maven
 .mvn/
 !mvnw
 !mvnw.cmd
+!.mvn/wrapper/maven-wrapper.jar
 
 # Gradle (si lo usas)
 .gradle/
 build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# IDE específicos
+# Eclipse/STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# VS Code
+.vscode/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
 
 # Docker
 .dockerignore
@@ -61,10 +88,6 @@ frontend-yowpet/web-build/
 frontend-yowpet/android/
 frontend-yowpet/ios/
 frontend-yowpet/expo-env.d.ts
-
-# Expo specific files
-frontend-yowpet/.expo/
-frontend-yowpet/.expo-shared/
 
 # Expo debugging
 frontend-yowpet/.metro-health-check*

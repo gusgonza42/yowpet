@@ -1,0 +1,27 @@
+${AnsiColor.BRIGHT_BLUE}
+   ___  _    _ _____            _____ _____ _____ _   _______ _____ _______   __
+  |_  || |  | |_   _|          /  ___|  ___/  __ \ | | | ___ \_   _|_   _\ \ / /
+    | || |  | | | |    ______  \ `--.| |__ | /  \/ | | | |_/ / | |   | |  \ V /
+    | || |/\| | | |   |______|  `--. \  __|| |   | | | |    /  | |   | |   \ /
+/\__/ /\  /\  / | |            /\__/ / |___| \__/\ |_| | |\ \ _| |_  | |   | |
+\____/  \/  \/  \_/            \____/\____/ \____/\___/\_| \_|\___/  \_/   \_/
+
+${AnsiColor.BRIGHT_YELLOW}🛰️  W E L C O M E   T O   S E C U R E   G A T E W A Y !  🔐
+${AnsiColor.BRIGHT_GREEN}    Your trusted JWT Security & Authentication System! 🛸🌌🚀
+${AnsiColor.BRIGHT_CYAN}=================================================================================
+    🔹 ${AnsiColor.BRIGHT_YELLOW}Application: ${spring.application.name} - Version: ${app.version} 🌍
+    🔹 ${AnsiColor.BRIGHT_GREEN}Java Version: ${java.version} | JVM: ${java.vm.version} (${java.vm.vendor}) 🌒
+    🔹 ${AnsiColor.BRIGHT_RED}Powered by Spring Boot: ${spring-boot.version} 🚀
+
+    🔹 ${AnsiColor.BRIGHT_WHITE}Executed by: ${userJWT.name} | PID: ${PID} 🌟
+    🔹 ${AnsiColor.BRIGHT_GREEN}Active Profiles: ${spring.profiles.active} 🧑‍🚀
+    🔹 ${AnsiColor.BRIGHT_YELLOW}API Base URL: http://localhost:${server.port}/ 🛸
+
+    🔹 ${AnsiColor.BRIGHT_BLUE}OS: ${os.name} (${os.arch}) 🌠
+    🔹 ${AnsiColor.BRIGHT_CYAN}Running on port: ${server.port} 🌍
+    🔹 ${AnsiColor.BRIGHT_YELLOW}Author: ${app.author} 👩‍🚀
+    🔹 ${AnsiColor.BRIGHT_WHITE}Description: ${app.description} 🌌
+${AnsiColor.BRIGHT_CYAN}=================================================================================
+
+${AnsiColor.BRIGHT_MAGENTA}🚀 Happy Coding! 👩‍💻 Let's build something amazing! 🌌🚀
+
