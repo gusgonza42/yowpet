@@ -49,7 +49,7 @@ public class CaregiverWorkerService {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
             User user = userOpt.get();
-            user.setRole(User.role_caregiver);
+            user.setRole(User.ROLE_CAREGIVER);
             userRepository.updateUser(
                     user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getCity(),
                     user.getAddress(), user.getPhoneNumber(), user.getZipCode(), user.getGender(),
@@ -74,7 +74,7 @@ public class CaregiverWorkerService {
             }
             User user = userOpt.get();
             user.setUpdatedAt(new Date());
-            user.setRole(User.role_caregiver);
+            user.setRole(User.ROLE_CAREGIVER);
 
             caregiverWorker.setUser(user.getId());
             caregiverWorkerRepository.createCaregiverWorker(caregiverWorker);
@@ -158,7 +158,7 @@ public class CaregiverWorkerService {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
             User user = userOpt.get();
-            user.setRole(User.role_user);
+            user.setRole(User.ROLE_USER);
             userRepository.updateUser(
                     user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getCity(),
                     user.getAddress(), user.getPhoneNumber(), user.getZipCode(), user.getGender(),

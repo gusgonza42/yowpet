@@ -153,10 +153,10 @@ public class UserService {
      */
     public ResponseEntity<String> deleteUser(int id) {
         try {
-            User optionalUser = userRepository.getUser(id);
-            if (optionalUser != null) {
-                User user = optionalUser;
-                user.setStatus(User.status_inactive);
+            Optional<User> optionalUser = Optional.ofNullable(userRepository.getUser(id));
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                user.setStatus(User.STATUS_INACTIVE);
                 user.setDeletedAt(new Date());
                 user.setUpdatedAt(new Date());
                 userRepository.deleteUser(
@@ -183,7 +183,7 @@ public class UserService {
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Constants.USUARIO_NO_ENCONTRADO);
             }
-            user.setRole(User.role_admin);
+            user.setRole(User.ROLE_ADMIN);
             user.setUpdatedAt(new Date());
 
             userRepository.toAdmin(user.getId());
@@ -206,7 +206,7 @@ public class UserService {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Constants.USUARIO_NO_ENCONTRADO);
             }
             user.setUpdatedAt(new Date());
-            user.setRole(User.role_user);
+            user.setRole(User.ROLE_USER);
             userRepository.unadmin(user.getId());
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(Constants.USUARIO_DESACTIVADO_COMO_ADMIN);
         } catch (Exception e) {

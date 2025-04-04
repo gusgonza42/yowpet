@@ -1,13 +1,12 @@
 package com.yowpet.backend.model;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.PrePersist;
 import lombok.*;
 
 import java.util.Date;
+import java.util.Objects;
 
-/**
- * Representa una entidad de mascota en el sistema.
- */
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,92 +16,75 @@ public class Pet {
     public static final int STATUS_ACTIVE = 1;
     public static final int STATUS_INACTIVE = 0;
 
-    /**
-     * El identificador único para la mascota.
-     */
+    public static final int STERILIZED_YES = 1;
+    public static final int STERILIZED_NO = 0;
+
     private int id;
-
-    /**
-     * La categoría del animal a la que pertenece la mascota.
-     * Es una clave foránea que referencia a la entidad AnimalCategory.
-     */
     private int animalCategory;
-
-    /**
-     * El propietario de la mascota.
-     */
     private int ownerId;
-
-    /**
-     * La raza de la mascota.
-     */
     private int breed;
-
-    /**
-     * El estado de la mascota.
-     * Valor por defecto: 1 = activo, 0 = inactivo
-     */
-    private int status = STATUS_ACTIVE;
-
-    /**
-     * El nombre de la mascota.
-     */
+    private Integer status = STATUS_ACTIVE;
     private String name;
-
-    /**
-     * La fecha de nacimiento de la mascota.
-     */
     private Date birthDate;
-
-    /**
-     * El género de la mascota.
-     */
     private String gender;
-
-    /**
-     * Indica si la mascota está esterilizada.
-     */
-    private int sterilized;
-
-    /**
-     * La foto de perfil de la mascota.
-     */
+    private String sterilized;  // "yes" or "no"
     private String profilePicture;
-
-    /**
-     * La descripción de la mascota.
-     */
     private String description;
-
-    /**
-     * El contacto de emergencia de la mascota.
-     */
     private String emergencyContact;
-
-    /**
-     * La fecha de creación de la mascota.
-     */
     private Date createdAt;
-
-    /**
-     * La fecha de última actualización de la mascota.
-     */
     private Date updatedAt;
-
-    /**
-     * La fecha de eliminación de la mascota.
-     */
     private Date deletedAt;
 
-    /**
-     * Establece la fecha de registro al crear el objeto mascota.
-     */
-    @PrePersist
-    protected void onCreate( ) {
-        if( createdAt == null ) {
-            createdAt = new Date( );
+    // Getter to return int version of sterilized
+    @JsonProperty("sterilizedAsInt")
+    public int getSterilizedAsInt() {
+        if ("yes".equalsIgnoreCase(sterilized)) {
+            return STERILIZED_YES;
+        } else {
+            return STERILIZED_NO;
         }
     }
 
+    // Getter to return "yes" or "no"
+    @JsonProperty("sterilizedText")
+    public String getSterilizedText() {
+        return "yes".equalsIgnoreCase(sterilized) ? "yes" : "no";
+    }
 
+    // Accept 1/0 and map to "yes"/"no"
+    public void setSterilizedFromInt(int sterilizedStatus) {
+        if (sterilizedStatus == STERILIZED_YES) {
+            this.sterilized = "yes";
+        } else if (sterilizedStatus == STERILIZED_NO) {
+            this.sterilized = "no";
+        } else {
+            throw new IllegalArgumentException("Invalid sterilized value. Use 1 for 'yes' or 0 for 'no'.");
+        }
+    }
+
+    // Accepts string values "1", "0", "yes", "no"
+    public void setSterilized(String sterilized) {
+        if ("1".equals(sterilized) || "yes".equalsIgnoreCase(sterilized)) {
+            this.sterilized = "yes";
+        } else if ("0".equals(sterilized) || "no".equalsIgnoreCase(sterilized)) {
+            this.sterilized = "no";
+        } else {
+            throw new IllegalArgumentException("Invalid sterilized value. Use 'yes', 'no', '1' or '0'.");
+        }
+    }
+
+    public int getStatus() {
+        return Objects.requireNonNullElse(status, STATUS_ACTIVE);
+    }
+
+    public void setStatus(Integer status) {
+        this.status = Objects.requireNonNullElse(status, STATUS_ACTIVE);
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) {
+            createdAt = new Date();
+        }
+    }
 }
