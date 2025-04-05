@@ -60,25 +60,25 @@ import { ScreenContainer } from '../../components/global/ScreenContainer';
 ## 💡 Tips y Recordatorios
 
 1. **Documentación por Carpeta**
-   - Cada README explica su propósito específico
-   - Incluye ejemplos de uso
-   - Mantiene convenciones del área
+    - Cada README explica su propósito específico
+    - Incluye ejemplos de uso
+    - Mantiene convenciones del área
 
 2. **Imports y Exports**
-   - Usar alias definidos
-   - Evitar rutas relativas largas
-   - Exportar componentes nombrados
+    - Usar alias definidos
+    - Evitar rutas relativas largas
+    - Exportar componentes nombrados
 
 3. **Estructura de Archivos**
-   - Seguir convenciones de nombrado
-   - Agrupar por funcionalidad
-   - Mantener jerarquía clara
+    - Seguir convenciones de nombrado
+    - Agrupar por funcionalidad
+    - Mantener jerarquía clara
 
 4. **No Olvides**
-   - Tests unitarios
-   - PropTypes/TypeScript
-   - Documentar cambios
-   - Optimizar imágenes
+    - Tests unitarios
+    - PropTypes/TypeScript
+    - Documentar cambios
+    - Optimizar imágenes
 
 ## 🚀 Comenzando
 
@@ -122,20 +122,45 @@ npm test
 ## 📝 Convenciones Generales
 
 1. **Nombrado**
-   - Componentes: PascalCase
-   - Hooks: useNombreHook
-   - Constantes: UPPER_SNAKE_CASE
-   - Archivos de estilo: styles.js
+    - Componentes: PascalCase
+    - Hooks: useNombreHook
+    - Constantes: UPPER_SNAKE_CASE
+    - Archivos de estilo: styles.js
 
 2. **Imports**
-   - Agrupar por tipo
-   - Usar alias
-   - Mantener orden consistente
+    - Agrupar por tipo
+    - Usar alias
+    - Mantener orden consistente
 
 3. **Documentación**
-   - Actualizar READMEs
-   - Comentar código complejo
-   - Incluir ejemplos
+    - Actualizar READMEs
+    - Comentar código complejo
+    - Incluir ejemplos
+
+## Prettier y ESLint
+
+- Prettier: Formateo automático
+- ESLint: Reglas de estilo
+- Configuración en `.prettierrc` y `.eslintrc.js`
+- Ejecutar `npm run lint` para verificar errores
+- Ejecutar `npm run format` para formatear el código
+- Configurar Prettier y ESLint para evitar conflictos
+- Usar `eslint --fix` para corregir errores automáticamente
+- Configurar Prettier para ignorar archivos específicos si es necesario
+- Asegurarse de que Prettier y ESLint estén instalados como dependencias de desarrollo
+- Configurar scripts en `package.json` para facilitar el uso de Prettier y ESLint
+  Usa estos comandos para formatear y verificar el código:
+
+```bash  
+Ctrl + Alt + Shift + P
+Ctrl + Alt + L
+```  
+
+Tienes que instalar Prettier y ESLint como extensiones en tu editor de código para que funcionen correctamente.
+
+- Configurar Prettier y ESLint para que se ejecuten automáticamente al guardar archivos
+- Asegurarse de que Prettier y ESLint estén configurados para trabajar juntos sin conflictos
+- Configurar Prettier para ignorar archivos específicos si es necesario
 
 ---
 Última actualización: Abril 2025

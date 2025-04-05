@@ -1,15 +1,15 @@
-import { StyleSheet } from "react-native";
-import { YowPetTheme } from "@theme/Colors";
+import { StyleSheet } from 'react-native';
+import { YowPetTheme } from '@theme/Colors';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
   },
   headerContainer: {
     flex: 0.3,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   logo: {
     width: 120,
@@ -18,26 +18,26 @@ export const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: YowPetTheme.text.mainText,
-    textAlign: "center",
+    textAlign: 'center',
   },
   formContainer: {
     flex: 0.4,
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
     gap: 16,
   },
   button: {
-    width: "80%",
+    width: '80%',
     marginTop: 8,
   },
   footerContainer: {
     flex: 0.3,
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "flex-end",
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
     paddingBottom: 32,
-  }
+  },
 });

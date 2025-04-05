@@ -1,7 +1,7 @@
-import { Tabs } from "expo-router";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Platform } from "react-native";
-import { YowPetTheme } from "@theme/Colors";
+import { Tabs } from 'expo-router';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Platform } from 'react-native';
+import { YowPetTheme } from '@theme/Colors';
 
 export default function TabsLayout() {
   return (
@@ -29,14 +29,14 @@ export default function TabsLayout() {
         tabBarShowLabel: true,
         tabBarLabelStyle: {
           fontSize: 12,
-          marginBottom: Platform.OS === "ios" ? 0 : 4,
+          marginBottom: Platform.OS === 'ios' ? 0 : 4,
         },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Inicio",
+          title: 'Inicio',
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="home" size={size} color={color} />
@@ -46,7 +46,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="services"
         options={{
-          title: "Servicios",
+          title: 'Servicios',
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
@@ -60,7 +60,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="map"
         options={{
-          title: "PetMap",
+          title: 'PetMap',
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
@@ -74,7 +74,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="planner"
         options={{
-          title: "Calendario",
+          title: 'Calendario',
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="calendar" size={size} color={color} />
@@ -84,7 +84,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Perfil",
+          title: 'Perfil',
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons

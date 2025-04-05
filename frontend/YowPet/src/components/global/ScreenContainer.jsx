@@ -1,5 +1,5 @@
-import { View, SafeAreaView, StyleSheet } from "react-native";
-import { useTheme } from "react-native-paper";
+import { View, SafeAreaView, StyleSheet } from 'react-native';
+import { useTheme } from 'react-native-paper';
 
 export function ScreenContainer({ children, style, backgroundColor }) {
   const { colors } = useTheme();
