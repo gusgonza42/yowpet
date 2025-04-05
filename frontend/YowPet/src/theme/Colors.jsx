@@ -1,8 +1,11 @@
 export const YowPetTheme = {
   brand: {
-    mainGreen: '#4CAF50', // Main brand color
-    supportBlue: '#2196F3', // Support brand color
-    highlightOrange: '#FF9800', // Highlight actions/elements
+    primary: '#0E333C', // Main brand color
+    secondary: '#F6BBA9', // Support brand color
+    surface: '#FBE186', // Highlight actions/elements
+    accent: '#A0B3FF', // Dark gray for contrast
+    white: '#FFFFFF', // Light gray for backgrounds
+    support: '#0D0D0D', // Accent color for highlights
   },
   background: {
     mainWhite: '#FFFFFF', // Main background
