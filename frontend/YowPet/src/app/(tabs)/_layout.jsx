@@ -1,42 +1,114 @@
-import { Tabs } from "expo-router";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Platform } from "react-native";
-import { YowPetTheme } from "@theme/Colors";
+import React from 'react';
+import { Tabs } from 'expo-router';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
+import { YowPetTheme } from '@theme/Colors';
 
-export default function TabsLayout() {
+const TabsLayout = () => {
+  const { width } = useWindowDimensions();
+  const isSmallScreen = width < 480;
+
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: YowPetTheme.brand.mainGreen,
-        tabBarInactiveTintColor: YowPetTheme.text.subtleText,
+        tabBarActiveTintColor: YowPetTheme.brand.white,
+        tabBarInactiveTintColor: YowPetTheme.brand.accent,
         tabBarStyle: Platform.select({
           ios: {
-            height: 88,
+            height: 78,
             paddingBottom: 30,
             paddingTop: 10,
-            backgroundColor: YowPetTheme.background.mainWhite,
-            borderTopWidth: 0.5,
-            borderTopColor: YowPetTheme.border.softBorder,
+            backgroundColor: YowPetTheme.brand.primary,
+            position: 'absolute',
+            bottom: 20,
+            marginHorizontal: 20,
+            borderRadius: 55,
+            shadowColor: YowPetTheme.shadow.mediumShadow,
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.3,
+            shadowRadius: 4.65,
           },
           android: {
             height: 60,
-            paddingBottom: 4,
-            paddingTop: 4,
-            elevation: 4,
-            backgroundColor: YowPetTheme.background.mainWhite,
+            paddingVertical: 4,
+            backgroundColor: YowPetTheme.brand.primary,
+            position: 'absolute',
+            bottom: 20,
+            marginHorizontal: 20,
+            borderRadius: 15,
+            elevation: 8,
+          },
+          web: {
+            height: 70,
+            backgroundColor: YowPetTheme.brand.primary,
+            position: 'fixed',
+            bottom: 20,
+            left: '50%',
+            transform: [{ translateX: '-50%' }],
+            width: '100%',
+            maxWidth: 700,
+            borderRadius: 55,
+            zIndex: 1000,
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            paddingHorizontal: 20,
+            display: 'flex',
           },
         }),
         tabBarShowLabel: true,
-        tabBarLabelStyle: {
-          fontSize: 12,
-          marginBottom: Platform.OS === "ios" ? 0 : 4,
-        },
+        tabBarButton: Platform.select({
+          web: ({ children, onPress, accessibilityState }) => (
+            <Pressable
+              onPress={onPress}
+              style={({ pressed }) => [
+                stylesLayout.webTabButton,
+                accessibilityState?.selected && stylesLayout.webTabButtonActive,
+                pressed && stylesLayout.webTabButtonPressed,
+              ]}
+              accessibilityRole="tab"
+              accessibilityState={accessibilityState}
+            >
+              <View style={stylesLayout.webTabContent}>
+                {React.Children.map(children, child => {
+                  if (React.isValidElement(child)) {
+                    return child;
+                  }
+                  if (typeof child === 'string') {
+                    return <Text style={stylesLayout.webTabText}>{child}</Text>;
+                  }
+                  return null;
+                })}
+              </View>
+            </Pressable>
+          ),
+          default: undefined,
+        }),
+        tabBarLabelStyle: Platform.select({
+          web: {
+            fontSize: isSmallScreen ? 0 : 15,
+            fontWeight: '600',
+            textTransform: 'none',
+            color: YowPetTheme.brand.white,
+            display: isSmallScreen ? 'none' : 'flex',
+          },
+          default: {
+            fontSize: 12,
+            fontWeight: '600',
+          },
+        }),
+        headerShown: false,
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Inicio",
+          title: 'Inicio',
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="home" size={size} color={color} />
@@ -46,7 +118,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="services"
         options={{
-          title: "Servicios",
+          title: 'Servicios',
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
@@ -60,7 +132,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="map"
         options={{
-          title: "PetMap",
+          title: 'PetMap',
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
@@ -74,7 +146,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="planner"
         options={{
-          title: "Calendario",
+          title: 'Calendario',
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="calendar" size={size} color={color} />
@@ -84,7 +156,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Perfil",
+          title: 'Perfil',
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
@@ -97,4 +169,50 @@ export default function TabsLayout() {
       />
     </Tabs>
   );
-}
+};
+
+const stylesLayout = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  webHeader: {
+    marginTop: 70,
+  },
+  webContent: {
+    maxWidth: 1200,
+    width: '100%',
+    marginHorizontal: 'auto',
+    paddingTop: 90,
+    paddingHorizontal: 20,
+  },
+  webTabButton: {
+    flex: 1,
+    minWidth: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    margin: 4,
+  },
+  webTabContent: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 2,
+  },
+  webTabButtonActive: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 20,
+    padding: 4,
+    transform: [{ scale: 0.95 }],
+  },
+  webTabButtonPressed: {
+    opacity: 0.8,
+  },
+  webTabText: {
+    fontSize: 12,
+    fontWeight: '600',
+    textTransform: 'none',
+    color: YowPetTheme.brand.white,
+  },
+});
+export default TabsLayout;

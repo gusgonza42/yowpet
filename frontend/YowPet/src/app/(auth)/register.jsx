@@ -1,7 +1,7 @@
-import { View, StyleSheet } from "react-native";
-import { Button } from "react-native-paper";
-import { router } from "expo-router";
-import { ScreenContainer } from "@components/global/ScreenContainer";
+import { View, StyleSheet } from 'react-native';
+import { Button } from 'react-native-paper';
+import { router } from 'expo-router';
+import { ScreenContainer } from '@components/global/ScreenContainer';
 
 export default function Register() {
   return (
@@ -9,7 +9,7 @@ export default function Register() {
       <View style={styles.container}>
         <Button
           mode="contained"
-          onPress={() => router.replace("/(tabs)")}
+          onPress={() => router.replace('/(tabs)')}
           style={styles.button}
         >
           Registrarse
@@ -26,11 +26,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     gap: 10,
   },
   button: {
-    width: "80%",
+    width: '80%',
   },
 });

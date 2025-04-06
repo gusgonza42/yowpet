@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet } from "react-native";
-import { ScreenContainer } from "@components/global/ScreenContainer";
+import { View, Text, StyleSheet } from 'react-native';
+import { ScreenContainer } from '@components/global/ScreenContainer';
 
 export default function MapScreen() {
   return (
@@ -14,7 +14,7 @@ export default function MapScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

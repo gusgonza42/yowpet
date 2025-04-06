@@ -13,7 +13,8 @@
       "@hooks/*": ["src/hooks/*"],
       "@store/*": ["src/store/*"],
       "@service/*": ["src/services/*"],
-      "@assets/*": ["assets/*"]
+      "@assets/*": ["assets/*"],
+      "@app-assets/*": ["app/assets/*"],
     }
   }
 }

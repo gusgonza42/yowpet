@@ -1,5 +1,5 @@
-import { MD3LightTheme } from "react-native-paper";
-import { YowPetTheme } from "@theme/Colors";
+import { MD3LightTheme } from 'react-native-paper';
+import { YowPetTheme } from '@theme/Colors';
 
 const theme = {
   ...MD3LightTheme,
