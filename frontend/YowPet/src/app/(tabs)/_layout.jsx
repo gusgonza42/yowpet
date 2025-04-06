@@ -1,14 +1,25 @@
+import React from 'react';
 import { Tabs } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Platform } from 'react-native';
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import { YowPetTheme } from '@theme/Colors';
 
-export default function TabsLayout() {
+const TabsLayout = () => {
+  const { width } = useWindowDimensions();
+  const isSmallScreen = width < 480;
+
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: YowPetTheme.brand.primary,
-        tabBarInactiveTintColor: YowPetTheme.brand.white,
+        tabBarActiveTintColor: YowPetTheme.brand.white,
+        tabBarInactiveTintColor: YowPetTheme.brand.accent,
         tabBarStyle: Platform.select({
           ios: {
             height: 78,
@@ -17,36 +28,83 @@ export default function TabsLayout() {
             backgroundColor: YowPetTheme.brand.primary,
             position: 'absolute',
             bottom: 20,
-            margin: 10,
-            left: 20,
-            right: 20,
+            marginHorizontal: 20,
             borderRadius: 55,
             shadowColor: YowPetTheme.shadow.mediumShadow,
-            shadowOffset: {
-              width: 0,
-              height: 4,
-            },
+            shadowOffset: { width: 0, height: 4 },
             shadowOpacity: 0.3,
             shadowRadius: 4.65,
           },
           android: {
             height: 60,
-            paddingBottom: 4,
-            paddingTop: 4,
-            backgroundColor: '#0E303C',
+            paddingVertical: 4,
+            backgroundColor: YowPetTheme.brand.primary,
             position: 'absolute',
             bottom: 20,
-            left: 20,
-            right: 20,
+            marginHorizontal: 20,
             borderRadius: 15,
             elevation: 8,
           },
+          web: {
+            height: 70,
+            backgroundColor: YowPetTheme.brand.primary,
+            position: 'fixed',
+            bottom: 20,
+            left: '50%',
+            transform: [{ translateX: '-50%' }],
+            width: '100%',
+            maxWidth: 700,
+            borderRadius: 55,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            zIndex: 1000,
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            paddingHorizontal: 20,
+          },
         }),
         tabBarShowLabel: true,
-        tabBarLabelStyle: {
-          fontSize: 12,
-          marginBottom: Platform.OS === 'ios' ? 0 : 4,
-        },
+        tabBarButton: Platform.select({
+          web: ({ children, onPress, accessibilityState }) => (
+            <Pressable
+              onPress={onPress}
+              style={({ pressed }) => [
+                stylesLayout.webTabButton,
+                accessibilityState?.selected && stylesLayout.webTabButtonActive,
+                pressed && stylesLayout.webTabButtonPressed,
+              ]}
+              accessibilityRole="tab"
+              accessibilityState={accessibilityState}
+            >
+              <View style={stylesLayout.webTabContent}>
+                {React.Children.map(children, child => {
+                  if (React.isValidElement(child)) {
+                    return child;
+                  }
+                  if (typeof child === 'string') {
+                    return <Text style={stylesLayout.webTabText}>{child}</Text>;
+                  }
+                  return null;
+                })}
+              </View>
+            </Pressable>
+          ),
+          default: undefined,
+        }),
+        tabBarLabelStyle: Platform.select({
+          web: {
+            fontSize: isSmallScreen ? 0 : 15,
+            fontWeight: '600',
+            textTransform: 'none',
+            color: YowPetTheme.brand.white,
+            display: isSmallScreen ? 'none' : 'flex',
+          },
+          default: {
+            fontSize: 12,
+            fontWeight: '600',
+          },
+        }),
+        headerShown: false,
       }}
     >
       <Tabs.Screen
@@ -113,4 +171,48 @@ export default function TabsLayout() {
       />
     </Tabs>
   );
-}
+};
+
+const stylesLayout = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  webHeader: {
+    marginTop: 70,
+  },
+  webContent: {
+    maxWidth: 1200,
+    width: '100%',
+    marginHorizontal: 'auto',
+    paddingTop: 90,
+    paddingHorizontal: 20,
+  },
+  webTabButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  webTabContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  webTabButtonActive: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 25,
+  },
+  webTabButtonPressed: {
+    opacity: 0.8,
+  },
+  webTabText: {
+    fontSize: 15,
+    fontWeight: '600',
+    textTransform: 'none',
+    color: YowPetTheme.brand.white,
+  },
+});
+export default TabsLayout;
