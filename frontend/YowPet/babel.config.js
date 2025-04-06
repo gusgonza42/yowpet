@@ -20,6 +20,7 @@ module.exports = function (api) {
             '@store': './src/store',
             '@service': './src/services',
             '@assets': './assets',
+            '@app-assets': './src/app/assets',
           },
         },
       ],
