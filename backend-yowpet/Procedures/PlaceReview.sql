@@ -116,7 +116,7 @@ SELECT id,
        place_id         as place,
        user_id          as user
 FROM place_reviews
-WHERE place = p_place
+WHERE place_id = p_place
   AND status != 0;
 END$$
 DELIMITER ;
@@ -153,7 +153,7 @@ SELECT id,
 FROM place_reviews
 WHERE place_id = p_place
   AND user_id = p_user
-  AND estado != 0;
+  AND status != 0;
 END$$
 DELIMITER ;
 

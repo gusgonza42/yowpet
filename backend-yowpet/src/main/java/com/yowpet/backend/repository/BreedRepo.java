@@ -38,22 +38,22 @@ public class BreedRepo {
     }
 
     public Breed getBreed(int breedId) {
-        String sql = "CALL getbreed(?)";
+        String sql = "CALL getBreedById(?)";
         return template.queryForObject(sql, new Object[]{breedId}, breedRowMapper);
     }
 
     public List<Breed> getBreeds() {
-        String sql = "CALL getbreeds()"; // No `?` needed if procedure takes no arguments
+        String sql = "CALL getAllBreeds()"; // No `?` needed if procedure takes no arguments
         return template.query(sql, breedRowMapper);
     }
 
     public List<Breed> getBreedsByAnimalCategory(int animalCatId) {
-        String sql = "CALL getbreedsbyanimalcategory(?)";
+        String sql = "CALL getBreedsByCategory(?)";
         return template.query(sql, new Object[]{animalCatId}, breedRowMapper);
     }
 
     public List<Breed> searchBreeds(String searchTerm) {
-        String sql = "CALL Searchbreed(?)";
+        String sql = "CALL searchBreedsByName(?)";
         return template.query(sql, new Object[]{"%" + searchTerm + "%"}, breedRowMapper);
     }
 }

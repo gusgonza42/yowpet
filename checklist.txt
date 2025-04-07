@@ -2,3 +2,7 @@ DELETE ME AFTER FINISHING THE BRANCH
 
 - User -- Done -- 2025-04-04 19:34:00
 - pets -- Done -- 2025-04-04  13:00:00
+- places -- Done -- 2025-04-07  17:20:00
+- allergies -- Done -- 2025-04-07  17:40:00
+- animalcategory -- Done -- 2025-04-07  18:26:00
+- Breed -- Done -- 2025-04-07  19:56:00

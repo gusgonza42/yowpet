@@ -30,7 +30,7 @@ public class AnimalCategoryController {
         service.create(category);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable int id) {
         service.delete(id);
     }

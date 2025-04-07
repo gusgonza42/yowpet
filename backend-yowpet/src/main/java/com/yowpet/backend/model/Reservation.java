@@ -24,6 +24,8 @@ public class Reservation {
 
     private int careGiver;
 
+    private int pet;
+
     private String details;
 
     private Date reservationDate;

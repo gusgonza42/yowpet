@@ -31,12 +31,12 @@ public class BreedController {
         breedService.createBreed(req);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public void updateBreed(@PathVariable int id, @RequestBody Breed breed) {
         breedService.updateBreed(id, breed);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteBreed(@PathVariable int id) {
         breedService.deleteBreed(id);
     }
