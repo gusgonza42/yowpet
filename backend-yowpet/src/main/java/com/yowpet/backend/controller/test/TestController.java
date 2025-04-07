@@ -14,7 +14,7 @@ import java.util.List;
  * REST Controller to handle test-related requests.
  */
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/yowpet")
 public class TestController {
 
     private final TestService testService;
