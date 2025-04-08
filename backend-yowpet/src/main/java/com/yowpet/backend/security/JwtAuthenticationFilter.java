@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         // No validar token para rutas públicas
-        if (path.equals("/yowpet/login") || path.equals("/yowpet/register") ||
+        if (path.equals("/yowpet/login") || path.equals("/yowpet/register") || path.equals("/yowpet/hello") ||
                 path.startsWith("/swagger-ui/") || path.startsWith("/v3/api-docs/")) {
             filterChain.doFilter(request, response);
             return;
