@@ -39,7 +39,7 @@ public class AuthService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(token -> {
-                    if (token == null || token.isEmpty()) {
+                    if (token == null || token.trim().isEmpty()) {
                         throw new WebClientResponseException(HttpStatus.UNAUTHORIZED.value(),
                             "Credenciales inválidas", null, null, null);
                     }
