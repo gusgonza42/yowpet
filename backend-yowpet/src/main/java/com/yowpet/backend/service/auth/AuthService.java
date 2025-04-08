@@ -29,7 +29,7 @@ public class AuthService {
     }
 
     public ResponseEntity<?> login(AuthRequestDTO request) {
-        return executeAuthRequest("/auth/login", request, HttpStatus.OK, null);
+        return executeAuthRequest("/auth/login", request, HttpStatus.OK, "Inicio de sesión exitoso");
     }
 
     private ResponseEntity<?> executeAuthRequest(String uri, AuthRequestDTO request, HttpStatus successStatus, String successMessage) {
@@ -39,13 +39,15 @@ public class AuthService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(token -> {
+                    if (token == null || token.trim().isEmpty()) {
+                        throw new WebClientResponseException(HttpStatus.UNAUTHORIZED.value(),
+                            "Credenciales inválidas", null, null, null);
+                    }
                     AuthResponseDTO response = new AuthResponseDTO();
                     response.setToken(token.replace("\"", ""));
                     response.setType("Bearer");
                     response.setSuccess(true);
-                    if (successMessage != null) {
-                        response.setMessage(successMessage);
-                    }
+                    response.setMessage(successMessage);
                     return ResponseEntity.status(successStatus)
                             .body(response);
                 })
