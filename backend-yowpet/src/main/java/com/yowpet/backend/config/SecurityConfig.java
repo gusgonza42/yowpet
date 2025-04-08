@@ -26,7 +26,7 @@ public class SecurityConfig {
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/yowpet/login", "/yowpet/register","/yowpet/auth/hello").permitAll()
+                .requestMatchers("/yowpet/login", "/yowpet/register", "/yowpet/hello").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
             )
