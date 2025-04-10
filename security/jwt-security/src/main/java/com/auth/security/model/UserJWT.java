@@ -41,7 +41,7 @@ public class UserJWT {
 
     private Integer zipCode = 0;
 
-    private String gender = "No especificado";
+    private String gender = "";
 
     private String profilePicture = "No especificado";
 
@@ -49,9 +49,9 @@ public class UserJWT {
 
     private Date birthDate = null;
 
-    private String languages = "No especificado";
+    private String languages ;
 
-    private String paymentMethod = "No especificado";
+    private String paymentMethod;
 
     private String token = "No especificado";
 

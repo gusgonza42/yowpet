@@ -2,6 +2,7 @@ package com.auth.security.repository;
 
 import com.auth.security.model.UserJWT;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,28 +16,39 @@ public class UserReposJWT {
 
     public UserJWT getUserByEmail(String email) {
         String sql = "CALL GetUserByEmail(?)";
-        UserJWT userJWT = template.queryForObject(sql, new BeanPropertyRowMapper<>(UserJWT.class), email);
-        if (userJWT != null) {
-            return userJWT;
-        } else {
+        try {
+            return template.queryForObject(sql, new BeanPropertyRowMapper<>(UserJWT.class), email);
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
+
 
     public UserJWT getUserByUsername(String username) {
         String sql = "CALL GetUserByUsername(?)";
-        UserJWT userJWT = template.queryForObject(sql, new BeanPropertyRowMapper<>(UserJWT.class), username);
-        if (userJWT != null) {
-            return userJWT;
-        } else {
+        try {
+            return template.queryForObject(sql, new BeanPropertyRowMapper<>(UserJWT.class), username);
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
 
-    public void createUser(String firstName, String lastName, String username, String email, String password, String city, String address, String phoneNumber, int zipCode, String gender, String profilePicture, int role, String languages, String paymentMethod, java.util.Date birthDate, String token) {
-        String sql = "CALL createUserandToken(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
-       int rowsAffected =template.update(sql, firstName, lastName, username, email, password, city, address, phoneNumber, zipCode, gender, profilePicture, role, languages, paymentMethod, new java.sql.Date(birthDate.getTime()), token);
-   System.out.println("Rows affected: " + rowsAffected);
+
+    public void createUser(String firstName, String lastName, String username, String email, String password,
+                           String city, String address, String phoneNumber, int zipCode, String gender,
+                           String profilePicture, int role, String languages, String paymentMethod,
+                           java.util.Date birthDate, String token) {
+
+        String sql = "CALL createUserandToken(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        // Convertir fecha solo si no es nula
+        java.sql.Date sqlBirthDate = null;
+        if (birthDate != null) {
+            sqlBirthDate = new java.sql.Date(birthDate.getDate());
+        }
+
+        template.update(sql, firstName, lastName, username, email, password, city, address, phoneNumber,
+                zipCode, gender, profilePicture, role, languages, paymentMethod, sqlBirthDate, token);
     }
 
 }

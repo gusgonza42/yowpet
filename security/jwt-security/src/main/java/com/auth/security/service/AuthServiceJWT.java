@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import static com.auth.security.util.UtilsJWT.printMssg;
 
 /**
@@ -125,16 +127,16 @@ public class AuthServiceJWT {
      * @return ResponseEntity con el token JWT o un mensaje de error.
      */
     public ResponseEntity<?> register(AuthRequestJWT authRequestJWT) {
-        UserJWT userJWTByEmail = userRepositoryJWT.getUserByEmail(authRequestJWT.getEmail());
+      Optional<UserJWT> userJWTByEmail = Optional.ofNullable(userRepositoryJWT.getUserByEmail(authRequestJWT.getEmail()));
 
-        if (userJWTByEmail != null) {
+        if (userJWTByEmail.isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(AuthConstantsJWT.EMAIL_ALREADY_EXISTS);
         }
 
-        UserJWT userJWTByUsername = userRepositoryJWT.getUserByEmail(authRequestJWT.getUsername());
+        Optional<UserJWT> userJWTByUsername = Optional.ofNullable(userRepositoryJWT.getUserByEmail(authRequestJWT.getUsername()));
 
-        if (userJWTByUsername != null) {
+        if (userJWTByUsername.isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(AuthConstantsJWT.USERNAME_ALREADY_EXISTS);
         }
