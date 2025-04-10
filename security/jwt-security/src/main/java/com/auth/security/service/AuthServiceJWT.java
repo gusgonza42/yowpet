@@ -92,21 +92,7 @@ public class AuthServiceJWT {
                 token = jwtTokenUtils.generateToken(userJWT.getUsername());
                 userJWT.setToken(token);
                 printMssg(AuthConstantsJWT.TOKEN_CREATED_OR_UPDATED);
-                userRepositoryJWT.createUser(userJWT.getFirstName(),
-                        userJWT.getLastName(),
-                        userJWT.getUsername(),
-                        userJWT.getEmail(),
-                        userJWT.getPassword(),
-                        userJWT.getCity(),
-                        userJWT.getAddress(),
-                        userJWT.getPhonenumber(),
-                        userJWT.getZipCode(),
-                        userJWT.getGender(),
-                        userJWT.getProfilePicture(),
-                        userJWT.getRole(),
-                        userJWT.getLanguages(),
-                        userJWT.getPaymentMethod(),
-                        userJWT.getBirthDate(),
+                userRepositoryJWT.UpdateUsertoken(userJWT.getEmail(),
                         userJWT.getToken());
             }
 
@@ -127,7 +113,7 @@ public class AuthServiceJWT {
      * @return ResponseEntity con el token JWT o un mensaje de error.
      */
     public ResponseEntity<?> register(AuthRequestJWT authRequestJWT) {
-      Optional<UserJWT> userJWTByEmail = Optional.ofNullable(userRepositoryJWT.getUserByEmail(authRequestJWT.getEmail()));
+        Optional<UserJWT> userJWTByEmail = Optional.ofNullable(userRepositoryJWT.getUserByEmail(authRequestJWT.getEmail()));
 
         if (userJWTByEmail.isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT)

@@ -33,6 +33,13 @@ public class UserReposJWT {
         }
     }
 
+    public void UpdateUsertoken(String email, String token) {
+
+        String sql = "CALL UpdateUserToken(?, ?)";
+
+        template.update(sql,email, token);
+    }
+
 
     public void createUser(String firstName, String lastName, String username, String email, String password,
                            String city, String address, String phoneNumber, int zipCode, String gender,
