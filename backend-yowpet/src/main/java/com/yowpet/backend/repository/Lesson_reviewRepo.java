@@ -2,6 +2,7 @@ package com.yowpet.backend.repository;
 
 import com.yowpet.backend.model.Lesson_reviews;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -14,31 +15,19 @@ public class Lesson_reviewRepo {
     @Autowired
     private JdbcTemplate template;
 
-    // RowMapper for Lesson_reviews
-    private final RowMapper<Lesson_reviews> lessonReviewsRowMapper = (rs, rowNum) -> {
-        Lesson_reviews review = new Lesson_reviews();
-        review.setId(rs.getInt("id"));
-        review.setLesson(rs.getInt("lesson_id"));
-        review.setUser(rs.getInt("user_id"));
-        review.setRating(rs.getDouble("rating"));
-        review.setComment(rs.getString("comment"));
-        review.setEstado(rs.getInt("estado"));
-        return review;
-    };
-
     public List<Lesson_reviews> getAllLessonReviews() {
         String sql = "CALL GetAllLessonReviews()";
-        return template.query(sql, lessonReviewsRowMapper);
+        return template.query(sql, new BeanPropertyRowMapper<>(Lesson_reviews.class));
     }
 
     public Lesson_reviews getLessonReviewById(int reviewId) {
         String sql = "CALL GetLessonReviewById(?)";
-        return template.queryForObject(sql, new Object[]{reviewId}, lessonReviewsRowMapper);
+        return template.queryForObject(sql, new Object[]{reviewId}, new BeanPropertyRowMapper<>(Lesson_reviews.class));
     }
 
     public List<Lesson_reviews> searchLessonReviewsByRating(double rating) {
         String sql = "CALL SearchLessonReviewsByRating(?)";
-        return template.query(sql, new Object[]{rating}, lessonReviewsRowMapper);
+        return template.query(sql, new Object[]{rating}, new BeanPropertyRowMapper<>(Lesson_reviews.class));
     }
 
     public void createLessonReview(Lesson_reviews review) {

@@ -43,10 +43,6 @@ public class LessonRepo {
         String sql = "CALL getLesson(?)";
         return template.queryForObject(sql, new Integer[]{lessonId},LessonRowMapper);
     }
-    public Lesson getLessonbyID(int lessonId ) {
-        String sql = "CALL getLessonbyID(?)";
-        return template.queryForObject(sql, new Integer[]{lessonId},LessonRowMapper);
-    }
 
     public List<Lesson> getAllLessons() {
         String sql = "CALL getAllLessons()";

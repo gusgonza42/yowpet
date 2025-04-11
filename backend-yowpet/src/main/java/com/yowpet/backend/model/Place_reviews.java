@@ -8,8 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Place_reviews {
-    public static int status_active = 1;
-    public static int status_deleted = 0;
+    public static int status_active = 2;
+    public static int status_deleted = 1;
 
     private int id;
 

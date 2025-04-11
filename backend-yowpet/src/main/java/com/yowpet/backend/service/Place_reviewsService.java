@@ -20,7 +20,7 @@ public class Place_reviewsService {
     //GET all place_reviews
     public ResponseEntity<List<Place_reviews>> getAllPlace_reviews() {
         try {
-            List<Place_reviews> place_reviews = place_reviewsRepository.findAllByEstadoNot(0);
+            List<Place_reviews> place_reviews = place_reviewsRepository.findAllByEstadoNot();
             if (place_reviews.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -33,7 +33,7 @@ public class Place_reviewsService {
     //GET place_review by ID
     public ResponseEntity<Place_reviews> getPlace_reviewById(int id) {
         try {
-           Optional<Place_reviews> place_reviews = Optional.ofNullable(place_reviewsRepository.findByIdAndEstadoNot(id, 0));
+           Optional<Place_reviews> place_reviews = Optional.ofNullable(place_reviewsRepository.findByIdAndEstadoNot(id, 2));
             if(place_reviews.isEmpty()){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -96,7 +96,7 @@ public class Place_reviewsService {
             if (existingPlace_reviews.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            existingPlace_reviews.get().setEstado(0);
+            existingPlace_reviews.get().setEstado(1);
             place_reviewsRepository.updatePlace_reviews(existingPlace_reviews.get());
             return ResponseEntity.noContent().build();
         } catch (Exception e) {

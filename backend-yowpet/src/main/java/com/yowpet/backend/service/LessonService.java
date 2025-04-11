@@ -19,7 +19,7 @@ public class LessonService {
     //GET all lessons
     public ResponseEntity<List<Lesson>> getAllLessons() {
         try {
-            List<Lesson> lessons = lessonRepository.getLessonsByEstado(0);
+            List<Lesson> lessons = lessonRepository.getLessonsByEstado(1);
             if (lessons.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -65,7 +65,7 @@ public class LessonService {
     public ResponseEntity<Lesson> updateLesson(int id, Lesson updatedLesson) {
         try {
            Lesson existingLesson = lessonRepository.getLesson(id);
-            if (existingLesson != null) {
+            if (existingLesson == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
             lessonRepository.createLesson(updatedLesson);
@@ -78,8 +78,8 @@ public class LessonService {
     //DELETE lesson
     public ResponseEntity<Lesson> deleteLesson(int id) {
         try {
-            Lesson existingLesson = lessonRepository.getLessonbyID(id);
-            if (existingLesson != null) {
+            Lesson existingLesson = lessonRepository.getLesson(id);
+            if (existingLesson == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
             existingLesson.setEstado(0);

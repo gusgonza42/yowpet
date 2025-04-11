@@ -2,6 +2,7 @@ package com.yowpet.backend.repository;
 
 import com.yowpet.backend.model.Place_reviews;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -14,25 +15,16 @@ public class Place_reviewRepo {
     @Autowired
     private JdbcTemplate template;
 
-    // RowMapper for Place_reviews
-    private final RowMapper<Place_reviews> placeRowMapper = (rs, rowNum) -> {
-        Place_reviews place = new Place_reviews();
-        place.setId(rs.getInt("id"));
-        place.setRating(rs.getDouble("rating"));
-        place.setEstado(rs.getInt("estado"));
-        return place;
-    };
-
     // Create Place_reviews
     public void createPlace_reviews(Place_reviews review) {
-        String sql = "CALL createPlaceReview(?, ?, ?, ?, ?)";
-        template.update(sql, review.getRating(), review.getComment(), review.getEstado(), review.getPlace(), review.getUser());
+        String sql = "CALL createPlaceReview(?, ?, ?, ?)";
+        template.update(sql, review.getRating(), review.getComment(), review.getPlace(), review.getUser());
     }
 
     // Update Place_reviews
     public void updatePlace_reviews(Place_reviews review) {
-        String sql = "CALL updatePlaceReview(?, ?, ?, ?, ?)";
-        template.update(sql, review.getId(),review.getRating(),review.getComment(),review.getEstado());
+        String sql = "CALL updatePlaceReview(?, ?, ?, ?)";
+        template.update(sql, review.getId(), review.getRating(), review.getComment(), review.getEstado());
     }
 
     // Soft Delete Place_reviews
@@ -44,56 +36,56 @@ public class Place_reviewRepo {
     // Get Place_reviews by ID
     public Place_reviews getPlace_review(int placeId) {
         String sql = "CALL getPlaceReview(?)";
-        return template.queryForObject(sql, new Object[]{placeId}, placeRowMapper);
+        return template.queryForObject(sql, new Object[]{placeId}, new BeanPropertyRowMapper<>(Place_reviews.class));
     }
 
     // Get All Active Place_reviewss
     public List<Place_reviews> getAllPlace_reviews() {
         String sql = "CALL getAllPlaceReviews()";
-        return template.query(sql, placeRowMapper);
+        return template.query(sql, new BeanPropertyRowMapper<>(Place_reviews.class));
     }
 
     // Search Place_reviewss by Name or Address
    /* public List<Place_reviews> searchPlace_reviewss(String searchTerm) {
         String sql = "CALL searchPlaceReviews(?)";
-        return template.query(sql, new Object[]{"%" + searchTerm + "%"}, placeRowMapper);
+        return template.query(sql, new Object[]{"%" + searchTerm + "%"}, new BeanPropertyRowMapper<>(Place_reviews.class));
     }*/
 
     public List<Place_reviews> getPlace_reviewsByPlace(int placeId) {
         String sql = "CALL getPlaceReviewsByPlace(?)";
-        return template.query(sql, new Object[]{placeId}, placeRowMapper);
+        return template.query(sql, new Object[]{placeId}, new BeanPropertyRowMapper<>(Place_reviews.class));
     }
 
     public List<Place_reviews> getPlace_reviewsByUser(int userId) {
         String sql = "CALL getPlaceReviewsByUser(?)";
-        return template.query(sql, new Object[]{userId}, placeRowMapper);
+        return template.query(sql, new Object[]{userId}, new BeanPropertyRowMapper<>(Place_reviews.class));
     }
 
     public List<Place_reviews> getPlace_reviewsByPlaceAndUser(int placeId, int userId) {
         String sql = "CALL getPlaceReviewsByPlaceAndUser(?, ?)";
-        return template.query(sql, new Object[]{placeId, userId}, placeRowMapper);
+        return template.query(sql, new Object[]{placeId, userId}, new BeanPropertyRowMapper<>(Place_reviews.class));
     }
 
-    public List<Place_reviews> getPlace_reviewsbyRating(double rating){
+    public List<Place_reviews> getPlace_reviewsbyRating(double rating) {
 
         String sql = "CALL getPlaceReviewsByRating(?)";
-        return template.query(sql, new Object[]{rating}, placeRowMapper);
+        return template.query(sql, new Object[]{rating}, new BeanPropertyRowMapper<>(Place_reviews.class));
     }
 
-    public List<Place_reviews> getPlace_reviewsbyidandEstado(int Id , int estado){
+    public List<Place_reviews> getPlace_reviewsbyidandEstado(int Id, int estado) {
 
         String sql = "CALL getPlaceReviewsByIdandEstado(?, ?)";
-        return template.query(sql, new Object[]{ estado}, placeRowMapper);
+        return template.query(sql, new Object[]{estado}, new BeanPropertyRowMapper<>(Place_reviews.class));
     }
 
-    public List<Place_reviews> findAllByEstadoNot(int estado) {
-        String sql = "CALL getPlaceReviewsByEstadoNot(?)";
-        return template.query(sql, new Object[]{estado}, placeRowMapper);
+    public List<Place_reviews> findAllByEstadoNot() {
+        String sql = "CALL getAllPlaceReviews()";
+        return template.query(sql, new BeanPropertyRowMapper<>(Place_reviews.class));
     }
 
     public Place_reviews findByIdAndEstadoNot(int id, int estado) {
-        String sql = "CALL getPlaceReviewByIdAndEstadoNot(?, ?)";
-        List<Place_reviews> result = template.query(sql, new Object[]{id, estado}, placeRowMapper);
+        String sql = "CALL getPlaceReviewsByUser(?)";
+        List<Place_reviews> result = template.query(sql, new Object[]{id}, new BeanPropertyRowMapper<>(Place_reviews.class));
         return result.isEmpty() ? null : result.get(0);
     }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -20,6 +21,10 @@ public class Lesson {
     private String content;
 
     private int estado = status_active;
+
+    private Date  created_at = new Date();
+
+    private Date  updated_at = new Date();
 
     public int getId() {
         return id;
