@@ -26,7 +26,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/logos/yowpet.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#FFFFFF"
       },
       "package": "com.yowpet.app"
     },
@@ -47,7 +47,6 @@
       "tsconfigPaths": true
     },
     "updates": {
-      "fallbackToCacheTimeout": 0,
       "enabled": true,
       "checkAutomatically": "ON_LOAD"
     }
