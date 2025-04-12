@@ -1,11 +1,8 @@
 package com.yowpet.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
