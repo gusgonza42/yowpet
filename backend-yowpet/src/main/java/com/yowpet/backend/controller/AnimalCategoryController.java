@@ -1,7 +1,7 @@
 package com.yowpet.backend.controller;
 
-import com.yowpet.backend.model.Animal_Category;
-import com.yowpet.backend.service.Animal_CategoryService;
+import com.yowpet.backend.model.AnimalCategory;
+import com.yowpet.backend.service.AnimalCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,38 +9,38 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/yowpet/animalCat")
-public class Animal_CategoryController {
+public class AnimalCategoryController {
 
     @Autowired
-    private Animal_CategoryService service;
+    private AnimalCategoryService service;
 
     @GetMapping
-    public List<Animal_Category> getAllcats() {
+    public List<AnimalCategory> getAllcats() {
         return service.getAll();
     }
 
     @GetMapping("/{id}")
-    public  Animal_Category getById(@PathVariable Long id) {
+    public  AnimalCategory getById(@PathVariable int id) {
         return service.getbyID(id);
 
     }
 
     @PostMapping("/create")
-    public void create(@RequestBody Animal_Category category) {
+    public void create(@RequestBody AnimalCategory category) {
         service.create(category);
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    @DeleteMapping("/delete/{id}")
+    public void delete(@PathVariable int id) {
         service.delete(id);
     }
 
     @GetMapping("/search")
-    public List<Animal_Category> search(@RequestParam("text") String text) {
+    public List<AnimalCategory> search(@RequestParam("text") String text) {
         return service.search(text);
     }
 
     @PutMapping("/update/{id}")
-    public  Animal_Category update(@RequestBody Animal_Category cat, @PathVariable long id)
+    public  AnimalCategory update(@RequestBody AnimalCategory cat, @PathVariable int id)
     {return service.update(id,cat);}
 }

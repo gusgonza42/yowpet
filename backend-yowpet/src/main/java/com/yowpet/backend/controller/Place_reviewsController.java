@@ -22,7 +22,7 @@ public class Place_reviewsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Place_reviews> getPlace_reviewById(@PathVariable Long id) {
+    public ResponseEntity<Place_reviews> getPlace_reviewById(@PathVariable int id) {
         return place_reviewsService.getPlace_reviewById(id);
     }
 
@@ -37,12 +37,12 @@ public class Place_reviewsController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Place_reviews> updatePlace_review(@PathVariable Long id, @RequestBody Place_reviews place_reviews) {
+    public ResponseEntity<Place_reviews> updatePlace_review(@PathVariable int id, @RequestBody Place_reviews place_reviews) {
         return place_reviewsService.updatePlace_review(id, place_reviews);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Place_reviews> deletePlace_review(@PathVariable Long id) {
+    public ResponseEntity<Place_reviews> deletePlace_review(@PathVariable int id) {
         return place_reviewsService.deletePlace_review(id);
     }
 }
