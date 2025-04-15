@@ -4,7 +4,9 @@ import { YowPetTheme } from '@theme/Colors';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
   },
   headerContainer: {
     flex: 0.3,

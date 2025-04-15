@@ -23,7 +23,7 @@ export default function ProfileScreen() {
 
       <Button
         mode="contained"
-        onPress={() => router.replace(APP_ROUTES.AUTH.LOGIN)}
+        onPress={() => router.replace(APP_ROUTES.AUTH.AUTH)}
         style={styles.button}
         contentStyle={styles.buttonContent}
         icon="logout"

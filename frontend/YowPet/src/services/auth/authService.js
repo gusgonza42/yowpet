@@ -1,7 +1,7 @@
 import { axiosClient } from '@/services/api/clienteAxios';
 
 export const authService = {
-  // Login
+  // Auth
   login: credentials => axiosClient.post('/auth/login', credentials),
 
   // Registro

@@ -1,5 +1,5 @@
 import { Link, Stack } from 'expo-router';
-import { Text, StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { ScreenContainer } from '@components/global/ScreenContainer';
 
 export default function NotFoundScreen() {
@@ -8,7 +8,7 @@ export default function NotFoundScreen() {
       <Stack.Screen options={{ title: 'Oops!' }} />
       <ScreenContainer style={styles.container}>
         <Text style={styles.title}>¡Esta página no existe!</Text>
-        <Link href="/" style={styles.link}>
+        <Link href="/(auth)/auth" style={styles.link}>
           <Text style={styles.linkText}>Volver al inicio</Text>
         </Link>
       </ScreenContainer>
