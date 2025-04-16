@@ -18,31 +18,31 @@ public class Lesson_reviewsController {
 
     @GetMapping("/all")
     public ResponseEntity<List<Lesson_reviews>> getAllLesson_reviews() {
-        return lesson_reviewsService.getAllLesson_reviews();
+        return lesson_reviewsService.getAllLessonReviews();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Lesson_reviews> getLesson_reviewById(@PathVariable Long id) {
-        return lesson_reviewsService.getLesson_reviewById(id);
+    public ResponseEntity<Lesson_reviews> getLesson_reviewById(@PathVariable int id) {
+        return lesson_reviewsService.getLessonReviewById(id);
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<Lesson_reviews>> searchLesson_reviews(@RequestParam("rating") double rating) {
-        return lesson_reviewsService.searchLesson_reviews(rating);
+        return lesson_reviewsService.searchLessonReviews(rating);
     }
 
     @PostMapping("/create")
     public ResponseEntity<Lesson_reviews> createLesson_review(@RequestBody Lesson_reviews lesson_reviews) {
-        return lesson_reviewsService.createLesson_review(lesson_reviews);
+        return lesson_reviewsService.createLessonReview(lesson_reviews);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Lesson_reviews> updateLesson_review(@PathVariable Long id, @RequestBody Lesson_reviews lesson_reviews) {
-        return lesson_reviewsService.updateLesson_review(id, lesson_reviews);
+    public ResponseEntity<Lesson_reviews> updateLesson_review(@PathVariable int id, @RequestBody Lesson_reviews lesson_reviews) {
+        return lesson_reviewsService.updateLessonReview(id, lesson_reviews);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Lesson_reviews> deleteLesson_review(@PathVariable Long id) {
-        return lesson_reviewsService.deleteLesson_review(id);
+    public ResponseEntity<Void> deleteLesson_review(@PathVariable int id) {
+        return lesson_reviewsService.deleteLessonReview(id);
     }
 }

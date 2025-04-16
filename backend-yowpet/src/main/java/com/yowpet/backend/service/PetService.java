@@ -1,14 +1,14 @@
 package com.yowpet.backend.service;
 
 import com.yowpet.backend.model.Pet;
-import com.yowpet.backend.repository.PetRepository;
-import com.yowpet.backend.utils.constants.Constants;
+import com.yowpet.backend.repository.PetRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Servicio para manejar las operaciones relacionadas con las mascotas.
@@ -16,121 +16,58 @@ import java.util.List;
 @Service
 public class PetService {
 
-    private final PetRepository petRepository;
+    private final PetRepo petRepo;
 
-    /**
-     * Constructor para inyectar el repositorio de mascotas.
-     *
-     * @param petRepository el repositorio de mascotas
-     */
-    public PetService( PetRepository petRepository ) {
-        this.petRepository = petRepository;
+    @Autowired
+    public PetService(PetRepo petRepo) {
+        this.petRepo = petRepo;
     }
 
-    /**
-     * Crea una nueva mascota.
-     *
-     * @param pet la mascota a crear
-     * @return una respuesta HTTP con el resultado de la operación
-     */
-    public ResponseEntity< String > createPet( Pet pet ) {
+    public ResponseEntity<String> createPet(Pet pet) {
         try {
-            if( petRepository.existsPetByNameAndOwnerId( pet.getName( ), pet.getOwnerId( ) ) ) {
-                return ResponseEntity.status( HttpStatus.CONFLICT ).body( Constants.PET_EXISTS );
-            }
-            petRepository.save( pet );
-            return ResponseEntity.status( HttpStatus.CREATED ).body( Constants.PET_CREATED_SUCCESSFULLY );
-        } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( Constants.ERROR_INTERNO_DEL_SERVIDOR );
+            petRepo.createPet(pet);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Pet created successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating pet");
         }
     }
 
-    /**
-     * Obtiene todas las mascotas activas.
-     *
-     * @return una respuesta HTTP con la lista de mascotas
-     */
-    @Transactional
-    public ResponseEntity< List< Pet > > getAllPets( ) {
+    public ResponseEntity<List<Pet>> getAllPets() {
         try {
-            List< Pet > pets = petRepository.findByStatus( Pet.STATUS_ACTIVE );
-            pets.forEach( pet -> pet.getAllergies( ).size( ) ); // Inicializar la colección
-            return ResponseEntity.status( HttpStatus.OK ).body( pets );
-        } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( null );
+            Optional<List<Pet>> pets = Optional.ofNullable(petRepo.getAllPets());
+            return ResponseEntity.status(HttpStatus.OK).body(pets.get());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
-    /**
-     * Obtiene una mascota por su ID.
-     *
-     * @param id el ID de la mascota
-     * @return una respuesta HTTP con la mascota encontrada
-     */
-    @Transactional
-    public ResponseEntity< Pet > getPetById( Long id ) {
+    public ResponseEntity<Pet> getPetById(int id) {
         try {
-            Pet pet = petRepository.findById( id ).orElse( null );
-            if( pet == null ) {
-                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( null );
+            Optional<Pet> pet = Optional.ofNullable(petRepo.getPet(id));
+            if (pet.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
-            pet.getAllergies( ).size( ); // Inicializar la colección
-            return ResponseEntity.status( HttpStatus.OK ).body( pet );
-        } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( null );
+            return ResponseEntity.status(HttpStatus.OK).body(pet.get());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
-    /**
-     * Actualiza una mascota existente.
-     *
-     * @param id  el ID de la mascota a actualizar
-     * @param pet los nuevos datos de la mascota
-     * @return una respuesta HTTP con la mascota actualizada
-     */
-    public ResponseEntity< Pet > updatePet( Long id, Pet pet ) {
+    public ResponseEntity<Pet> updatePet(Pet pet) {
         try {
-            Pet petToUpdate = petRepository.findById( id ).orElse( null );
-            if( petToUpdate == null ) {
-                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( null );
-            }
-            petToUpdate.setName( pet.getName( ) );
-            petToUpdate.setBirthDate( pet.getBirthDate( ) );
-            petToUpdate.setGender( pet.getGender( ) );
-            petToUpdate.setSterilized( pet.getSterilized( ) );
-            petToUpdate.setProfilePicture( pet.getProfilePicture( ) );
-            petToUpdate.setOwnerId( pet.getOwnerId( ) );
-            petToUpdate.setBreed( pet.getBreed( ) );
-            petToUpdate.setAllergies( pet.getAllergies( ) );
-            petToUpdate.setStatus( pet.getStatus( ) );
-            petToUpdate.setDescription( pet.getDescription( ) );
-            petToUpdate.setEmergencyContact( pet.getEmergencyContact( ) );
-            petToUpdate.setUpdatedAt( pet.getUpdatedAt( ) );
-            petRepository.save( petToUpdate );
-            return ResponseEntity.status( HttpStatus.OK ).body( petToUpdate );
-        } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( null );
+            petRepo.updatePet(pet);
+            return ResponseEntity.status(HttpStatus.OK).body(pet);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
-    /**
-     * Elimina (lógicamente) una mascota por su ID.
-     *
-     * @param id el ID de la mascota a eliminar
-     * @return una respuesta HTTP con el resultado de la operación
-     */
-    public ResponseEntity< String > deletePet( Long id ) {
+    public ResponseEntity<String> deletePet(int id) {
         try {
-            Pet pet = petRepository.findById( id ).orElse( null );
-            if( pet == null ) {
-                return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( null );
-            }
-            pet.setStatus( Pet.STATUS_INACTIVE );
-            pet.setDeletedAt( pet.getUpdatedAt( ) );
-            petRepository.save( pet );
-            return ResponseEntity.status( HttpStatus.OK ).body( Constants.PET_DELETED_SUCCESSFULLY );
-        } catch ( Exception e ) {
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( null );
+            petRepo.deletePet(id);
+            return ResponseEntity.status(HttpStatus.OK).body("Pet deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting pet");
         }
     }
 }

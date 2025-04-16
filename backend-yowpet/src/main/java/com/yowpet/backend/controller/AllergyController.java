@@ -1,9 +1,9 @@
 package com.yowpet.backend.controller;
 
 import com.yowpet.backend.model.Allergy;
-import com.yowpet.backend.model.Animal_Category;
+import com.yowpet.backend.model.AnimalCategory;
 import com.yowpet.backend.service.AllergyService;
-import com.yowpet.backend.service.Animal_CategoryService;
+import com.yowpet.backend.service.AnimalCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,23 +22,23 @@ public class AllergyController {
     }
 
     @GetMapping("/{id}")
-    public Allergy getById(@PathVariable Long id) {
+    public Allergy getById(@PathVariable int id) {
         return service.getbyID(id);
 
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public void create(@RequestBody Allergy allergy) {
         service.create(allergy);
     }
 
     @PutMapping("/{id}")
-    public void update(@PathVariable Long id,@RequestBody Allergy allergy) {
+    public void update(@PathVariable int id,@RequestBody Allergy allergy) {
         service.update(id, allergy);
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    @DeleteMapping("/delete/{id}")
+    public void delete(@PathVariable int id) {
         service.delete(id);
     }
 

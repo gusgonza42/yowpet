@@ -1,42 +1,33 @@
 package com.yowpet.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "lessons")
 public class Lesson {
     public static int status_active = 1;
     public static int status_deleted = 0;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
-    @Column(length = 255, nullable = false)
     private String title;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Column(length = 45, nullable = false)
     private int estado = status_active;
 
-    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Lesson_reviews> reviews;
+    private Date  created_at = new Date();
 
-    public Long getId() {
+    private Date  updated_at = new Date();
+
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -64,13 +55,6 @@ public class Lesson {
         this.estado = estado;
     }
 
-    public List<Lesson_reviews> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<Lesson_reviews> reviews) {
-        this.reviews = reviews;
-    }
 
     @Override
     public String toString() {
@@ -79,7 +63,6 @@ public class Lesson {
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", estado=" + estado +
-                ", reviews=" + reviews +
                 '}';
     }
 }

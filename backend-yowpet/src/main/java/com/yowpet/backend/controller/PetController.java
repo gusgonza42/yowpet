@@ -53,7 +53,7 @@ public class PetController {
      * @return una respuesta HTTP con la mascota encontrada
      */
     @GetMapping ( "/{id}" )
-    public ResponseEntity< Pet > getPetById( @PathVariable Long id ) {
+    public ResponseEntity< Pet > getPetById( @PathVariable int id ) {
         return petService.getPetById( id );
     }
 
@@ -65,8 +65,8 @@ public class PetController {
      * @return una respuesta HTTP con la mascota actualizada
      */
     @PutMapping ( "/update/{id}" )
-    public ResponseEntity< Pet > updatePet( @PathVariable Long id, @RequestBody Pet pet ) {
-        return petService.updatePet( id, pet );
+    public ResponseEntity< Pet > updatePet( @PathVariable int id, @RequestBody Pet pet ) {
+        return petService.updatePet( pet);
     }
 
     /**
@@ -76,12 +76,12 @@ public class PetController {
      * @return una respuesta HTTP con el resultado de la operación
      */
     @DeleteMapping ( "/delete/{id}" )
-    public ResponseEntity< String > deletePet( @PathVariable Long id ) {
+    public ResponseEntity< String > deletePet( @PathVariable int id ) {
         return petService.deletePet( id );
     }
 
 //    @PostMapping("/illnes/{id}")
-//    public ResponseEntity< Pet > addIllnes( @PathVariable Long id,@RequestBody Pet pet ) {
+//    public ResponseEntity< Pet > addIllnes( @PathVariable int id,@RequestBody Pet pet ) {
 //        return petService.updatePet( id, pet );
 //    }
 }

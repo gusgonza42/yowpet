@@ -9,37 +9,25 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "places")
 public class Place {
     public static int status_active = 1;
     public static int status_deleted = 0;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
-    @Column(length = 100, nullable = false)
     private String name;
 
-    @Column(length = 255, nullable = false)
     private String address;
 
-    @Column(length = 45, nullable = false)
     private String addresscode;
 
-    @Column(length = 45, nullable = false)
     private int estado = status_active;
 
-    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Place_reviews> reviews;
-
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -73,14 +61,6 @@ public class Place {
 
     public void setEstado(int estado) {
         this.estado = estado;
-    }
-
-    public List<Place_reviews> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<Place_reviews> reviews) {
-        this.reviews = reviews;
     }
 
     @Override

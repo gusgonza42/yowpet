@@ -1,172 +1,120 @@
 package com.yowpet.backend.model;
 
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
 
-/**
- * Representa una entidad de usuario en el sistema.
- */
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table ( name = "user" )
 public class User {
-    public static int status_active = 1;
-    public static int status_inactive = 0;
-    public static int role_admin = 0;
-    public static int role_caregiver = 1;
-    public static int role_user = 2;
+    // Constants for status
+    public static final int STATUS_ACTIVE = 1;
+    public static final int STATUS_INACTIVE = 2;
 
-    /**
-     * El identificador único para el usuario.
-     */
-    @Id
-    @GeneratedValue ( strategy = GenerationType.IDENTITY )
-    @Column ( name = "id" )
-    private Long id;
+    // Constants for roles
+    public static final int ROLE_ADMIN = 0;
+    public static final int ROLE_CAREGIVER = 1;
+    public static final int ROLE_USER = 2;
 
-    /**
-     * El nombre del usuario.
-     */
-    @Column ( name = "first_name", nullable = false )
+    private int id;
     private String firstName;
-
-    /**
-     * El apellido del usuario.
-     */
-    @Column ( name = "last_name", nullable = false )
     private String lastName;
-
-    /**
-     * El correo electrónico del usuario.
-     */
-    @Column ( name = "email", nullable = false, unique = true )
+    private String username;
     private String email;
-
-    /**
-     * La contraseña del usuario.
-     */
-    @Column ( name = "password", nullable = false )
     private String password;
-
-    /**
-     * La ciudad del usuario.
-     */
-    @Column ( name = "city" )
     private String city;
-
-    /**
-     * La dirección del usuario.
-     */
-    @Column ( name = "address", length = 150 )
     private String address;
-
-    /**
-     * El estado del usuario.
-     * Valor por defecto: 1 = activo, 0 = inactivo
-     */
-    @Column ( name = "status" )
-    private int status = status_active;
-
-    /**
-     * El número de teléfono del usuario.
-     */
-    @Column ( name = "phone_number", length = 9 )
-    private int phoneNumber;
-
-    /**
-     * El código postal del usuario.
-     */
-    @Column ( name = "zip_code", length = 5 )
+    private String phoneNumber;
     private int zipCode;
-
-    /**
-     * El género del usuario.
-     * Valores: 1 = masculino, 0 = femenino, 2 = no binario, 3 = otros.
-     */
-    @Column ( name = "gender" )
     private String gender;
-
-    /**
-     * La foto de perfil del usuario.
-     */
-    @Column ( name = "profile_picture" )
     private String profilePicture;
-
-    /**
-     * El rol del usuario.
-     * Valores: 0 = admin, 1 = cuidador, 2 = usuario.
-     */
-    @Column ( name = "role" )
-    private int role = role_user;
-
-    /**
-     * La fecha de nacimiento del usuario.
-     */
-    @Column ( name = "birth_date" )
-    @Temporal ( TemporalType.DATE )
-    private Date birthDate;
-
-    /**
-     * Los idiomas que habla el usuario.
-     */
     private String languages;
-
-    /**
-     * El metodo de pago del usuario.
-     */
-    @Column ( name = "payment_method" )
     private String paymentMethod;
 
-    private String token;
-    /**
-     * La fecha de creación del usuario.
-     */
-    @Column ( name = "created_at" )
-    @Temporal ( TemporalType.DATE )
+    private int status;  // Store status as an integer (1 = active, 2 = inactive)
+    private int role;    // Store role as an integer (0 = admin, 1 = caregiver, 2 = user)
+
+    private Date birthDate;
     private Date createdAt;
-
-    /**
-     * La fecha de última actualización del usuario.
-     */
-    @Column ( name = "updated_at" )
-    @Temporal ( TemporalType.TIMESTAMP )
     private Date updatedAt;
-
-    /**
-     * La fecha de eliminación del usuario.
-     */
-    @Column ( name = "deleted_at" )
-    @Temporal ( TemporalType.TIMESTAMP )
     private Date deletedAt;
 
-    /**
-     * Establece la fecha de registro al crear el objeto usuario.
-     */
-    @PrePersist
-    protected void onCreate( ) {
-        if( createdAt == null ) {
-            createdAt = new Date( );
+    // Getter for 'status' (as String)
+    public String getStatusString() {
+        return (this.status == STATUS_ACTIVE) ? "active" : "inactive";
+    }
+
+    // Setter for 'status' (from String)
+    public void setStatusFromString(String statusString) {
+        if ("active".equalsIgnoreCase(statusString)) {
+            this.status = STATUS_ACTIVE;
+        } else if ("inactive".equalsIgnoreCase(statusString)) {
+            this.status = STATUS_INACTIVE;
+        } else {
+            throw new IllegalArgumentException("Invalid status value: " + statusString);
         }
     }
 
-    /**
-     * Constructor para crear un nuevo usuario con el nombre, apellido, correo electrónico y contraseña especificados.
-     *
-     * @param firstName el nombre del usuario
-     * @param lastName  el apellido del usuario
-     * @param email     el correo electrónico del usuario
-     * @param password  la contraseña del usuario
-     */
-    public User( String firstName, String lastName, String email, String password ) {
+    // Getter for 'role' (as String)
+    public String getRoleString() {
+        switch (this.role) {
+            case ROLE_ADMIN:
+                return "admin";
+            case ROLE_CAREGIVER:
+                return "caregiver";
+            case ROLE_USER:
+                return "user";
+            default:
+                return "unknown";
+        }
+    }
+
+    // Setter for 'role' (from String)
+    public void setRoleFromString(String roleString) {
+        switch (roleString.toLowerCase()) {
+            case "admin":
+                this.role = ROLE_ADMIN;
+                break;
+            case "caregiver":
+                this.role = ROLE_CAREGIVER;
+                break;
+            case "user":
+                this.role = ROLE_USER;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid role value: " + roleString);
+        }
+    }
+
+    public String getLanguages() {
+        if (languages == null || languages.isEmpty()) {
+            return "English(no set)";
+        } else {
+            return languages;
+        }
+
+    }
+
+    public void setLanguages(String languages) {
+        if (languages == null || languages.isEmpty()) {
+            this.languages = "English(no set)";
+        } else {
+            this.languages = languages;
+        }
+    }
+
+    // Constructor for creating a new User
+    public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.status = STATUS_ACTIVE;  // Default status
+        this.role = ROLE_USER;        // Default role
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
     }
 }
