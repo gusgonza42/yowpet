@@ -6,6 +6,7 @@ export const YowPetTheme = {
     accent: '#A0B3FF', // Dark gray for contrast
     white: '#FFFFFF', // Light gray for backgrounds
     support: '#0D0D0D', // Accent color for highlights
+    orange: '#FF7043', // Orange for highlights
   },
   background: {
     mainWhite: '#FFFFFF', // Main background

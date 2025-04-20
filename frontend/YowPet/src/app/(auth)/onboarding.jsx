@@ -1,33 +1,28 @@
-// src/app/(auth)/onboarding.jsx
 import { useRef, useState } from 'react';
-import {
-  Animated,
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Animated, Dimensions, FlatList, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { OnboardingItem } from '@components/onboarding/OnboardingItem';
-import { YowPetTheme } from '@theme/Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const slides = [
   {
     id: '1',
-    title: 'Bienvenido a YowPet',
-    description: 'La mejor forma de cuidar a tu mascota',
+    description: '¡Nunca perderás de vista a tu mejor amigo peludo!',
     image: require('../../assets/logos/yowpet_icon_v2.png'),
   },
   {
     id: '2',
-    title: 'Encuentra servicios',
-    description: 'Conecta con veterinarios y servicios para mascotas',
-    image: require('../../assets/logos/yowpet_icon_v2.png'),
+    description: '¡Nunca perderás de vista a tu mejor amigo peludo!',
+    image: require('../../assets/logos/icon.png'),
   },
-  // Agrega más slides según necesites
+  {
+    id: '3',
+    description: '¡Nunca perderás de vista a tu mejor amigo peludo!',
+    image: require('../../assets/logos/yowpet.png'),
+  },
 ];
+
+const { width } = Dimensions.get('window');
 
 export default function Onboarding() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -41,7 +36,7 @@ export default function Onboarding() {
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
 
-  const scrollTo = async () => {
+  const handleContinue = async () => {
     if (currentIndex < slides.length - 1) {
       slidesRef.current.scrollToIndex({ index: currentIndex + 1 });
     } else {
@@ -58,7 +53,13 @@ export default function Onboarding() {
     <View style={styles.container}>
       <FlatList
         data={slides}
-        renderItem={({ item }) => <OnboardingItem item={item} />}
+        renderItem={({ item, index }) => (
+          <OnboardingItem
+            item={item}
+            onContinue={handleContinue}
+            index={index}
+          />
+        )}
         horizontal
         showsHorizontalScrollIndicator={false}
         pagingEnabled
@@ -74,12 +75,42 @@ export default function Onboarding() {
         viewabilityConfig={viewConfig}
         ref={slidesRef}
       />
-      <View style={styles.bottomContainer}>
-        <TouchableOpacity style={styles.button} onPress={scrollTo}>
-          <Text style={styles.buttonText}>
-            {currentIndex === slides.length - 1 ? 'Comenzar' : 'Siguiente'}
-          </Text>
-        </TouchableOpacity>
+
+      <View style={styles.paginationContainer}>
+        <>
+          {slides.map((_, index) => {
+            const inputRange = [
+              (index - 1) * width,
+              index * width,
+              (index + 1) * width,
+            ];
+
+            const dotWidth = scrollX.interpolate({
+              inputRange,
+              outputRange: [10, 20, 10],
+              extrapolate: 'clamp',
+            });
+
+            const opacity = scrollX.interpolate({
+              inputRange,
+              outputRange: [0.3, 1, 0.3],
+              extrapolate: 'clamp',
+            });
+
+            return (
+              <Animated.View
+                key={index.toString()}
+                style={[
+                  styles.dot,
+                  { width: dotWidth, opacity },
+                  currentIndex === index
+                    ? styles.activeDot
+                    : styles.inactiveDot,
+                ]}
+              />
+            );
+          })}
+        </>
       </View>
     </View>
   );
@@ -88,35 +119,26 @@ export default function Onboarding() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: YowPetTheme.background.mainWhite || '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
+    backgroundColor: '#FFFFFF',
   },
-  bottomContainer: {
+
+  paginationContainer: {
     position: 'absolute',
-    bottom: 50,
+    bottom: 190,
+    flexDirection: 'row',
     width: '100%',
-    paddingHorizontal: 20,
-    zIndex: 1,
-  },
-  button: {
-    backgroundColor: '#007AFF',
-    padding: 15,
-    borderRadius: 10,
+    justifyContent: 'center',
     alignItems: 'center',
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
   },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
+  dot: {
+    height: 10,
+    borderRadius: 5,
+    marginHorizontal: 25,
+  },
+  activeDot: {
+    backgroundColor: '#003E52', // Color azul oscuro para dot activo
+  },
+  inactiveDot: {
+    backgroundColor: '#D1D1D1', // Color gris para dots inactivos
   },
 });
