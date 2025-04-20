@@ -1,29 +1,34 @@
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import { Avatar, Button } from 'react-native-paper';
-import { router } from 'expo-router';
-import { APP_ROUTES } from '@constants/Routes';
+import { useAuth } from '@/context/AuthContext';
 import { ScreenContainer } from '@components/global/ScreenContainer';
 import { YowPetTheme } from '@theme/Colors';
 
 export default function ProfileScreen() {
+  const { user, logout } = useAuth();
+
   return (
     <ScreenContainer backgroundColor={YowPetTheme.background.mainWhite}>
       <View style={styles.header}>
         <Avatar.Image size={100} source={require('@assets/logos/icon.png')} />
-        <Text style={styles.title}>John Doe</Text>
+        <Text style={styles.title}>{user?.firstName || 'Usuario'}</Text>
       </View>
 
       <View style={styles.content}>
         <View style={styles.infoCard}>
           <Text style={styles.infoTitle}>Información Personal</Text>
-          <Text style={styles.infoText}>Email: john@example.com</Text>
-          <Text style={styles.infoText}>Teléfono: +1234567890</Text>
+          <Text style={styles.infoText}>
+            Email: {user?.email || 'No disponible'}
+          </Text>
+          <Text style={styles.infoText}>
+            Teléfono: {user?.phone || 'No disponible'}
+          </Text>
         </View>
       </View>
 
       <Button
         mode="contained"
-        onPress={() => router.replace(APP_ROUTES.AUTH.AUTH)}
+        onPress={logout}
         style={styles.button}
         contentStyle={styles.buttonContent}
         icon="logout"

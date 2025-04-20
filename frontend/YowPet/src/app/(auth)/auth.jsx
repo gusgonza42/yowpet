@@ -1,15 +1,15 @@
 import { useRef, useState } from 'react';
 import { Animated, View } from 'react-native';
 import { ScreenContainer } from '@components/global/ScreenContainer';
-import { router } from 'expo-router';
-import { APP_ROUTES } from '@constants/Routes';
 import { CustomHeader } from '@components/auth/CustomHeader';
 import { AuthTabs } from '@components/auth/AuthTabs';
 import { AuthForm } from '@components/auth/AuthForm';
 import { SocialButtons } from '@components/auth/SocialButtons';
 import { styles } from '@components/auth/styles';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Auth() {
+  const { login } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     email: '',
@@ -49,8 +49,27 @@ export default function Auth() {
     }, 200);
   };
 
-  const handleSubmit = () => {
-    router.replace(APP_ROUTES.TABS.HOME);
+  const handleSubmit = async () => {
+    if (!formData.email || !formData.password) {
+      console.log('Campos incompletos');
+      return;
+    }
+
+    const userData = {
+      email: formData.email,
+      password: formData.password,
+    };
+
+    if (isLogin) {
+      await login(userData);
+    } else {
+      const registerData = {
+        ...userData,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+      };
+      await login(registerData);
+    }
   };
 
   const handleForgotPassword = () => {
