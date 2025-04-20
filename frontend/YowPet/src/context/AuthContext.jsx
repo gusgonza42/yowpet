@@ -16,13 +16,16 @@ const useProtectedRoute = user => {
     const inTabsGroup = segments[0] === '(tabs)';
 
     if (user && inAuthGroup) {
-      router.replace(APP_ROUTES.TABS.HOME);
+      router.replace(APP_ROUTES.TABS.HOME, {
+        animation: 'none',
+      });
     } else if (!user && inTabsGroup) {
-      router.replace(APP_ROUTES.AUTH.AUTH);
+      router.replace(APP_ROUTES.AUTH.AUTH, {
+        animation: 'none',
+      });
     }
   }, [user, segments]);
 };
-
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
