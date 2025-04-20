@@ -11,6 +11,7 @@ export default function AuthLayout() {
         presentation: 'card',
       }}
     >
+      <Stack.Screen name="onboarding" />
       <Stack.Screen name="auth" />
     </Stack>
   );

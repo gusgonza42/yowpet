@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     setIsAuthenticating(true);
     try {
-      await AsyncStorage.removeItem('@auth_user');
+      await AsyncStorage.clear(); // Limpia todo el storage incluyendo @onboarding_complete
       setUser(null);
       return true;
     } catch (error) {
