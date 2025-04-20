@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { YowPetTheme } from '@theme/Colors';
 import { useRouter, useSegments } from 'expo-router';
 import { APP_ROUTES } from '@constants/Routes';
@@ -16,16 +16,13 @@ const useProtectedRoute = user => {
     const inTabsGroup = segments[0] === '(tabs)';
 
     if (user && inAuthGroup) {
-      router.replace(APP_ROUTES.TABS.HOME, {
-        animation: 'none',
-      });
+      router.replace(APP_ROUTES.TABS.HOME, { animation: 'none' });
     } else if (!user && inTabsGroup) {
-      router.replace(APP_ROUTES.AUTH.AUTH, {
-        animation: 'none',
-      });
+      router.replace(APP_ROUTES.AUTH.AUTH, { animation: 'none' });
     }
   }, [user, segments]);
 };
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -34,7 +31,7 @@ export const AuthProvider = ({ children }) => {
   useProtectedRoute(user);
 
   useEffect(() => {
-    loadStoredUser();
+    loadStoredUser().then(r => r);
   }, []);
 
   const loadStoredUser = async () => {
@@ -80,8 +77,10 @@ export const AuthProvider = ({ children }) => {
 
   if (loading || isAuthenticating) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color={YowPetTheme.brand.primary} />
+      <View style={authContextStyles.loaderContainer}>
+        <View style={authContextStyles.loaderWrapper}>
+          <ActivityIndicator size={36} color={YowPetTheme.brand.primary} />
+        </View>
       </View>
     );
   }
@@ -104,3 +103,15 @@ export const useAuth = () => {
   }
   return context;
 };
+
+const authContextStyles = StyleSheet.create({
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: YowPetTheme.brand.white,
+  },
+  loaderWrapper: {
+    padding: 8,
+  },
+});

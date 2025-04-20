@@ -9,7 +9,7 @@ export default function Layout() {
         <Stack
           screenOptions={{
             headerShown: false,
-            animation: 'none', // Desactiva la animación inicial
+            animation: 'none', // animacion lateral disable
           }}
         >
           <Stack.Screen
