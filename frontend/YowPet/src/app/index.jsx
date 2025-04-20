@@ -9,7 +9,7 @@ export default function Index() {
   const [checkingOnboarding, setCheckingOnboarding] = useState(true);
 
   useEffect(() => {
-    checkOnboarding();
+    checkOnboarding().then(r => r);
   }, []);
 
   const checkOnboarding = async () => {
