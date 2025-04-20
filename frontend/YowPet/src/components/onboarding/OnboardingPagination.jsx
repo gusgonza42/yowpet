@@ -1,4 +1,5 @@
-import { Animated, StyleSheet, View } from 'react-native';
+import { Animated, View } from 'react-native';
+import { styles } from './styles';
 
 export const OnboardingPagination = ({
   slides,
@@ -6,7 +7,7 @@ export const OnboardingPagination = ({
   getDotAnimation,
 }) => {
   return (
-    <View style={styles.paginationContainer}>
+    <View style={styles.pagination.paginationContainer}>
       {slides.map((_, index) => {
         const { width: dotWidth, opacity } = getDotAnimation(index);
 
@@ -14,9 +15,11 @@ export const OnboardingPagination = ({
           <Animated.View
             key={index.toString()}
             style={[
-              styles.dot,
+              styles.pagination.dot,
               { width: dotWidth, opacity },
-              currentIndex === index ? styles.activeDot : styles.inactiveDot,
+              currentIndex === index
+                ? styles.pagination.activeDot
+                : styles.pagination.inactiveDot,
             ]}
           />
         );
@@ -24,25 +27,3 @@ export const OnboardingPagination = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  paginationContainer: {
-    position: 'absolute',
-    bottom: 180, // Más cerca del botón
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  dot: {
-    height: 12, // Más grande
-    borderRadius: 6,
-    marginHorizontal: 6,
-  },
-  activeDot: {
-    backgroundColor: '#003E52',
-  },
-  inactiveDot: {
-    backgroundColor: '#D1D1D1',
-  },
-});

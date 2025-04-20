@@ -1,7 +1,8 @@
-import { Animated, FlatList, StyleSheet, View } from 'react-native';
+import { Animated, FlatList, View } from 'react-native';
 import { OnboardingItem } from '@components/onboarding/OnboardingItem';
 import { OnboardingPagination } from '@components/onboarding/OnboardingPagination';
 import { useOnboarding } from '@hooks/useOnboarding';
+import { styles } from '@components/onboarding/styles';
 
 export default function Onboarding() {
   const {
@@ -16,7 +17,7 @@ export default function Onboarding() {
   } = useOnboarding();
 
   return (
-    <View style={styles.container}>
+    <View style={styles.onboardingScreen.container}>
       <FlatList
         data={slides}
         renderItem={({ item, index }) => (
@@ -51,10 +52,3 @@ export default function Onboarding() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-});

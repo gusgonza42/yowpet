@@ -1,4 +1,5 @@
-import { Animated, StyleSheet } from 'react-native';
+import { Animated } from 'react-native';
+import { styles } from '@components/onboarding/styles';
 
 export const DecorationShape = ({
   config,
@@ -6,26 +7,10 @@ export const DecorationShape = ({
   transform,
   isTopBackground = false,
 }) => {
-  const styles = StyleSheet.create({
-    backgroundShape: {
-      position: 'absolute',
-      height: '50%',
-      zIndex: 1,
-      backgroundColor: config.color,
-      borderBottomLeftRadius: 100, // Radio para fondo superior
-    },
-    decorationShape: {
-      position: 'absolute',
-      zIndex: 1,
-      backgroundColor: config.color,
-      borderRadius: 50, // Aplicamos bordes curvados a todas las formas decorativas
-    },
-  });
-
   // Determinamos qué estilo base aplicar
   const baseStyle = isTopBackground
-    ? styles.backgroundShape
-    : styles.decorationShape;
+    ? styles.decorationShape.backgroundShape
+    : styles.decorationShape.decorationShape;
 
   return (
     <Animated.View
@@ -38,6 +23,7 @@ export const DecorationShape = ({
           bottom: config.position.bottom,
           width: config.position.width,
           height: isTopBackground ? '50%' : config.position.height,
+          backgroundColor: config.color, // Mantener dinámico
           opacity,
           transform,
         },

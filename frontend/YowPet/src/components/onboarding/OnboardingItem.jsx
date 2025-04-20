@@ -1,9 +1,9 @@
-import { SafeAreaView, StyleSheet, useWindowDimensions } from 'react-native';
-import { YowPetTheme } from '@theme/Colors';
+import { SafeAreaView, useWindowDimensions } from 'react-native';
 import { DecorationShape } from './DecorationShape';
 import { OnboardingContent } from './OnboardingContent';
 import { useOnboardingAnimations } from '@hooks/useOnboardingAnimations';
 import { screenConfigs } from '@constants/onboardingData';
+import { styles } from './styles';
 
 export const OnboardingItem = ({ item, onContinue, index, scrollX }) => {
   const { width } = useWindowDimensions();
@@ -36,7 +36,7 @@ export const OnboardingItem = ({ item, onContinue, index, scrollX }) => {
   const finalContentTransform = animations.getFinalContentTransform();
 
   return (
-    <SafeAreaView style={[styles.container, { width }]}>
+    <SafeAreaView style={[styles.onboardingItem.container, { width }]}>
       {/* Fondo superior con color cambiante */}
       <DecorationShape
         config={config.topBackground}
@@ -69,10 +69,3 @@ export const OnboardingItem = ({ item, onContinue, index, scrollX }) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: YowPetTheme.background.mainWhite,
-  },
-});

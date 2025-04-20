@@ -6,7 +6,7 @@ export const styles = {
   onboardingItem: StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: YowPetTheme.background.mainWhite,
+      backgroundColor: YowPetTheme.brand.mainWhite,
     },
   }),
 
@@ -16,13 +16,13 @@ export const styles = {
       position: 'absolute',
       height: '50%',
       zIndex: 1,
-      backgroundColor: 'transparent', // Se establece dinámicamente
+      backgroundColor: 'transparent',
       borderBottomLeftRadius: 100,
     },
     decorationShape: {
       position: 'absolute',
       zIndex: 1,
-      backgroundColor: 'transparent', // Se establece dinámicamente
+      backgroundColor: 'transparent',
       borderRadius: 50,
     },
   }),
@@ -113,10 +113,10 @@ export const styles = {
       marginHorizontal: 6,
     },
     activeDot: {
-      backgroundColor: '#003E52',
+      backgroundColor: YowPetTheme.brand.primary,
     },
     inactiveDot: {
-      backgroundColor: '#D1D1D1',
+      backgroundColor: YowPetTheme.brand.accent,
     },
   }),
 
@@ -124,7 +124,7 @@ export const styles = {
   onboardingScreen: StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#FFFFFF',
+      backgroundColor: YowPetTheme.background.mainWhite,
     },
   }),
 };
