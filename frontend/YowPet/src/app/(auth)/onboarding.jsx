@@ -1,7 +1,7 @@
 import { Animated, FlatList, View } from 'react-native';
 import { OnboardingItem } from '@components/onboarding/OnboardingItem';
 import { OnboardingPagination } from '@components/onboarding/OnboardingPagination';
-import { useOnboarding } from '@hooks/useOnboarding';
+import { useOnboarding } from '@hooks/onBoarding/useOnboarding';
 import { styles } from '@components/onboarding/styles';
 
 export default function Onboarding() {

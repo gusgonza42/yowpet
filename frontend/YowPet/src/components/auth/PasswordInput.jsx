@@ -6,14 +6,18 @@ export const PasswordInput = ({
   label,
   value,
   onChangeText,
+  onBlur,
   visible,
   toggleVisibility,
   icon,
+  error,
+  errorColor,
 }) => (
   <TextInput
     label={label}
     value={value}
     onChangeText={onChangeText}
+    onBlur={onBlur}
     secureTextEntry={!visible}
     mode="outlined"
     style={styles.password.input}
@@ -24,8 +28,9 @@ export const PasswordInput = ({
         onPress={toggleVisibility}
       />
     }
-    outlineColor={YowPetTheme.border.softBorder}
-    activeOutlineColor={YowPetTheme.brand.primary}
+    outlineColor={error ? errorColor : YowPetTheme.border.softBorder}
+    activeOutlineColor={error ? errorColor : YowPetTheme.brand.primary}
     textColor={YowPetTheme.text.mainText}
+    error={error}
   />
 );

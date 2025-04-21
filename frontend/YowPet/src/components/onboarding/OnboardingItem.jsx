@@ -1,7 +1,7 @@
 import { SafeAreaView, useWindowDimensions } from 'react-native';
 import { DecorationShape } from './DecorationShape';
 import { OnboardingContent } from './OnboardingContent';
-import { useOnboardingAnimations } from '@hooks/useOnboardingAnimations';
+import { useOnboardingAnimations } from '@hooks/onBoarding/useOnboardingAnimations';
 import { screenConfigs } from '@constants/onboardingData';
 import { styles } from './styles';
 

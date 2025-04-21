@@ -175,5 +175,13 @@ export const styles = {
       fontWeight: 'bold',
       color: YowPetTheme.brand.primary,
     },
+    errorText: {
+      color: YowPetTheme.status.errorState,
+      fontSize: 12,
+      alignSelf: 'flex-start',
+      marginTop: 2,
+      marginBottom: 6,
+      marginLeft: 8,
+    },
   }),
 };
