@@ -92,11 +92,11 @@ export const AuthForm = ({
         style={styles.form.submitButton}
         contentStyle={styles.form.submitButtonContent}
         labelStyle={styles.form.submitButtonLabel}
-        buttonColor={YowPetTheme.brand.accent || '#1E3A4C'}
+        buttonColor={YowPetTheme.brand.primary}
         textColor={YowPetTheme.brand.white}
         onPress={handleSubmit}
       >
-        {isLogin ? 'Sign In' : 'REGISTRARSE'}
+        {isLogin ? 'Iniciar sesión' : 'Registrarse'}
       </Button>
 
       <FormFooter isLogin={isLogin} onForgotPassword={handleForgotPassword} />

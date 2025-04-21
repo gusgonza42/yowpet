@@ -5,7 +5,7 @@ export const FormFooter = ({ isLogin, onForgotPassword }) => (
   <>
     {isLogin && (
       <Text style={styles.footer.forgotPasswordText} onPress={onForgotPassword}>
-        HAVE YOU FORGOTTEN YOUR PASSWORD?
+        ¿Olvidaste tu contraseña?
       </Text>
     )}
 

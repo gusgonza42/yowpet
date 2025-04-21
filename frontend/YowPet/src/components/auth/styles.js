@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { YowPetTheme } from '@theme/Colors';
 
 export const styles = {
   CustomHeader: StyleSheet.create({
@@ -12,16 +13,17 @@ export const styles = {
       fontWeight: 'bold',
     },
     yowText: {
-      color: '#1E3A4C',
+      color: YowPetTheme.brand.primary,
     },
     petText: {
-      color: '#FF7F50',
+      color: YowPetTheme.brand.orange,
     },
   }),
   authTabs: StyleSheet.create({
     tabContainer: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'center',
+      alignItems: 'center',
       paddingHorizontal: 10,
       marginBottom: 20,
     },
@@ -31,22 +33,24 @@ export const styles = {
       flex: 1,
       alignItems: 'center',
       marginHorizontal: 5,
+      justifyContent: 'center',
     },
     activeTab: {
-      backgroundColor: '#1E3A4C',
+      backgroundColor: YowPetTheme.brand.primary,
     },
     tabText: {
       fontWeight: '600',
-      color: '#1E3A4C',
+      color: YowPetTheme.text.subtleText,
+      textAlign: 'center',
     },
     activeTabText: {
-      color: '#FFFFFF',
+      color: YowPetTheme.brand.white,
     },
   }),
 
   auth: StyleSheet.create({
     screenContainer: {
-      backgroundColor: '#FFFFFF',
+      backgroundColor: YowPetTheme.background.mainWhite,
     },
     container: {
       flex: 1,
@@ -55,9 +59,14 @@ export const styles = {
     },
     authContainer: {
       width: '90%',
-      backgroundColor: '#F5F7F9',
+      backgroundColor: YowPetTheme.surface.medium,
       borderRadius: 25,
       padding: 16,
+      shadowColor: YowPetTheme.shadow.mediumShadow,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.2,
+      shadowRadius: 6,
+      elevation: 4,
     },
   }),
 
@@ -78,6 +87,7 @@ export const styles = {
       marginTop: 15,
       borderRadius: 25,
       height: 50,
+      backgroundColor: YowPetTheme.brand.primary,
     },
     submitButtonContent: {
       height: 50,
@@ -86,6 +96,7 @@ export const styles = {
       fontSize: 16,
       fontWeight: 'bold',
       letterSpacing: 1,
+      color: YowPetTheme.brand.white,
     },
   }),
 
@@ -147,19 +158,22 @@ export const styles = {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: '#FFFFFF',
+      backgroundColor: YowPetTheme.surface.light,
       justifyContent: 'center',
       alignItems: 'center',
       marginHorizontal: 10,
-      shadowColor: '#000',
+      shadowColor: YowPetTheme.shadow.softShadow,
       shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.2,
       shadowRadius: 1.5,
       elevation: 2,
+      borderWidth: 1,
+      borderColor: YowPetTheme.border.softBorder,
     },
     socialButtonText: {
       fontSize: 20,
       fontWeight: 'bold',
+      color: YowPetTheme.brand.primary,
     },
   }),
 };
