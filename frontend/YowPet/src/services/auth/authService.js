@@ -1,15 +1,15 @@
 import { axiosClient } from '@/services/api/clienteAxios';
 
-export const authService = {
-  // Auth
-  login: credentials => axiosClient.post('/auth/login', credentials),
+  export const authService = {
+    // Auth
+    login: credentials => axiosClient.post('/login', credentials),
 
-  // Registro
-  register: userData => axiosClient.post('/auth/register', userData),
+    // Registro
+    register: userData => axiosClient.post('/register', userData),
 
-  // Recuperar contraseña
-  forgotPassword: email => axiosClient.post('/auth/forgot-password', { email }),
+    // Recuperar contraseña
+    forgotPassword: email => axiosClient.post('/forgot-password', { email }),
 
-  // Verificar token
-  verifyToken: () => axiosClient.get('/auth/verify'),
-};
+    // Verificar token
+    verifyToken: () => axiosClient.get('/validation'),
+  };

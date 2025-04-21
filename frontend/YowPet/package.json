@@ -4,6 +4,7 @@
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start --port 3000 --tunnel",
+    "def": "expo start --port 3000",
     "android": "expo start --android --port 3000",
     "ios": "expo start --ios --port 3000",
     "web": "expo start --web --port 3000",

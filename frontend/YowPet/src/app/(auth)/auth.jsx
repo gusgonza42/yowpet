@@ -1,4 +1,3 @@
-// src/app/(auth)/auth.jsx
 import { View } from 'react-native';
 import { ScreenContainer } from '@components/global/ScreenContainer';
 import { CustomHeader } from '@components/auth/CustomHeader';
