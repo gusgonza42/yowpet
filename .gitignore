@@ -46,6 +46,8 @@ frontend/YowPet/yarn-debug.log*
 frontend/YowPet/yarn-error.log*
 
 # React Native/Expo
+frontend/YowPet/.vscode/
+frontend/YowPet/.idea/
 frontend/YowPet/.expo/
 frontend/YowPet/.expo-shared/
 frontend/YowPet/dist/
