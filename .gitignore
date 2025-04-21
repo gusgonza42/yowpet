@@ -40,24 +40,18 @@ docker-compose.local.yaml
 .docker/
 
 # Node.js (para React Native con Expo)
-frontend-yowpet/node_modules/
-frontend-yowpet/npm-debug.log*
-frontend-yowpet/yarn-debug.log*
-frontend-yowpet/yarn-error.log*
+frontend/YowPet/node_modules/
+frontend/YowPet/npm-debug.log*
+frontend/YowPet/yarn-debug.log*
+frontend/YowPet/yarn-error.log*
 
 # React Native/Expo
-frontend-yowpet/.expo/
-frontend-yowpet/.expo-shared/
-frontend-yowpet/dist/
-frontend-yowpet/web-build/
-frontend-yowpet/android/
-frontend-yowpet/ios/
-frontend-yowpet/expo-env.d.ts
-
-# Expo specific files
-frontend-yowpet/.expo/
-frontend-yowpet/.expo-shared/
-
+frontend/YowPet/.expo/
+frontend/YowPet/.expo-shared/
+frontend/YowPet/dist/
+frontend/YowPet/web-build/
+frontend/YowPet/android/
+frontend/YowPet/ios/
 # Expo debugging
 frontend-yowpet/.metro-health-check*
 
