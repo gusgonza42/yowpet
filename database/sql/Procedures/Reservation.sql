@@ -1,6 +1,5 @@
 -- ----------------- Drop Reservation if exist ----------------- --
 
-DROP PROCEDURE IF EXISTS createReservation;
 DROP PROCEDURE IF EXISTS updateReservation;
 DROP PROCEDURE IF EXISTS deleteReservation;
 DROP PROCEDURE IF EXISTS getReservationById;
@@ -11,15 +10,19 @@ DROP PROCEDURE IF EXISTS completeReservation;
 
 -- Create Reservation
 DELIMITER $$
+
+DROP PROCEDURE IF EXISTS createReservation;
+
 CREATE PROCEDURE createReservation(
     IN p_user_id INT,
     IN p_caregiver_id INT,
-    IN p_reservation_date DATE,
+    IN p_pet_id INT,
+    IN p_reservation_date DATETIME,
     IN p_details VARCHAR(255)
 )
 BEGIN
-    INSERT INTO reservations (user_id, caregiver_id, reservation_date, details, status)
-    VALUES (p_user_id, p_caregiver_id, p_reservation_date, p_details, 1);
+    INSERT INTO reservations (user_id, caregiver_id, pet_id, reservation_date, details, status)
+    VALUES (p_user_id, p_caregiver_id, p_pet_id, p_reservation_date, p_details, 'pending');
 END$$
 DELIMITER ;
 
