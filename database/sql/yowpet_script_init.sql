@@ -28,7 +28,7 @@ DELIMITER $$
 -- Procedures
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `completeReservation` (IN `p_id` INT)   BEGIN
-    update reservations set status = 2 where id = p_id;
+    update reservations set status = 2 where reservation_id = p_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `createallergy` (IN `p_id` INT, IN `p_name` VARCHAR(255))   BEGIN
@@ -47,19 +47,19 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createbreed` (IN `p_animalCatId` IN
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `createCaregiverWorker` (IN `p_user_id` INT, IN `p_speciality` VARCHAR(255), IN `p_experience_years` INT, IN `p_hourly_rate` DECIMAL(10,2), IN `p_rating` DECIMAL(3,2), IN `p_review` TEXT, IN `p_description` TEXT, IN `p_service_worker` VARCHAR(255), IN `p_status_active_work` BOOLEAN)   BEGIN
-    INSERT INTO caregiver_worker (user_id, speciality, experience_years, hourly_rate, rating, review,
+    INSERT INTO caregiver_workers (user_id, speciality, experience_years, hourly_rate, rating, review,
                                   description, service_worker, status_active_work)
     VALUES (p_user_id, p_speciality, p_experience_years, p_hourly_rate, p_rating,
             p_review, p_description, p_service_worker, p_status_active_work);
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `createLesson` (IN `p_title` VARCHAR(255), IN `p_content` TEXT, IN `p_estado` INT)   BEGIN
-INSERT INTO lesson (title, content, estado)
+INSERT INTO lessons (title, content, status)
 VALUES (p_title, p_content, p_estado);
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `CreateLessonReview` (IN `p_lesson_id` BIGINT, IN `p_user_id` BIGINT, IN `p_rating` DOUBLE, IN `p_comment` TEXT)   BEGIN
-    INSERT INTO lesson_reviews (lesson_id, user_id, rating, comment, estado)
+    INSERT INTO lesson_reviews (lesson_id, user_id, rating, comment, status)
     VALUES (p_lesson_id, p_user_id, ROUND(p_rating, 1), p_comment, 1);
 END$$
 
@@ -117,11 +117,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deletebreed` (IN `p_breedId` INT)  
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCaregiverWorker` (IN `p_id` INT)   BEGIN
-    DELETE FROM caregiver_worker WHERE id = p_id;
+    DELETE FROM caregiver_workers WHERE id = p_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteLesson` (IN `p_id` INT)   BEGIN
-DELETE FROM lesson WHERE id = p_id;
+DELETE FROM lessons WHERE id = p_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deletePet` (IN `p_id` INT)   BEGIN
@@ -145,7 +145,7 @@ WHERE id = p_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteReservation` (IN `p_id` INT)   BEGIN
-    UPDATE reservations SET status = 0 WHERE id = p_id;
+    UPDATE reservations SET status = 0 WHERE reservation_id = p_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUser` (IN `p_user_id` INT)   BEGIN
@@ -157,7 +157,7 @@ WHERE id = p_user_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `disableCaregiverWorker` (IN `p_id` INT)   BEGIN
-    UPDATE caregiver_worker
+    UPDATE caregiver_workers
     SET status_active_work = 0
     WHERE id = p_id;
 END$$
@@ -188,7 +188,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllBreeds` ()   BEGIN
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllCaregiverWorkers` ()   BEGIN
-    SELECT * FROM caregiver_worker;
+    SELECT * FROM caregiver_workers;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getallergy` (IN `p_allergyId` INT)   BEGIN
@@ -202,11 +202,11 @@ SELECT id, name, photo FROM allergies;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllLessonReviews` ()   BEGIN
-    SELECT * FROM lesson_reviews WHERE estado <> 0;
+    SELECT * FROM lesson_reviews WHERE status <> 0;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllLessons` ()   BEGIN
-SELECT * FROM lesson;
+SELECT * FROM lessons;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllPets` ()   BEGIN
@@ -260,7 +260,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAnimalCategory` (IN `p_animalCat
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAvailableCaregiverWorkers` (IN `p_status_active_work` BOOLEAN)   BEGIN
-    SELECT * FROM caregiver_worker WHERE status_active_work = p_status_active_work;
+    SELECT * FROM caregiver_workers WHERE status_active_work = p_status_active_work;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getBreedById` (IN `p_breedId` INT)   BEGIN
@@ -274,38 +274,38 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getBreedsByCategory` (IN `p_animalC
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCaregiverWorker` (IN `p_id` INT)   BEGIN
-    SELECT * FROM caregiver_worker WHERE id = p_id;
+    SELECT * FROM caregiver_workers WHERE id = p_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCaregiverWorkersByCategory` (IN `p_animal_cat_id` INT)   BEGIN
     SELECT cw.*
-    FROM caregiver_worker cw
+    FROM caregiver_workers cw
              JOIN caregiver_worker_category cwc ON cw.id = cwc.caregiver_id
     WHERE cwc.category_id = p_animal_cat_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCaregiverWorkersByRating` (IN `p_rating` DECIMAL(3,2))   BEGIN
-    SELECT * FROM caregiver_worker WHERE rating >= p_rating ORDER BY rating DESC;
+    SELECT * FROM caregiver_workers WHERE rating >= p_rating ORDER BY rating DESC;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCaregiverWorkersBySpeciality` (IN `p_speciality` VARCHAR(255))   BEGIN
-    SELECT * FROM caregiver_worker WHERE speciality = p_speciality;
+    SELECT * FROM caregiver_workers WHERE speciality = p_speciality;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCaregiverWorkersByUser` (IN `p_user_id` INT)   BEGIN
-    SELECT * FROM caregiver_worker WHERE user_id = p_user_id;
+    SELECT * FROM caregiver_workers WHERE user_id = p_user_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getLesson` (IN `p_id` INT)   BEGIN
-SELECT * FROM lesson WHERE id = p_id;
+SELECT * FROM lessons WHERE id = p_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetLessonReviewById` (IN `review_id` BIGINT)   BEGIN
-    SELECT * FROM lesson_reviews WHERE id = review_id AND estado <> 0;
+    SELECT * FROM lesson_reviews WHERE id = review_id AND status <> 0;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getLessonsByEstado` (IN `p_estado` INT)   BEGIN
-SELECT * FROM lesson WHERE estado = p_estado;
+SELECT * FROM lessons WHERE status = p_estado;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getPet` (IN `p_id` INT)   BEGIN
@@ -417,7 +417,7 @@ WHERE user_id = p_user
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getReservationById` (IN `p_id` INT)   BEGIN
-    SELECT * FROM reservations WHERE id = p_id AND status != 0;
+    SELECT * FROM reservations WHERE reservation_id = p_id AND status != 0;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getReservationsByCareGiver` (IN `p_caregiver_id` INT)   BEGIN
@@ -537,19 +537,19 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `searchCaregiverWorkers` (IN `p_search_term` VARCHAR(255))   BEGIN
     SELECT *
-    FROM caregiver_worker
+    FROM caregiver_workers
     WHERE speciality LIKE p_search_term
        OR description LIKE p_search_term
        OR service_worker LIKE p_search_term;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SearchLessonReviewsByRating` (IN `review_rating` DOUBLE)   BEGIN
-    SELECT * FROM lesson_reviews WHERE ROUND(rating, 1) = review_rating AND estado <> 0;
+    SELECT * FROM lesson_reviews WHERE ROUND(rating, 1) = review_rating AND status <> 0;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `searchLessons` (IN `p_search_term` VARCHAR(255))   BEGIN
 SELECT *
-FROM lesson
+FROM lessons
 WHERE title LIKE p_search_term
    OR content LIKE p_search_term;
 END$$
@@ -620,7 +620,7 @@ WHERE firstname LIKE CONCAT('%', p_searchTerm, '%')
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SoftDeleteLessonReview` (IN `review_id` BIGINT)   BEGIN
-    UPDATE lesson_reviews SET estado = 0 WHERE id = review_id;
+    UPDATE lesson_reviews SET status = 0 WHERE id = review_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `toAdmin` (IN `p_user_id` INT)   BEGIN
@@ -657,7 +657,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updatebreed` (IN `p_breedId` INT, I
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCaregiverWorker` (IN `p_id` INT, IN `p_user_id` INT, IN `p_speciality` VARCHAR(255), IN `p_experience_years` INT, IN `p_hourly_rate` DECIMAL(10,2), IN `p_rating` DECIMAL(3,2), IN `p_review` TEXT, IN `p_description` TEXT, IN `p_service_worker` VARCHAR(255), IN `p_status_active_work` BOOLEAN)   BEGIN
-    UPDATE caregiver_worker
+    UPDATE caregiver_workers
     SET user_id            = p_user_id,
         speciality         = p_speciality,
         experience_years   = p_experience_years,
@@ -671,10 +671,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCaregiverWorker` (IN `p_id` I
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateLesson` (IN `p_id` INT, IN `p_title` VARCHAR(255), IN `p_content` TEXT, IN `p_estado` INT)   BEGIN
-UPDATE lesson
+UPDATE lessons
 SET title   = p_title,
     content = p_content,
-    estado  = p_estado
+    status  = p_estado
 WHERE id = p_id;
 END$$
 
@@ -682,7 +682,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `UpdateLessonReview` (IN `review_id`
     UPDATE lesson_reviews
     SET rating  = ROUND(new_rating, 1),
         comment = new_comment,
-        estado  = new_estado
+        status  = new_estado
     WHERE id = review_id;
 END$$
 
@@ -725,7 +725,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateReservation` (IN `p_id` INT, 
     UPDATE reservations
     SET reservation_date = p_reservation_date,
         details          = p_details
-    WHERE id = p_id;
+    WHERE reservation_id = p_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUser` (IN `p_user_id` INT, IN `p_first_name` VARCHAR(255), IN `p_last_name` VARCHAR(255), IN `p_email` VARCHAR(255), IN `p_city` VARCHAR(255), IN `p_address` VARCHAR(255), IN `p_telephone` VARCHAR(20), IN `p_zip_code` INT, IN `p_gender` VARCHAR(50), IN `p_profile_picture` VARCHAR(255), IN `p_rol` INT, IN `p_languages` TEXT, IN `p_payment_method` VARCHAR(255), IN `p_birth_date` DATE)   BEGIN
