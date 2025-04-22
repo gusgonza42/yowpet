@@ -82,9 +82,7 @@ export function useAuthForm() {
         const response = await authService.register(registerData);
 
         if (response.success) {
-          // Si el registro es exitoso, guardamos el token
           await AsyncStorage.setItem('token', response.token);
-          // Y actualizamos el contexto de autenticación
           const userData = {
             email: values.email,
             firstName: values.firstName,
@@ -94,13 +92,11 @@ export function useAuthForm() {
           await authLogin(userData);
           resetForm();
         } else {
-          // Si hay un error, mostramos el mensaje del backend
           setErrors({ submit: response.message || 'Error en el registro' });
         }
       }
     } catch (error) {
-      // Manejamos errores de red u otros problemas no controlados
-      console.error('Error en autenticación:', error);
+      console.log('Error en autenticación:', error);
       setErrors({
         submit:
           error.response?.data?.message ||
@@ -131,7 +127,7 @@ export function useAuthForm() {
           'Se ha enviado un enlace de recuperación a su correo electrónico',
       };
     } catch (error) {
-      console.error('Error al recuperar contraseña:', error);
+      console.log('Error al recuperar contraseña:', error);
       return {
         success: false,
         message:

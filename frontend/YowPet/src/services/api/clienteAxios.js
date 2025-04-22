@@ -21,7 +21,7 @@ axiosClient.interceptors.request.use(
         config.headers.Authorization = `Bearer ${token}`;
       }
     } catch (error) {
-      console.error('Error al obtener el token:', error);
+      console.log('Error al obtener el token:', error);
     }
     return config;
   },
