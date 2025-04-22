@@ -1,6 +1,7 @@
 -- ----------------- Drop Users if exist ----------------- --
 
 DROP PROCEDURE IF EXISTS createUser;
+DROP PROCEDURE IF EXISTS createUserandToken;
 DROP PROCEDURE IF EXISTS updateUser;
 DROP PROCEDURE IF EXISTS deleteUser;
 DROP PROCEDURE IF EXISTS getUser;
@@ -48,6 +49,35 @@ BEGIN
         p_latitud, p_longitud, NOW(), NOW(), p_username, 1
     );
 END //
+
+
+CREATE PROCEDURE createUserandToken(
+    IN p_first_name VARCHAR(255),
+    IN p_last_name VARCHAR(255),
+    IN p_username VARCHAR(255),
+    IN p_email VARCHAR(255),
+    IN p_password VARCHAR(255),
+    IN p_city VARCHAR(255),
+    IN p_address VARCHAR(255),
+    IN p_telephone VARCHAR(20),
+    IN p_zip_code INT,
+    IN p_gender VARCHAR(50),
+    IN p_profile_picture VARCHAR(255),
+    IN p_rol INT,
+    IN p_languages TEXT,
+    IN p_payment_method VARCHAR(255),
+    IN p_birth_date DATE,
+    IN p_token VARCHAR(255)
+)
+BEGIN
+    INSERT INTO users (firstname, lastname, username, email, password, city, address, telephone,
+                       postalcode, gender, photo, rol, languages, paymentmethod, birthdate,
+                       createdAt, updatedAt, Token)
+    VALUES (p_first_name, p_last_name, p_username, p_email, p_password, p_city,
+            p_address, p_telephone, p_zip_code, p_gender, p_profile_picture, p_rol,
+            p_languages, p_payment_method, p_birth_date, NOW(), NOW(), p_token);
+END //
+
 
 -- Actualizar un usuario existente
 CREATE PROCEDURE updateUser(
@@ -175,16 +205,16 @@ BEGIN
     WHERE username = p_username AND state = 1;
 END //
 
--- Actualizar el token de un usuario
-CREATE PROCEDURE updateUserToken(
-    IN p_id INT,
+
+CREATE PROCEDURE UpdateUserToken(
+    IN p_email VARCHAR(255),
     IN p_token LONGTEXT
 )
 BEGIN
     UPDATE users
     SET Token = p_token,
         updatedAt = NOW()
-    WHERE id = p_id;
+    WHERE email = p_email;
 END //
 
 -- Validar credenciales de usuario
