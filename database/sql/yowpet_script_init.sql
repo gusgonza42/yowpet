@@ -6,7 +6,9 @@
 -- Generation Time: Apr 08, 2025 at 04:45 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
-
+DROP DATABASE IF EXISTS yowpet;
+CREATE DATABASE IF NOT EXISTS yowpet;
+USE yowpet;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -1130,7 +1132,7 @@ CREATE TABLE `users` (
   `updatedAt` datetime DEFAULT NULL,
   `deletedAt` datetime DEFAULT NULL,
   `username` varchar(100) DEFAULT NULL,
-  `Token` varchar(100) DEFAULT NULL
+  `Token` TEXT DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
