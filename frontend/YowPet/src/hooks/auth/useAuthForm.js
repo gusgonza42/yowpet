@@ -22,7 +22,6 @@ export function useAuthForm() {
     : {
         firstName: '',
         lastName: '',
-        username: '', // Añadido campo username requerido por el backend
         email: '',
         password: '',
         confirmPassword: '',
@@ -76,7 +75,6 @@ export function useAuthForm() {
         const registerData = {
           firstName: values.firstName,
           lastName: values.lastName,
-          username: values.username, // Asegúrate de que el usuario proporcione un nombre de usuario
           email: values.email,
           password: values.password,
         };
@@ -91,7 +89,6 @@ export function useAuthForm() {
             email: values.email,
             firstName: values.firstName,
             lastName: values.lastName,
-            username: values.username,
             token: response.token,
           };
           await authLogin(userData);

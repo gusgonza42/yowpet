@@ -56,8 +56,7 @@ public class AuthServiceJWT {
      */
     public ResponseEntity<?> login(AuthRequestJWT authRequestJWT) {
         try {
-            String identifier = authRequestJWT.getUsername() != null && !authRequestJWT.getUsername().isEmpty()
-                    ? authRequestJWT.getUsername() : authRequestJWT.getEmail();
+            String identifier = authRequestJWT.getEmail();
 
             if (identifier == null || identifier.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -69,14 +68,10 @@ public class AuthServiceJWT {
                         .body(AuthConstantsJWT.CREDENTIALS_REQUIRED);
             }
 
-            // Buscar usuario por username o email
-            UserJWT userJWT = userRepositoryJWT.getUserByUsername(identifier);
+            // Buscar usuario por email
+            UserJWT userJWT = userRepositoryJWT.getUserByEmail(identifier);
 
-            // Si no lo encuentra por username, buscar por email
-            if (userJWT == null) {
-                userJWT = userRepositoryJWT.getUserByEmail(identifier);
-            }
-
+            // Si no lo encuentra por email
             if (userJWT == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(AuthConstantsJWT.USER_NOT_EXISTS);
@@ -89,14 +84,14 @@ public class AuthServiceJWT {
 
             String token = userJWT.getToken();
             if (token == null || !jwtTokenUtils.isValidToken(token)) {
-                token = jwtTokenUtils.generateToken(userJWT.getUsername());
+                token = jwtTokenUtils.generateToken(userJWT.getEmail());
                 userJWT.setToken(token);
                 printMssg(AuthConstantsJWT.TOKEN_CREATED_OR_UPDATED);
                 userRepositoryJWT.UpdateUsertoken(userJWT.getEmail(),
                         userJWT.getToken());
             }
 
-            printMssg(userJWT.getUsername() + " logged in");
+            printMssg(userJWT.getEmail() + " logged in");
 
             return ResponseEntity.status(HttpStatus.OK).body(token);
         } catch (Exception e) {
@@ -120,24 +115,15 @@ public class AuthServiceJWT {
                     .body(AuthConstantsJWT.EMAIL_ALREADY_EXISTS);
         }
 
-        Optional<UserJWT> userJWTByUsername = Optional.ofNullable(userRepositoryJWT.getUserByEmail(authRequestJWT.getUsername()));
-
-        if (userJWTByUsername.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(AuthConstantsJWT.USERNAME_ALREADY_EXISTS);
-        }
-
-        String token = jwtTokenUtils.generateToken(authRequestJWT.getUsername());
+        String token = jwtTokenUtils.generateToken(authRequestJWT.getEmail());
         UserJWT userJWT = new UserJWT();
         userJWT.setFirstName(authRequestJWT.getFirstName());
         userJWT.setLastName(authRequestJWT.getLastName());
-        userJWT.setUsername(authRequestJWT.getUsername());
         userJWT.setEmail(authRequestJWT.getEmail());
         userJWT.setPassword(passwordEncoder.encode(authRequestJWT.getPassword()));
         userJWT.setToken(token);
         userRepositoryJWT.createUser(userJWT.getFirstName(),
                 userJWT.getLastName(),
-                userJWT.getUsername(),
                 userJWT.getEmail(),
                 userJWT.getPassword(),
                 userJWT.getCity(),
@@ -152,7 +138,7 @@ public class AuthServiceJWT {
                 userJWT.getBirthDate(),
                 userJWT.getToken());
 
-        printMssg(userJWT.getUsername() + " registered");
+        printMssg(userJWT.getEmail() + " registered");
         return ResponseEntity.status(HttpStatus.CREATED).body(token);
     }
 
