@@ -4,17 +4,19 @@ export const slides = [
   {
     id: '1',
     description: 'Cuida y sigue el día a día de tu mascota.',
-    image: require('../../assets/logos/yowpet_icon_v2.png'),
+    image: require('../assets/ilustrationYowpetV1/Ilustrator_cat_screen_1_v2.png'),
   },
   {
     id: '2',
     description: 'Enséñala con rutinas y consejos prácticos.',
-    image: require('../../assets/logos/yowpet_icon_v2.png'),
+    image: require('../assets/ilustrationYowpetV1/Ilustrator_dog_screen_2.png'),
   },
   {
     id: '3',
     description: 'Descubre sitios pet-friendly y más servicios.',
-    image: require('../../assets/logos/yowpet_icon_v2.png'),
+    image: require(
+      '../assets/ilustrationYowpetV1/Ilustrator_location_screen_3' + '.png'
+    ),
   },
 ];
 
