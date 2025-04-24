@@ -23,7 +23,7 @@ export const DecorationShape = ({
           bottom: config.position.bottom,
           width: config.position.width,
           height: isTopBackground ? '50%' : config.position.height,
-          backgroundColor: config.color, // Mantener dinámico
+          backgroundColor: config.color,
           opacity,
           transform,
         },
