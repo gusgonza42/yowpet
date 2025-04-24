@@ -13,11 +13,11 @@ const icons = {
 
 export default function ServicesScreen() {
   const menuItems = [
-    { title: 'Comunidad', route: '/community/community', icon: icons.comunidad },
-    { title: 'Chat', route: '/chat/chat', icon: icons.chat },
-    { title: 'Buscar cuidador', route: '/find-caretaker/find-caretaker', icon: icons.cuidador },
-    { title: 'Educa a tu mascota', route: '/educate/educate', icon: icons.educa },
-    { title: 'Localiza tu mascota', route: '/locate/locate', icon: icons.localiza },
+    { title: 'Comunidad', route: '/(services)/community', icon: icons.comunidad },
+    { title: 'Chat', route: '/(services)/chat', icon: icons.chat },
+    { title: 'Buscar cuidador', route: '/(services)/find-caretaker', icon: icons.cuidador },
+    { title: 'Educa a tu mascota', route: '/(services)/educate', icon: icons.educa },
+    { title: 'Localiza tu mascota', route: '/(services)/locate', icon: icons.localiza },
   ];
 
   return (
