@@ -68,6 +68,13 @@ export const styles = {
       shadowRadius: 6,
       elevation: 4,
     },
+    backgroundImage: {
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
+      resizeMode: 'cover', // Opciones: 'cover', 'contain', 'stretch'
+      opacity: 0.8, // Ajusta según necesites
+    },
   }),
 
   form: StyleSheet.create({
