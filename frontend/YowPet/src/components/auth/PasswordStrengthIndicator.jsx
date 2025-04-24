@@ -1,73 +1,89 @@
-// PasswordStrengthIndicator.jsx
-import { View, Text } from 'react-native';
-import { StyleSheet } from 'react-native';
-import { YowPetTheme } from '@theme/Colors';
+import React, { useMemo } from 'react';
+    import { View, Text, StyleSheet } from 'react-native';
+    import { YowPetTheme } from '@theme/Colors';
 
-export const PasswordStrengthIndicator = ({ password }) => {
-  const getStrength = () => {
-    if (!password) return 0;
+    export const PasswordStrengthIndicator = ({ password }) => {
+      // No mostrar nada si no hay contraseña
+      if (!password || password.length === 0) {
+        return null;
+      }
 
-    let score = 0;
-    if (password.length > 6) score++;
-    if (password.length > 10) score++;
-    if (/[A-Z]/.test(password)) score++;
-    if (/[0-9]/.test(password)) score++;
-    if (/[^A-Za-z0-9]/.test(password)) score++;
+      const { strength, message, color } = useMemo(() => {
+        // Criterios para evaluar la fortaleza
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasDigit = /\d/.test(password);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        const isLongEnough = password.length >= 8;
 
-    return score;
-  };
+        // Calcular puntuación (0-4)
+        let score = 0;
+        if (hasLowerCase) score++;
+        if (hasUpperCase) score++;
+        if (hasDigit) score++;
+        if (hasSpecialChar) score++;
+        if (isLongEnough) score++;
 
-  const strength = getStrength();
+        // Determinar nivel basado en puntuación
+        if (score === 0 || password.length < 6) {
+          return {
+            strength: 'débil',
+            message: 'Contraseña débil',
+            color: YowPetTheme.status.errorState
+          };
+        } else if (score <= 2) {
+          return {
+            strength: 'media',
+            message: 'Contraseña media',
+            color: YowPetTheme.status.warningState
+          };
+        } else {
+          return {
+            strength: 'fuerte',
+            message: 'Contraseña fuerte',
+            color: YowPetTheme.status.successState
+          };
+        }
+      }, [password]);
 
-  const getColor = () => {
-    if (strength < 2) return YowPetTheme.status.errorState;
-    if (strength < 4) return YowPetTheme.brand.orange;
-    return YowPetTheme.status.successState;
-  };
+      return (
+        <View style={styles.container}>
+          <View style={styles.barContainer}>
+            <View
+              style={[
+                styles.strengthBar,
+                {
+                  backgroundColor: color,
+                  width: strength === 'débil' ? '33%' : strength === 'media' ? '66%' : '100%'
+                }
+              ]}
+            />
+          </View>
+          <Text style={[styles.text, { color }]}>{message}</Text>
+        </View>
+      );
+    };
 
-  const getMessage = () => {
-    if (strength < 2) return 'Débil';
-    if (strength < 4) return 'Media';
-    return 'Fuerte';
-  };
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.barContainer}>
-        {[0, 1, 2, 3, 4].map(index => (
-          <View
-            key={index}
-            style={[
-              styles.bar,
-              { backgroundColor: index < strength ? getColor() : '#E1E8ED' }
-            ]}
-          />
-        ))}
-      </View>
-      <Text style={[styles.text, { color: getColor() }]}>{getMessage()}</Text>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    marginBottom: 10,
-    alignItems: 'flex-start',
-  },
-  barContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    marginBottom: 5,
-  },
-  bar: {
-    flex: 1,
-    height: 4,
-    marginRight: 4,
-    borderRadius: 2,
-  },
-  text: {
-    fontSize: 12,
-    marginLeft: 8,
-  },
-});
+    const styles = StyleSheet.create({
+      container: {
+        width: '100%',
+        marginVertical: 8,
+        alignItems: 'flex-start',
+      },
+      barContainer: {
+        height: 6,
+        width: '100%',
+        backgroundColor: '#e0e0e0',
+        borderRadius: 3,
+        overflow: 'hidden',
+        marginBottom: 4
+      },
+      strengthBar: {
+        height: '100%',
+        borderRadius: 3,
+      },
+      text: {
+        fontSize: 12,
+        fontWeight: '500',
+      }
+    });

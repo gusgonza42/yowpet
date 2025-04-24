@@ -1,8 +1,9 @@
 import { Animated, Text } from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 import { YowPetTheme } from '@theme/Colors';
 import { styles } from '@components/auth/styles';
 import { PasswordInput } from '@components/auth/PasswordInput';
+import { WebTextInput } from '@components/auth/WebTextInput';
 import { FormFooter } from '@components/auth/FormFooter';
 import { PasswordStrengthIndicator } from '@components/auth/PasswordStrengthIndicator';
 
@@ -28,26 +29,15 @@ export const AuthForm = ({
     <Animated.View style={[styles.form.formContainer, { opacity: fadeAnim }]}>
       {!isLogin && (
         <>
-          <TextInput
+          <WebTextInput
             label="Nombre"
             value={values.firstName}
             onChangeText={handleChange('firstName')}
             onBlur={handleBlur('firstName')}
-            mode="outlined"
-            style={styles.form.input}
-            left={<TextInput.Icon icon="account" />}
-            outlineColor={
-              touched.firstName && errors.firstName
-                ? YowPetTheme.status.errorState
-                : YowPetTheme.border.softBorder
-            }
-            activeOutlineColor={
-              touched.firstName && errors.firstName
-                ? YowPetTheme.status.errorState
-                : YowPetTheme.brand.primary
-            }
-            textColor={YowPetTheme.text.mainText}
+            icon="account"
+            autoCapitalize="words"
             error={touched.firstName && !!errors.firstName}
+            errorColor={YowPetTheme.status.errorState}
           />
           {touched.firstName && errors.firstName && (
             <Text style={styles.SocialButtons.errorText}>
@@ -55,26 +45,15 @@ export const AuthForm = ({
             </Text>
           )}
 
-          <TextInput
+          <WebTextInput
             label="Apellidos"
             value={values.lastName}
             onChangeText={handleChange('lastName')}
             onBlur={handleBlur('lastName')}
-            mode="outlined"
-            style={styles.form.input}
-            left={<TextInput.Icon icon="account" />}
-            outlineColor={
-              touched.lastName && errors.lastName
-                ? YowPetTheme.status.errorState
-                : YowPetTheme.border.softBorder
-            }
-            activeOutlineColor={
-              touched.lastName && errors.lastName
-                ? YowPetTheme.status.errorState
-                : YowPetTheme.brand.primary
-            }
-            textColor={YowPetTheme.text.mainText}
+            icon="account"
+            autoCapitalize="words"
             error={touched.lastName && !!errors.lastName}
+            errorColor={YowPetTheme.status.errorState}
           />
           {touched.lastName && errors.lastName && (
             <Text style={styles.SocialButtons.errorText}>
@@ -84,28 +63,15 @@ export const AuthForm = ({
         </>
       )}
 
-      <TextInput
+      <WebTextInput
         label="Email"
         value={values.email}
         onChangeText={handleChange('email')}
         onBlur={handleBlur('email')}
-        mode="outlined"
-        style={styles.form.input}
-        left={<TextInput.Icon icon="email" />}
+        icon="email"
         keyboardType="email-address"
-        autoCapitalize="none"
-        outlineColor={
-          touched.email && errors.email
-            ? YowPetTheme.status.errorState
-            : YowPetTheme.border.softBorder
-        }
-        activeOutlineColor={
-          touched.email && errors.email
-            ? YowPetTheme.status.errorState
-            : YowPetTheme.brand.primary
-        }
-        textColor={YowPetTheme.text.mainText}
         error={touched.email && !!errors.email}
+        errorColor={YowPetTheme.status.errorState}
       />
       {touched.email && errors.email && (
         <Text style={styles.SocialButtons.errorText}>{errors.email}</Text>
