@@ -1,5 +1,7 @@
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { styles } from '@components/auth/styles';
+import { AntDesign } from '@expo/vector-icons';
+import { YowPetTheme } from '@theme/Colors';
 
 export const SocialButtons = () => {
   return (
@@ -11,13 +13,13 @@ export const SocialButtons = () => {
       </View>
       <View style={styles.SocialButtons.socialButtonsContainer}>
         <TouchableOpacity style={styles.SocialButtons.socialButton}>
-          <Text style={styles.SocialButtons.socialButtonText}>f</Text>
+          <AntDesign name="facebook-square" size={24} color={YowPetTheme.brand.primary} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.SocialButtons.socialButton}>
-          <Text style={styles.SocialButtons.socialButtonText}>t</Text>
+          <AntDesign name="twitter" size={24} color={YowPetTheme.brand.primary} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.SocialButtons.socialButton}>
-          <Text style={styles.SocialButtons.socialButtonText}>G</Text>
+          <AntDesign name="google" size={24} color={YowPetTheme.brand.primary} />
         </TouchableOpacity>
       </View>
     </>

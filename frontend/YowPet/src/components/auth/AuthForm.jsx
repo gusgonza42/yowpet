@@ -4,14 +4,15 @@ import { YowPetTheme } from '@theme/Colors';
 import { styles } from '@components/auth/styles';
 import { PasswordInput } from '@components/auth/PasswordInput';
 import { FormFooter } from '@components/auth/FormFooter';
+import { PasswordStrengthIndicator } from '@components/auth/PasswordStrengthIndicator';
 
 export const AuthForm = ({
-  isLogin,
-  formikProps,
-  toggleVisibility,
-  handleForgotPassword,
-  fadeAnim,
-}) => {
+                           isLogin,
+                           formikProps,
+                           toggleVisibility,
+                           handleForgotPassword,
+                           fadeAnim,
+                         }) => {
   const {
     values,
     handleChange,
@@ -139,13 +140,15 @@ export const AuthForm = ({
               toggleVisibility(
                 setFieldValue,
                 'confirmPassword',
-                values.confirmPasswordVisible
+                values.confirmPasswordVisible,
               )
             }
             icon="lock-check"
             error={touched.confirmPassword && !!errors.confirmPassword}
             errorColor={YowPetTheme.status.errorState}
           />
+          {!isLogin && <PasswordStrengthIndicator password={values.password} />}
+
           {touched.confirmPassword && errors.confirmPassword && (
             <Text style={styles.SocialButtons.errorText}>
               {errors.confirmPassword}
@@ -160,7 +163,10 @@ export const AuthForm = ({
 
       <Button
         mode="contained"
-        style={styles.form.submitButton}
+        style={[
+          styles.form.submitButton,
+          isSubmitting && styles.form.disabledButton,
+        ]}
         contentStyle={styles.form.submitButtonContent}
         labelStyle={styles.form.submitButtonLabel}
         buttonColor={YowPetTheme.brand.primary}
@@ -169,7 +175,9 @@ export const AuthForm = ({
         disabled={isSubmitting}
         loading={isSubmitting}
       >
-        {isLogin ? 'Iniciar sesión' : 'Registrarse'}
+        {isSubmitting
+          ? (isLogin ? 'Iniciando sesión...' : 'Registrando...')
+          : (isLogin ? 'Iniciar sesión' : 'Registrarse')}
       </Button>
 
       <FormFooter isLogin={isLogin} onForgotPassword={handleForgotPassword} />

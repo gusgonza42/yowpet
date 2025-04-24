@@ -186,6 +186,7 @@ export const styles = {
       color: YowPetTheme.status.errorState,
       fontSize: 12,
       alignSelf: 'flex-start',
+      textAlign: 'center',
       marginTop: 2,
       marginBottom: 6,
       marginLeft: 8,
