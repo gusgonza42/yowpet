@@ -41,11 +41,11 @@ export const styles = {
       height: 500,
       alignSelf: 'center',
       marginBottom: 40,
-      marginTop: 10,
+      marginTop: -30,
     },
     textContainer: {
       alignItems: 'center',
-      marginVertical: 40,
+      marginVertical: 0,
       paddingHorizontal: 10,
     },
     logoText: {
@@ -111,8 +111,9 @@ export const styles = {
     },
     dot: {
       height: 12,
-      borderRadius: 6,
-      marginHorizontal: 6,
+      marginVertical: 40,
+      borderRadius: 9,
+      marginHorizontal: 10,
     },
     activeDot: {
       backgroundColor: YowPetTheme.brand.primary,
