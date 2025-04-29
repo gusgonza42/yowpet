@@ -1,28 +1,64 @@
+import { useRouter } from 'expo-router';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { ScreenContainer } from '@components/global/ScreenContainer';
 import { YowPetTheme } from '@theme/Colors';
 
+// Datos de videos organizados por nivel de dificultad
 const videos = {
     Básico: [
-        { title: 'Sentarse', thumbnail: require('../../assets/educate/sentarse.jpg') },
-        { title: 'Dar la pata', thumbnail: require('../../assets/educate/pata.jpg') },
+        {
+            title: 'Sentarse',
+            thumbnailKey: 'sentarse',
+            thumbnail: require('../../assets/educate/sentarse.jpg'),
+            description: 'Enseña a tu mascota a sentarse.',
+        },
+        {
+            title: 'Dar la pata',
+            thumbnailKey: 'pata',
+            thumbnail: require('../../assets/educate/pata.jpg'),
+            description: 'Entrena a tu perro para dar la pata.',
+        },
     ],
     Intermedio: [
-        { title: 'Caminar con correa', thumbnail: require('../../assets/educate/correa.jpg') },
-        { title: 'Quieto', thumbnail: require('../../assets/educate/quieto.jpg') },
+        {
+            title: 'Caminar con correa',
+            thumbnailKey: 'correa',
+            thumbnail: require('../../assets/educate/correa.jpg'),
+            description: 'Camina sin tirones.',
+        },
+        {
+            title: 'Quieto',
+            thumbnailKey: 'quieto',
+            thumbnail: require('../../assets/educate/quieto.jpg'),
+            description: 'Mantén a tu perro quieto por comando.',
+        },
     ],
     Avanzado: [
-        { title: 'Buscar objeto', thumbnail: require('../../assets/educate/objeto.jpg') },
-        { title: 'Hacer un truco', thumbnail: require('../../assets/educate/truco.jpg') },
+        {
+            title: 'Buscar objeto',
+            thumbnailKey: 'objeto',
+            thumbnail: require('../../assets/educate/objeto.jpg'),
+            description: 'Haz que encuentre un objeto.',
+        },
+        {
+            title: 'Hacer un truco',
+            thumbnailKey: 'truco',
+            thumbnail: require('../../assets/educate/truco.jpg'),
+            description: 'Un truco divertido y avanzado.',
+        },
     ],
 };
 
 export default function EducateScreen() {
+    const router = useRouter();
+
     return (
         <ScreenContainer backgroundColor={YowPetTheme.brand.primary}>
             <View style={styles.contentContainer}>
+                {/* Título de la pantalla */}
                 <Text style={styles.title}>Educa a tu mascota</Text>
 
+                {/* Lista de videos agrupados por nivel */}
                 <ScrollView
                     style={styles.scrollView}
                     contentContainerStyle={styles.scrollContent}
@@ -30,25 +66,44 @@ export default function EducateScreen() {
                 >
                     {Object.entries(videos).map(([level, vids]) => (
                         <View key={level} style={styles.levelSection}>
+                            {/* Título del nivel de dificultad */}
                             <Text style={styles.levelTitle}>{level}</Text>
+
                             <View style={styles.videoGrid}>
                                 {vids.map((video, index) => (
                                     <TouchableOpacity
                                         key={index}
                                         style={styles.videoCard}
                                         activeOpacity={0.8}
+                                        // Al hacer clic, se redirige a la pantalla de detalle con los parámetros
+                                        onPress={() =>
+                                            router.push({
+                                                pathname: '/(services)/educate/video',
+                                                params: {
+                                                    title: video.title,
+                                                    description: `Descripción: ${video.description}`,
+                                                    difficulty: level,
+                                                    thumbnailKey: video.thumbnailKey,
+                                                },
+                                            })
+                                        }
                                     >
+                                        {/* Imagen del video */}
                                         <Image
                                             source={video.thumbnail}
                                             style={styles.thumbnail}
                                             resizeMode="cover"
                                         />
+
+                                        {/* Título del video */}
                                         <Text style={styles.videoTitle}>{video.title}</Text>
                                     </TouchableOpacity>
                                 ))}
                             </View>
                         </View>
                     ))}
+
+                    {/* Espacio inferior para evitar corte en el scroll */}
                     <View style={styles.bottomSpacer} />
                 </ScrollView>
             </View>
