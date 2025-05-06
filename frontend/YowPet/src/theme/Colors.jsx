@@ -18,6 +18,7 @@ export const YowPetTheme = {
     softError: '#FEE2E2', // Error message background
     softSuccess: '#ECFDF5', // Success message background
     softWarning: '#FFFBEB', // Warning message background
+    softBackground: '#F3F4F6', // Soft background for cards
   },
   surface: {
     light: '#FFFFFF', // Light surfaces
@@ -31,6 +32,7 @@ export const YowPetTheme = {
     invertedText: '#FFFFFF', // Text on dark backgrounds
     linkText: '#2196F3', // Hyperlinks
     errorText: '#DC2626', // Error messages
+    softText: '#6B7280', // Soft text for less emphasis
   },
   border: {
     softBorder: '#E5E7EB', // Subtle borders

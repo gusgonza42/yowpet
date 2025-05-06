@@ -6,10 +6,9 @@ import {
   registerSchema,
 } from '@components/auth/validationSchemas';
 import { authService } from '@/services/auth/authService';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function useAuthForm() {
-  const { login: authLogin } = useAuth();
+  const { login, register } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
@@ -45,63 +44,82 @@ export function useAuthForm() {
     }, 200);
   };
 
-  const handleSubmit = async (
-    values,
-    { setSubmitting, resetForm, setErrors }
-  ) => {
+  const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
     try {
+      let userData;
       if (isLogin) {
-        // Proceso de login
-        const loginData = {
-          email: values.email,
-          password: values.password,
+        const response = await authService.login(values);
+        console.log('Respuesta del servidor (login):', response);
+
+        // Verificar si la respuesta está en data
+        const responseData = response.data || response;
+
+        if (!responseData) {
+          throw new Error('No se recibieron datos del servidor');
+        }
+
+        userData = {
+          token: responseData.token,
+          userId: responseData.id?.toString() || '0',
+          email: responseData.email || values.email,
+          firstName: responseData.firstName || '',
+          lastName: responseData.lastName || '',
+          username: responseData.username || values.email.split('@')[0]
         };
 
-        const response = await authService.login(loginData);
+        // Validar datos críticos
+        if (!userData.token) {
+          console.error('Datos de usuario recibidos:', userData);
+          throw new Error('Token de autenticación no recibido');
+        }
 
-        if (response.success) {
-          await AsyncStorage.setItem('token', response.token);
-          const userData = {
-            email: values.email,
-            token: response.token,
-          };
-          await authLogin(userData);
-          resetForm();
-        } else {
-          setErrors({ submit: response.message || 'Error al iniciar sesión' });
+        const loginSuccess = await login(userData);
+        if (!loginSuccess) {
+          throw new Error('Error en el proceso de inicio de sesión');
         }
       } else {
-        // Proceso de registro
-        const registerData = {
-          firstName: values.firstName,
-          lastName: values.lastName,
-          email: values.email,
-          password: values.password,
+        const response = await authService.register(values);
+        console.log('Respuesta del servidor (registro):', response);
+
+        // Verificar si la respuesta está en data
+        const responseData = response.data || response;
+
+        if (!responseData) {
+          throw new Error('No se recibieron datos del servidor');
+        }
+
+        userData = {
+          token: responseData.token,
+          userId: responseData.id?.toString() || '0',
+          email: responseData.email || values.email,
+          firstName: responseData.firstName || values.firstName,
+          lastName: responseData.lastName || values.lastName,
+          username: responseData.username || values.email.split('@')[0]
         };
 
-        const response = await authService.register(registerData);
+        // Validar datos críticos
+        if (!userData.token) {
+          console.error('Datos de usuario recibidos:', userData);
+          throw new Error('Token de autenticación no recibido');
+        }
 
-        if (response.success) {
-          await AsyncStorage.setItem('token', response.token);
-          const userData = {
-            email: values.email,
-            firstName: values.firstName,
-            lastName: values.lastName,
-            token: response.token,
-          };
-          await authLogin(userData);
-          resetForm();
-        } else {
-          setErrors({ submit: response.message || 'Error en el registro' });
+        const registerSuccess = await register(userData);
+        if (!registerSuccess) {
+          throw new Error('Error en el proceso de registro');
         }
       }
     } catch (error) {
-      console.log('Error en autenticación:', error);
-      setErrors({
-        submit:
-          error.response?.data?.message ||
-          'Error de conexión con el servidor. Intente nuevamente.',
-      });
+      console.error('Error completo:', error);
+      console.error('Respuesta del servidor:', error.response?.data);
+
+      let errorMessage = 'Error en la autenticación';
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      setFieldError('submit', errorMessage);
     } finally {
       setSubmitting(false);
     }

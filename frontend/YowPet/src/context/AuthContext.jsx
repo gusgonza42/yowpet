@@ -23,6 +23,18 @@ const useProtectedRoute = user => {
   }, [user, segments]);
 };
 
+const processUserData = rawUserData => {
+  return {
+    ...rawUserData,
+    userId: rawUserData.userId || rawUserData.id,
+    token: rawUserData.token,
+    email: rawUserData.email,
+    firstName: rawUserData.firstName || '',
+    lastName: rawUserData.lastName || '',
+    username: rawUserData.username || rawUserData.email?.split('@')[0] || '',
+  };
+};
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -31,14 +43,15 @@ export const AuthProvider = ({ children }) => {
   useProtectedRoute(user);
 
   useEffect(() => {
-    loadStoredUser().then(r => r);
+    loadStoredUser();
   }, []);
 
   const loadStoredUser = async () => {
     try {
-      const storedUser = await AsyncStorage.getItem('@auth_user');
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
+      const userDataString = await AsyncStorage.getItem('@auth_user');
+      if (userDataString) {
+        const userData = JSON.parse(userDataString);
+        setUser(userData);
       }
     } catch (error) {
       console.error('Error al cargar usuario:', error);
@@ -47,14 +60,41 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async userData => {
-    setIsAuthenticating(true);
+  const saveUserData = async userData => {
+    const processedData = processUserData(userData);
     try {
-      await AsyncStorage.setItem('@auth_user', JSON.stringify(userData));
-      setUser(userData);
+      await AsyncStorage.multiSet([
+        ['@auth_token', processedData.token],
+        ['@auth_userId', processedData.userId.toString()],
+        ['@auth_email', processedData.email],
+        ['@auth_user', JSON.stringify(processedData)],
+      ]);
+      setUser(processedData);
       return true;
     } catch (error) {
+      console.error('Error al guardar datos:', error);
+      return false;
+    }
+  };
+
+  const login = async rawUserData => {
+    setIsAuthenticating(true);
+    try {
+      return await saveUserData(rawUserData);
+    } catch (error) {
       console.error('Error en login:', error);
+      return false;
+    } finally {
+      setIsAuthenticating(false);
+    }
+  };
+
+  const register = async rawUserData => {
+    setIsAuthenticating(true);
+    try {
+      return await saveUserData(rawUserData);
+    } catch (error) {
+      console.error('Error en registro:', error);
       return false;
     } finally {
       setIsAuthenticating(false);
@@ -64,7 +104,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     setIsAuthenticating(true);
     try {
-      await AsyncStorage.clear(); // Limpia todo el storage incluyendo @onboarding_complete
+      await AsyncStorage.clear();
       setUser(null);
       return true;
     } catch (error) {
@@ -85,15 +125,20 @@ export const AuthProvider = ({ children }) => {
     );
   }
 
-  const value = {
-    user,
-    loading,
-    isAuthenticating,
-    login,
-    logout,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        isAuthenticating,
+        login,
+        register,
+        logout,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {
