@@ -8,7 +8,7 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import { ProfileHeader } from '@components/profile/ProfileHeader';
 import { MenuSection } from '@components/profile/MenuSection';
 import { LogoutButton } from '@components/profile/LogoutButton';
@@ -17,7 +17,7 @@ import { styles } from '@components/profile/styles';
 
 export default function ProfileScreen() {
   const { user, logout } = useAuth();
-  const navigation = useNavigation();
+  const router = useRouter();
   const screenHeight = Dimensions.get('window').height;
 
   const menuItems = [
@@ -27,7 +27,7 @@ export default function ProfileScreen() {
       icon: (
         <Ionicons name="person" size={24} color={YowPetTheme.brand.primary} />
       ),
-      onPress: () => navigation.navigate('AccountDetails'),
+      onPress: () => router.push('/profile/account'),
       showArrow: true,
     },
     {
@@ -40,7 +40,7 @@ export default function ProfileScreen() {
           color={YowPetTheme.brand.primary}
         />
       ),
-      onPress: () => navigation.navigate('PaymentMethods'),
+      onPress: () => router.push('/profile/payment'),
       showArrow: true,
     },
     {
@@ -54,7 +54,7 @@ export default function ProfileScreen() {
         />
       ),
       subtitle: '¡Actívalo para recibir facturas!',
-      onPress: () => navigation.navigate('WorkProfile'),
+      onPress: () => router.push('/profile/work'),
       showArrow: true,
     },
     {
@@ -68,7 +68,7 @@ export default function ProfileScreen() {
         />
       ),
       subtitle: 'Revisa todos los recursos',
-      onPress: () => navigation.navigate('Security'),
+      onPress: () => router.push('/profile/security'),
       showArrow: true,
     },
     {
@@ -81,7 +81,7 @@ export default function ProfileScreen() {
           color={YowPetTheme.brand.primary}
         />
       ),
-      onPress: () => navigation.navigate('Help'),
+      onPress: () => router.push('/profile/help'),
       showArrow: true,
     },
   ];

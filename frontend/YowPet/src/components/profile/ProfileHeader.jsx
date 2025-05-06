@@ -2,11 +2,11 @@ import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { YowPetTheme } from '@theme/Colors';
-import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import { styles } from './styles';
 
 export const ProfileHeader = ({ user }) => {
-  const navigation = useNavigation();
+  const router = useRouter();
 
   return (
     <View style={styles.ProfileHeader.header}>
@@ -35,7 +35,7 @@ export const ProfileHeader = ({ user }) => {
       <View style={styles.ProfileHeader.quickLinksContainer}>
         <TouchableOpacity
           style={styles.ProfileHeader.quickLink}
-          onPress={() => navigation.navigate('MyPets')}
+          onPress={() => router.push('/profile/pets')}
         >
           <View
             style={[
@@ -54,7 +54,7 @@ export const ProfileHeader = ({ user }) => {
 
         <TouchableOpacity
           style={styles.ProfileHeader.quickLink}
-          onPress={() => navigation.navigate('YowPetClub')}
+          onPress={() => router.push('/profile/club')}
         >
           <View
             style={[
