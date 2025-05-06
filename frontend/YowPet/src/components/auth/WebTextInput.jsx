@@ -6,25 +6,25 @@ import { styles } from '@components/auth/styles';
 import { AntDesign } from '@expo/vector-icons';
 
 export const WebTextInput = ({
-                               label,
-                               value,
-                               onChangeText,
-                               onBlur,
-                               icon,
-                               error,
-                               errorColor,
-                               keyboardType = 'default',
-                               autoCapitalize = 'none',
-                             }) => {
+  label,
+  value,
+  onChangeText,
+  onBlur,
+  icon,
+  error,
+  errorColor,
+  keyboardType = 'default',
+  autoCapitalize = 'none',
+}) => {
   // Mapeo entre iconos de React Native Paper y AntDesign
   const getAntDesignIcon = () => {
     const iconMap = {
-      'account': 'user',
+      account: 'user',
       'account-outline': 'user',
-      'email': 'mail',
+      email: 'mail',
       'email-outline': 'mail',
-      'mail': 'mail',
-      'lock': 'lock',
+      mail: 'mail',
+      lock: 'lock',
       'lock-outline': 'lock',
       'lock-check': 'lock1',
     };
@@ -39,12 +39,16 @@ export const WebTextInput = ({
         {value && <Text style={styles.webInputs.label}>{label}</Text>}
         <View style={styles.icons.inputWrapper}>
           <View style={styles.webInputs.iconLeft}>
-            <AntDesign name={getAntDesignIcon()} size={20} color={YowPetTheme.text.subtleText} />
+            <AntDesign
+              name={getAntDesignIcon()}
+              size={20}
+              color={YowPetTheme.text.subtleText}
+            />
           </View>
           <RNTextInput
             style={[
               styles.webInputs.input,
-              error && styles.webInputs.errorBorder
+              error && styles.webInputs.errorBorder,
             ]}
             value={value}
             onChangeText={onChangeText}
