@@ -1,17 +1,16 @@
-// frontend/YowPet/src/app/profile/payment.jsx
 import React from 'react';
-import { Text, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Text as ReactText, View as ReactView } from 'react-native';
+import { Ionicons as ReactIonicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { ScreenContainer } from '@components/global/ScreenContainer';
+import { ScreenContainer as ReactScreenContainer } from '@components/global/ScreenContainer';
 import { YowPetTheme } from '@theme/Colors';
 
 export default function PaymentScreen() {
   const router = useRouter();
 
   return (
-    <ScreenContainer backgroundColor={YowPetTheme.background.mainWhite}>
-      <View
+    <ReactScreenContainer backgroundColor={YowPetTheme.background.mainWhite}>
+      <ReactView
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -20,13 +19,13 @@ export default function PaymentScreen() {
           borderBottomColor: YowPetTheme.border.softBorder,
         }}
       >
-        <Ionicons
+        <ReactIonicons
           name="arrow-back"
           size={24}
           color={YowPetTheme.text.mainText}
           onPress={() => router.back()}
         />
-        <Text
+        <ReactText
           style={{
             fontSize: 20,
             fontWeight: 'bold',
@@ -34,8 +33,8 @@ export default function PaymentScreen() {
           }}
         >
           Métodos de pago
-        </Text>
-      </View>
-    </ScreenContainer>
+        </ReactText>
+      </ReactView>
+    </ReactScreenContainer>
   );
 }

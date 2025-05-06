@@ -1,31 +1,31 @@
 import React from 'react';
-import { Text, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Text as ReactText, View as ReactView } from 'react-native';
+import { Ionicons as ReactIonicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { ScreenContainer } from '@components/global/ScreenContainer';
+import { ScreenContainer as ReactScreenContainer } from '@components/global/ScreenContainer';
 import { YowPetTheme } from '@theme/Colors';
 
-export default function ClubScreen() {
+export default function ClubScreen(
+  style = {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: YowPetTheme.border.softBorder,
+  }
+) {
   const router = useRouter();
 
   return (
-    <ScreenContainer backgroundColor={YowPetTheme.background.mainWhite}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          padding: 16,
-          borderBottomWidth: 1,
-          borderBottomColor: YowPetTheme.border.softBorder,
-        }}
-      >
-        <Ionicons
+    <ReactScreenContainer backgroundColor={YowPetTheme.background.mainWhite}>
+      <ReactView style={style}>
+        <ReactIonicons
           name="arrow-back"
           size={24}
           color={YowPetTheme.text.mainText}
           onPress={() => router.back()}
         />
-        <Text
+        <ReactText
           style={{
             fontSize: 20,
             fontWeight: 'bold',
@@ -33,8 +33,8 @@ export default function ClubScreen() {
           }}
         >
           YowPet Club
-        </Text>
-      </View>
-    </ScreenContainer>
+        </ReactText>
+      </ReactView>
+    </ReactScreenContainer>
   );
 }
