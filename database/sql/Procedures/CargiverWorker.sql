@@ -27,7 +27,7 @@ CREATE PROCEDURE createCaregiverWorker(
     IN p_status_active_work BOOLEAN
 )
 BEGIN
-INSERT INTO caregiver_worker (user_id, speciality, experience_years, hourly_rate, rating, review,
+INSERT INTO caregiver_workers (user_id, speciality, experience_years, hourly_rate, rating, review,
                               description, service_worker, status_active_work)
 VALUES (p_user_id, p_speciality, p_experience_years, p_hourly_rate, p_rating,
         p_review, p_description, p_service_worker, p_status_active_work);
@@ -49,7 +49,7 @@ CREATE PROCEDURE updateCaregiverWorker(
     IN p_status_active_work BOOLEAN
 )
 BEGIN
-UPDATE caregiver_worker
+UPDATE caregiver_workers
 SET user_id            = p_user_id,
     speciality         = p_speciality,
     experience_years   = p_experience_years,
@@ -69,7 +69,7 @@ CREATE PROCEDURE deleteCaregiverWorker(
     IN p_id INT
 )
 BEGIN
-DELETE FROM caregiver_worker WHERE id = p_id;
+DELETE FROM caregiver_workers WHERE id = p_id;
 END //
 DELIMITER ;
 
@@ -79,7 +79,7 @@ CREATE PROCEDURE getCaregiverWorker(
     IN p_id INT
 )
 BEGIN
-SELECT * FROM caregiver_worker WHERE id = p_id;
+SELECT * FROM caregiver_workers WHERE id = p_id;
 END //
 DELIMITER ;
 
@@ -87,7 +87,7 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE getAllCaregiverWorkers()
 BEGIN
-SELECT * FROM caregiver_worker;
+SELECT * FROM caregiver_workers;
 END //
 DELIMITER ;
 
@@ -98,7 +98,7 @@ CREATE PROCEDURE getCaregiverWorkersByCategory(
 )
 BEGIN
 SELECT cw.*
-FROM caregiver_worker cw
+FROM caregiver_workers cw
          JOIN caregiver_worker_category cwc ON cw.id = cwc.caregiver_id
 WHERE cwc.category_id = p_animal_cat_id;
 END //
@@ -111,7 +111,7 @@ CREATE PROCEDURE searchCaregiverWorkers(
 )
 BEGIN
 SELECT *
-FROM caregiver_worker
+FROM caregiver_workers
 WHERE speciality LIKE p_search_term
    OR description LIKE p_search_term
    OR service_worker LIKE p_search_term;
@@ -124,7 +124,7 @@ CREATE PROCEDURE getCaregiverWorkersByUser(
     IN p_user_id INT
 )
 BEGIN
-SELECT * FROM caregiver_worker WHERE user_id = p_user_id;
+SELECT * FROM caregiver_workers WHERE user_id = p_user_id;
 END //
 DELIMITER ;
 
@@ -134,7 +134,7 @@ CREATE PROCEDURE getCaregiverWorkersBySpeciality(
     IN p_speciality VARCHAR(255)
 )
 BEGIN
-SELECT * FROM caregiver_worker WHERE speciality = p_speciality;
+SELECT * FROM caregiver_workers WHERE speciality = p_speciality;
 END //
 DELIMITER ;
 
@@ -144,7 +144,7 @@ CREATE PROCEDURE getCaregiverWorkersByRating(
     IN p_rating DECIMAL(3, 2)
 )
 BEGIN
-SELECT * FROM caregiver_worker WHERE rating >= p_rating ORDER BY rating DESC;
+SELECT * FROM caregiver_workers WHERE rating >= p_rating ORDER BY rating DESC;
 END //
 DELIMITER ;
 
@@ -153,7 +153,7 @@ CREATE PROCEDURE disableCaregiverWorker(
     IN p_id INT
 )
 BEGIN
-UPDATE caregiver_worker
+UPDATE caregiver_workers
 SET status_active_work = 0
 WHERE id = p_id;
 END //
@@ -165,6 +165,6 @@ CREATE PROCEDURE getAvailableCaregiverWorkers(
     IN p_status_active_work BOOLEAN
 )
 BEGIN
-SELECT * FROM caregiver_worker WHERE status_active_work = p_status_active_work;
+SELECT * FROM caregiver_workers WHERE status_active_work = p_status_active_work;
 END //
 DELIMITER ;

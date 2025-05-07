@@ -7,7 +7,7 @@ Esta carpeta contiene los hooks personalizados utilizados en la aplicación YowP
 ### useAuth
 
 - Gestión del estado de autenticación
-- Login/Logout
+- Auth/Logout
 - Verificación de tokens
 - Estado del usuario actual
 

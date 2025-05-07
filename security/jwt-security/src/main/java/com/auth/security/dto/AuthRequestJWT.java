@@ -20,12 +20,6 @@ public class AuthRequestJWT {
     private String lastName;
 
     /**
-     * Nombre de usuario para la autenticación.
-     * Ya no es obligatorio para permitir login con email.
-     */
-    private String username;
-
-    /**
      * Correo electrónico del usuario.
      * Debe ser un correo electrónico válido y no debe tener más de 50 caracteres.
      * Ya no es obligatorio para permitir login con username.

@@ -41,12 +41,12 @@ public class UserReposJWT {
     }
 
 
-    public void createUser(String firstName, String lastName, String username, String email, String password,
+    public void createUser(String firstName, String lastName, String email, String password,
                            String city, String address, String phoneNumber, int zipCode, String gender,
                            String profilePicture, int role, String languages, String paymentMethod,
                            java.util.Date birthDate, String token) {
 
-        String sql = "CALL createUserandToken(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "CALL createUserandToken(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         // Convertir fecha solo si no es nula
         java.sql.Date sqlBirthDate = null;
@@ -54,7 +54,7 @@ public class UserReposJWT {
             sqlBirthDate = new java.sql.Date(birthDate.getDate());
         }
 
-        template.update(sql, firstName, lastName, username, email, password, city, address, phoneNumber,
+        template.update(sql, firstName, lastName, email, password, city, address, phoneNumber,
                 zipCode, gender, profilePicture, role, languages, paymentMethod, sqlBirthDate, token);
     }
 
