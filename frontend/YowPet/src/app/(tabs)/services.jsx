@@ -13,36 +13,56 @@ const icons = {
 
 export default function ServicesScreen() {
   const menuItems = [
-    { title: 'Comunidad', route: '/(services)/community', icon: icons.comunidad },
+    {
+      title: 'Comunidad',
+      route: '/(services)/community',
+      icon: icons.comunidad,
+    },
     { title: 'Chat', route: '/(services)/chat', icon: icons.chat },
-    { title: 'Buscar cuidador', route: '/(services)/find-caretaker', icon: icons.cuidador },
-    { title: 'Educa a tu mascota', route: '/(services)/educate', icon: icons.educa },
-    { title: 'Localiza tu mascota', route: '/(services)/locate', icon: icons.localiza },
+    {
+      title: 'Buscar cuidador',
+      route: '/(services)/find-caretaker',
+      icon: icons.cuidador,
+    },
+    {
+      title: 'Educa a tu mascota',
+      route: '/(services)/educate',
+      icon: icons.educa,
+    },
+    {
+      title: 'Localiza tu mascota',
+      route: '/(services)/locate',
+      icon: icons.localiza,
+    },
   ];
 
   return (
-      <ScreenContainer backgroundColor={YowPetTheme.background.mainWhite}>
-        <View style={styles.container}>
-          <Text style={styles.title}>SERVICIOS</Text>
-          <View style={styles.menuBox}>
-            {menuItems.map((item, index) => (
-                <TouchableOpacity
-                    key={index}
-                    style={[
-                      styles.menuItem,
-                      index === menuItems.length - 1 && styles.lastItem,
-                    ]}
-                    onPress={() => router.push(item.route)}
-                >
-                  <View style={styles.iconWrapper}>
-                    <Image source={item.icon} style={styles.icon} resizeMode="contain" />
-                  </View>
-                  <Text style={styles.menuText}>{item.title}</Text>
-                </TouchableOpacity>
-            ))}
-          </View>
+    <ScreenContainer backgroundColor={YowPetTheme.background.mainWhite}>
+      <View style={styles.container}>
+        <Text style={styles.title}>SERVICIOS</Text>
+        <View style={styles.menuBox}>
+          {menuItems.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.menuItem,
+                index === menuItems.length - 1 && styles.lastItem,
+              ]}
+              onPress={() => router.push(item.route)}
+            >
+              <View style={styles.iconWrapper}>
+                <Image
+                  source={item.icon}
+                  style={styles.icon}
+                  resizeMode="contain"
+                />
+              </View>
+              <Text style={styles.menuText}>{item.title}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
-      </ScreenContainer>
+      </View>
+    </ScreenContainer>
   );
 }
 
