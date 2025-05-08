@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Crear instancia de Axios con configuración personalizada
 export const axiosClient = axios.create({
-  baseURL: `http://${API_URL}:8080${API_BASE_PATH}`,
+  baseURL: `${API_URL}:8080${API_BASE_PATH}`,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -14,21 +14,19 @@ export const axiosClient = axios.create({
 // Interceptor para peticiones
 axiosClient.interceptors.request.use(
   async config => {
-    // Aquí puedes añadir headers, tokens, etc.
-    try {
-      const token = await AsyncStorage.getItem('token');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    } catch (error) {
-      console.log('Error al obtener el token:', error);
+    const token = await AsyncStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token.trim()}`;
     }
+
+    console.log('[AXIOS] Request URL:', config.baseURL + config.url);
+    console.log('[AXIOS] Headers:', config.headers);
+
     return config;
   },
-  error => {
-    return Promise.reject(error);
-  }
+  error => Promise.reject(error)
 );
+
 
 // Interceptor para respuestas
 axiosClient.interceptors.response.use(

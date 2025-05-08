@@ -22,19 +22,22 @@ public class PlaceRepo {
         place.setAddress(rs.getString("address"));
         place.setAddresscode(rs.getString("addresscode"));
         place.setEstado(rs.getInt("estado"));
+        place.setLongitude(rs.getBigDecimal("longitude"));
+        place.setLatitude(rs.getBigDecimal("latitude"));
+        place.setFilter(rs.getString("filter"));
         return place;
     };
 
     // Create Place
     public void createPlace(Place place) {
-        String sql = "CALL createPlace(?, ?, ?)";
-        template.update(sql, place.getName(), place.getAddress(), place.getAddresscode());
+        String sql = "CALL createPlace(?, ?, ?,?,?,?)";
+        template.update(sql, place.getName(), place.getAddress(), place.getAddresscode(),place.getFilter(),place.getLatitude(),place.getLongitude());
     }
 
     // Update Place
     public void updatePlace(Place place) {
-        String sql = "CALL updatePlace(?, ?, ?, ?)";
-        template.update(sql, place.getId(), place.getName(), place.getAddress(), place.getAddresscode());
+        String sql = "CALL updatePlace(?, ?, ?, ?,?,?,?)";
+        template.update(sql, place.getId(), place.getName(), place.getAddress(), place.getAddresscode(),place.getFilter(),place.getLatitude(),place.getLongitude());
     }
 
     // Soft Delete Place

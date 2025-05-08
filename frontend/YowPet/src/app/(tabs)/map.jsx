@@ -5,98 +5,23 @@ import * as Location from 'expo-location';
 import { mapstyles } from '@/components/auth/LoginForm/styles';
 import { useLocalSearchParams } from 'expo-router';
 import MapMarker from '../Map/MapMarker';
+import {  useAxiosFetch } from '@/services/api/getfetch';
 
 export default function MapScreen() {
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [location, setLocation] = useState(null);
-  const [selectedMarker, setSelectedMarker] = useState(null); // 🟡 Modal state
+  const [selectedMarker, setSelectedMarker] = useState(null); 
+  const[refreshKey, setRefreshKey] = useState(0);
+  const { datos, loading, error } = useAxiosFetch('place/all', refreshKey);
+  
 
-  const markerData = [
-    {
-      id: 1,
-      type: 'Veterinarios',
-      title: 'Clinica Vet Barcelona',
-      latitude: 41.4109,
-      longitude: 2.1692,
-    },
-    {
-      id: 2,
-      type: 'Tiendas',
-      title: 'Pet Shop Central',
-      latitude: 41.4115,
-      longitude: 2.1688,
-    },
-    {
-      id: 3,
-      type: 'Pet-Friendly',
-      title: 'Dog Cafe BCN',
-      latitude: 41.4103,
-      longitude: 2.1697,
-    },
-    {
-      id: 4,
-      type: 'Parques',
-      title: 'Parque Canino Sur',
-      latitude: 41.4121,
-      longitude: 2.1701,
-    },
-    {
-      id: 5,
-      type: 'Veterinarios',
-      title: 'Vet Express',
-      latitude: 41.41,
-      longitude: 2.168,
-    },
-    {
-      id: 6,
-      type: 'Tiendas',
-      title: 'Mascotas y Más',
-      latitude: 41.4112,
-      longitude: 2.1699,
-    },
-    {
-      id: 7,
-      type: 'Pet-Friendly',
-      title: 'Bark & Brew',
-      latitude: 41.4118,
-      longitude: 2.1705,
-    },
-    {
-      id: 8,
-      type: 'Parques',
-      title: 'Jardines Felices',
-      latitude: 41.4123,
-      longitude: 2.1675,
-    },
-    {
-      id: 9,
-      type: 'Veterinarios',
-      title: 'Animal Care Center',
-      latitude: 41.4108,
-      longitude: 2.1702,
-    },
-    {
-      id: 10,
-      type: 'Tiendas',
-      title: 'Todo para Tu Mascota',
-      latitude: 41.4099,
-      longitude: 2.1691,
-    },
-    {
-      id: 11,
-      type: 'Pet-Friendly',
-      title: 'Café Perruno',
-      latitude: 41.411,
-      longitude: 2.1703,
-    },
-    {
-      id: 12,
-      type: 'Parques',
-      title: 'Plaza de las Mascotas',
-      latitude: 41.4102,
-      longitude: 2.1684,
-    },
-  ];
+
+  // if (loading) {
+  //   return <Text>Cargando...</Text>;
+  // }
+  // if (error) {
+  //   return <Text>Error: {error.message}</Text>;
+  // }
 
   const filters = ['Veterinarios', 'Tiendas', 'Pet-Friendly', 'Parques'];
 
@@ -114,8 +39,8 @@ export default function MapScreen() {
 
   const filteredMarkers =
     selectedFilter === 'All'
-      ? markerData
-      : markerData.filter(m => m.type === selectedFilter);
+      ? datos
+      : datos.filter(m => m.filter === selectedFilter);
 
   return (
     <View style={mapstyles.container}>
@@ -160,7 +85,7 @@ export default function MapScreen() {
         >
           {filteredMarkers.map(marker => {
             let pinColor, icon;
-            switch (marker.type) {
+            switch (marker.filter) {
               case 'Veterinarios':
                 pinColor = 'red';
                 icon = 'hospital-building';
@@ -222,7 +147,7 @@ export default function MapScreen() {
       <Modal
         visible={!!selectedMarker}
         transparent
-        animationType="slide"
+        animationfilter="slide"
         onRequestClose={() => setSelectedMarker(null)}
       >
         <Pressable
@@ -244,10 +169,16 @@ export default function MapScreen() {
             }}
           >
             <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-              {selectedMarker?.title}
+              {selectedMarker?.name}
             </Text>
             <Text style={{ fontSize: 14, marginTop: 8 }}>
-              Dirección genérica o añade info aquí.
+              {selectedMarker?.address}
+            </Text>
+            <Text style={{ fontSize: 14, marginTop: 8 }}>
+              {selectedMarker?.addresscode}
+            </Text>
+            <Text style={{ fontSize: 14, marginTop: 8 }}>
+              {selectedMarker?.filter}
             </Text>
           </View>
         </Pressable>
