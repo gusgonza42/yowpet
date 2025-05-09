@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { axiosClient } from './clienteAxios';
-//import { axiosClient } from '@/services/axiosClient';
 
 export const useAxiosFetch = (servlet, refreshKey, intervalTime = 30000) => {
   const [datos, setDatos] = useState([]);

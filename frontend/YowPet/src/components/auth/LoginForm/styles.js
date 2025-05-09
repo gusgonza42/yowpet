@@ -94,6 +94,7 @@ export const mapstyles = StyleSheet.create({
   },
   
   iconButton: {
+    felx: 1,
     backgroundColor: '#fff',
     padding: 10,
     borderRadius: 30,
@@ -180,6 +181,23 @@ export const mapstyles = StyleSheet.create({
   closeButtonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  addbutton: {
+    position: 'absolute',
+    bottom: 180,
+    left: 20,
+    backgroundColor: '#03A5A8',
+    borderRadius: 30,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+  addbuttontext: {
+    fontWeight: 'bold',
+    fontSize: 24,
   },
 });
   
