@@ -1,63 +1,51 @@
-import { useLocalSearchParams } from 'expo-router';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
+  Image,
   Dimensions,
-  ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import { ScreenContainer } from '@components/global/ScreenContainer';
 import { YowPetTheme } from '@theme/Colors';
-import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
-import YoutubePlayer from 'react-native-youtube-iframe';
-import { useState, useEffect, useRef } from 'react';
+import { ProgressBar } from 'react-native-paper';
 
 const { width } = Dimensions.get('window');
 
 export default function VideoDetailScreen() {
-  const { title, description, difficulty, videoId } = useLocalSearchParams();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const timeoutRef = useRef();
+  const {
+    title = 'No Title',
+    description = 'No Description',
+    difficulty = 'Unknown',
+    instructionImages = '',
+    steps = '',
+  } = useLocalSearchParams();
 
-  console.log(videoId);
+  const imageArray = instructionImages ? instructionImages.split(',') : [];
+  const stepArray = steps ? steps.split(',') : [];
 
-  const difficultyMap = {
-    Fácil: 1,
-    Medio: 3,
-    Difícil: 5,
+  const data = imageArray.map((image, index) => ({
+    image,
+    step: stepArray[index] || '',
+  }));
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleNext = () => {
+    if (currentIndex < data.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    }
   };
 
-  const difficultyLevel = difficultyMap[difficulty] || 3;
+  const handlePrevious = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
 
-  useEffect(() => {
-    // Set a timeout to stop loading after 10 seconds
-    timeoutRef.current = setTimeout(() => {
-      if (loading) {
-        setLoading(false);
-        setError('Video loading timed out. Please check your connection or try another video.');
-      }
-    }, 10000);
-    return () => clearTimeout(timeoutRef.current);
-  }, [loading]);
-
-  // Show error if videoId is missing
-  if (!videoId) {
-    return (
-      <ScreenContainer backgroundColor={YowPetTheme.brand.primary}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.title}>{title || 'Sin título'}</Text>
-          <Text style={styles.subtitle}>Nivel: {difficulty || '-'}</Text>
-        </View>
-        <View style={styles.contentContainer}>
-          <Text style={{ color: 'red', fontSize: 18, textAlign: 'center', marginTop: 40 }}>
-            No se encontró el video. Intenta de nuevo.
-          </Text>
-        </View>
-      </ScreenContainer>
-    );
-  }
+  const progress = (currentIndex + 1) / data.length;
 
   return (
     <ScreenContainer backgroundColor={YowPetTheme.brand.primary}>
@@ -67,60 +55,42 @@ export default function VideoDetailScreen() {
       </View>
 
       <View style={styles.contentContainer}>
-        <View style={styles.videoContainer}>
-          {loading && (
-            <View style={styles.loader}>
-              <ActivityIndicator size="large" color="#fff" />
-            </View>
-          )}
-          {error ? (
-            <Text style={{ color: 'red', textAlign: 'center', marginTop: 20 }}>
-              {error}
-            </Text>
-          ) : (
-            <YoutubePlayer
-              height={width * 0.6}
-              play={false}
-              videoId={videoId}
-              initialPlayerParams={{
-                controls: 1,
-                modestbranding: 1,
-                rel: 0,
-              }}
-              onReady={() => setLoading(false)}
-              onError={e => {
-                setLoading(false);
-                setError('No se pudo cargar el video.');
-              }}
-            />
-          )}
-        </View>
+        <Text style={styles.description}>{description}</Text>
 
-        <View style={styles.difficultyContainer}>
-          <Text style={styles.difficultyText}>Dificultad:</Text>
-          <View style={styles.starsContainer}>
-            {[...Array(5)].map((_, index) => (
-              <MaterialIcons
-                key={index}
-                name={index < difficultyLevel ? 'star' : 'star-border'}
-                size={28}
-                color={index < difficultyLevel ? '#FFD700' : '#DDD'}
-              />
-            ))}
-          </View>
-        </View>
+        <Text style={styles.progressText}>
+          Step {currentIndex + 1} of {data.length}
+        </Text>
 
-        <View style={styles.descriptionContainer}>
-          <Text style={styles.sectionTitle}>Descripción:</Text>
-          <View style={styles.descriptionBox}>
-            <Text style={styles.description}>{description}</Text>
-          </View>
-        </View>
+        <ProgressBar
+          progress={progress}
+          color={YowPetTheme.brand.primary}
+          style={styles.progressBar}
+        />
 
-        <TouchableOpacity style={styles.startButton} activeOpacity={0.8}>
-          <Text style={styles.startButtonText}>Comenzar entrenamiento</Text>
-          <MaterialIcons name="pets" size={20} color="white" />
-        </TouchableOpacity>
+        <Image source={{ uri: data[currentIndex].image }} style={styles.image} />
+
+        <Text style={styles.stepText}>{data[currentIndex].step}</Text>
+
+        <View style={styles.navigationContainer}>
+          <TouchableOpacity
+            onPress={handlePrevious}
+            style={[styles.navButton, currentIndex === 0 && styles.disabledButton]}
+            disabled={currentIndex === 0}
+          >
+            <Text style={styles.navButtonText}>Atrás</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={handleNext}
+            style={[
+              styles.navButton,
+              currentIndex === data.length - 1 && styles.disabledButton,
+            ]}
+            disabled={currentIndex === data.length - 1}
+          >
+            <Text style={styles.navButtonText}>Siguiente</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScreenContainer>
   );
@@ -129,19 +99,12 @@ export default function VideoDetailScreen() {
 const styles = StyleSheet.create({
   headerContainer: {
     paddingTop: 20,
-    paddingBottom: 40,
+    paddingBottom: 20,
     paddingHorizontal: 24,
     backgroundColor: YowPetTheme.brand.primary,
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
     alignItems: 'center',
-  },
-  contentContainer: {
-    flex: 1,
-    backgroundColor: YowPetTheme.background.mainWhite,
-    borderRadius: 24,
-    marginTop: -20,
-    padding: 24,
   },
   title: {
     fontSize: 28,
@@ -156,82 +119,69 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Inter-Medium',
   },
-  videoContainer: {
-    width: '100%',
-    height: width * 0.6,
-    borderRadius: 16,
-    overflow: 'hidden',
-    marginTop: -40,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 8,
-    backgroundColor: '#000',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loader: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 2,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-  },
-  difficultyContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginVertical: 24,
-    paddingHorizontal: 8,
-  },
-  difficultyText: {
-    fontSize: 18,
-    fontFamily: 'Inter-SemiBold',
-    color: YowPetTheme.text.mainText,
-  },
-  starsContainer: {
-    flexDirection: 'row',
-  },
-  descriptionContainer: {
-    marginTop: 8,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontFamily: 'Inter-Bold',
-    color: YowPetTheme.text.mainText,
-    marginBottom: 12,
-  },
-  descriptionBox: {
-    backgroundColor: YowPetTheme.background.lightGray,
+  contentContainer: {
+    flex: 1,
+    backgroundColor: YowPetTheme.background.mainWhite,
+    borderRadius: 24,
+    marginTop: -20,
     padding: 20,
-    borderRadius: 16,
+    alignItems: 'center',
   },
   description: {
     fontSize: 16,
     fontFamily: 'Inter-Regular',
     color: YowPetTheme.text.mainText,
-    lineHeight: 24,
+    textAlign: 'center',
+    marginBottom: 20,
   },
-  startButton: {
-    backgroundColor: YowPetTheme.brand.primary,
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 12,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 24,
-    shadowColor: YowPetTheme.brand.primary,
+  progressText: {
+    fontSize: 14,
+    fontFamily: 'Inter-Medium',
+    color: YowPetTheme.text.secondaryText,
+    marginBottom: 8,
+  },
+  progressBar: {
+    width: '100%',
+    height: 8,
+    borderRadius: 4,
+    marginBottom: 20,
+  },
+  image: {
+    width: width - 40,
+    height: 300,
+    borderRadius: 16,
+    marginBottom: 20,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.2,
     shadowRadius: 6,
-    elevation: 4,
+    elevation: 5,
   },
-  startButtonText: {
+  stepText: {
+    fontSize: 16,
+    fontFamily: 'Inter-Regular',
+    color: YowPetTheme.text.mainText,
+    textAlign: 'center',
+    lineHeight: 24,
+    marginBottom: 20,
+  },
+  navigationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  navButton: {
+    backgroundColor: YowPetTheme.brand.primary,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  navButtonText: {
+    fontSize: 16,
+    fontFamily: 'Inter-Medium',
     color: '#FFF',
-    fontSize: 18,
-    fontFamily: 'Inter-SemiBold',
-    marginRight: 10,
+  },
+  disabledButton: {
+    backgroundColor: YowPetTheme.background.lightGray,
   },
 });

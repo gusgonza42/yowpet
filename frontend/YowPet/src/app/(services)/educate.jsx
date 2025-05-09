@@ -24,15 +24,27 @@ const videos = {
       thumbnail: require('../../assets/educate/sentarse.jpg'),
       description: 'Enseña a tu mascota a sentarse.',
       duration: '2:15',
-      videoId: 'dQw4w9WgXcQ', // <-- YouTube ID
+      instructionImages: [
+        'https://www.wikihow.com/images/thumb/e/e5/Train-a-Dog-to-Give-You-Its-Paw-Step-1-Version-3.jpg/v4-728px-Train-a-Dog-to-Give-You-Its-Paw-Step-1-Version-3.jpg.webp',
+        'https://www.wikihow.com/images/thumb/a/a1/Train-a-Dog-to-Give-You-Its-Paw-Step-2-Version-3.jpg/v4-728px-Train-a-Dog-to-Give-You-Its-Paw-Step-2-Version-3.jpg.webp',
+      ],
     },
     {
       title: 'Dar La Pata',
       thumbnailKey: 'pata',
       thumbnail: require('../../assets/educate/pata.jpg'),
-      description: 'Entrena a tu perro para dar la pata.',
+      description: 'Enseña a tu perro a dar la pata con sesiones cortas y recompensas.',
       duration: '3:30',
-      videoId: 'WH_z25n4YzY', // <-- Example ID, replace with real
+      instructionImages: [
+        'https://www.wikihow.com/images/thumb/e/e5/Train-a-Dog-to-Give-You-Its-Paw-Step-1-Version-3.jpg/v4-728px-Train-a-Dog-to-Give-You-Its-Paw-Step-1-Version-3.jpg.webp',
+        'https://www.wikihow.com/images/thumb/a/a1/Train-a-Dog-to-Give-You-Its-Paw-Step-2-Version-3.jpg/v4-728px-Train-a-Dog-to-Give-You-Its-Paw-Step-2-Version-3.jpg.webp',
+        'https://www.wikihow.com/images/thumb/0/0b/Train-a-Dog-to-Give-You-Its-Paw-Step-3-Version-2.jpg/v4-728px-Train-a-Dog-to-Give-You-Its-Paw-Step-3-Version-2.jpg.webp',
+      ],
+      steps: [
+        'Step 1: Choose a treat to reward your dog for good behavior.',
+        'Step 2: Select a verbal command like "paw" or "shake."',
+        'Step 3: Find a quiet area to train your dog without distractions.',
+      ],
     },
     {
       title: 'Caminar Con Correa',
@@ -137,7 +149,8 @@ export default function EducateScreen() {
                       title: video.title,
                       description: video.description,
                       difficulty: selectedLevel,
-                      videoId: video.videoId,
+                      instructionImages: video.instructionImages || [],
+                      steps: video.steps || [],
                     },
                   })
                 }
