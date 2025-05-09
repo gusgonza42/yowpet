@@ -16,8 +16,10 @@ import { useRequest } from '@/services/api/fetchingdata';
 import { useAxiosFetch } from '@/services/api/getfetch';
 import MapMarker from '../Map/MapMarker';
 import DetailModal from '../Map/ViewDetailModal';
+import { useRef } from 'react';
 
 export default function MapScreen() {
+  const mapRef = useRef(null); // Reference to the MapView component
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [location, setLocation] = useState(null);
   const [selectedMarker, setSelectedMarker] = useState(null);
@@ -37,6 +39,7 @@ export default function MapScreen() {
   const [locationFilter, setLocationFilter] = useState('Veterinarios');
   const [isSelectingLocation, setIsSelectingLocation] = useState(false);
   const filters = ['Veterinarios', 'Tiendas', 'Pet-Friendly', 'Parques'];
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -49,6 +52,30 @@ export default function MapScreen() {
       setLocation(loc.coords);
     })();
   }, []);
+
+  const handleSearch = () => {
+    if (!searchQuery.trim()) return;
+
+    const foundMarker = datos.find(marker =>
+      marker.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    if (foundMarker && mapRef.current) {
+      mapRef.current.animateToRegion({
+        latitude: foundMarker.latitude,
+        longitude: foundMarker.longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
+
+      setSelectedMarker(foundMarker); // Optionally open the modal
+    } else {
+      Alert.alert(
+        'No encontrado',
+        'No se encontró ningún marcador con ese nombre.'
+      );
+    }
+  };
 
   const handleAddLocation = async () => {
     if (!newLocation.latitude || !newLocation.longitude || !locationName) {
@@ -113,8 +140,42 @@ export default function MapScreen() {
 
   return (
     <View style={mapstyles.container}>
-      {/* Top Bar */}
-      <View style={mapstyles.topBar}>{/* Add your top bar UI here */}</View>
+      <View style={mapstyles.topBar}>
+        {selectedFilter !== 'All' ? (
+          <>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedFilter('All');
+                setSearchQuery('');
+              }}
+              style={mapstyles.iconButton}
+            >
+              <Text style={mapstyles.iconText}> <AntDesign name="arrowleft" size={20} color="white" /></Text>
+            </TouchableOpacity>
+            <View style={mapstyles.searchContainershortened}>
+              <TextInput
+                placeholder="🔍 Buscar aquí..."
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+                onSubmitEditing={() => handleSearch()}
+                style={mapstyles.searchInput}
+                returnKeyType="search"
+              />
+            </View>{' '}
+          </>
+        ) : (
+          <View style={mapstyles.searchContainer}>
+            <TextInput
+              placeholder="🔍 Buscar aquí..."
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              onSubmitEditing={() => handleSearch()}
+              style={mapstyles.searchInput}
+              returnKeyType="search"
+            />
+          </View>
+        )}
+      </View>
 
       {isSelectingLocation && (
         <Text
@@ -127,6 +188,7 @@ export default function MapScreen() {
       {/* Map */}
       {location && (
         <MapView
+          ref={mapRef}
           style={{ flex: 1 }}
           showsUserLocation
           initialRegion={{
