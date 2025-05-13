@@ -8,7 +8,6 @@ import { FormField } from '@components/profile/account/FormField';
 import { ActionButtons } from '@components/profile/account/ActionButtons';
 import { userService } from '@service/profile/userService';
 
-
 export default function AccountScreen() {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
@@ -54,69 +53,118 @@ export default function AccountScreen() {
         birthDate: formData.birthDate || null,
       };
 
-      // Solo incluir contraseña si se ha modificado
       if (formData.password && formData.password !== '********') {
         dataToUpdate.password = formData.password;
       }
 
       const response = await userService.actualizarPerfil(dataToUpdate);
+      console.log('Respuesta actualización:', response);
 
-      // Verificar si la respuesta está en data
-      const updatedData = response.data || response;
-
-      if (!updatedData) {
-        throw new Error('No se recibieron datos del servidor');
+      if (!response || !response.data) {
+        throw new Error('Error al actualizar el perfil');
       }
 
-      // Actualizar el formulario con los datos actualizados
+      const updatedData = response.data;
       setFormData({
-        firstName: updatedData.firstName || '',
-        lastName: updatedData.lastName || '',
-        username: updatedData.username || '',
-        email: updatedData.email || '',
+        ...formData,
+        ...updatedData,
         password: '********',
         confirmPassword: '********',
-        city: updatedData.city === 'No especificado' ? '' : updatedData.city,
-        address:
-          updatedData.address === 'No especificado' ? '' : updatedData.address,
-        phoneNumber: updatedData.phoneNumber || '',
-        birthDate: updatedData.birthDate,
       });
 
       setIsEditing(false);
       alert('Perfil actualizado correctamente');
     } catch (error) {
-      console.error('Error al actualizar el perfil:', error);
-      alert(error.response?.data?.message || 'Error al actualizar el perfil');
+      console.error('Error detallado al actualizar:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+      });
+      alert(
+        error.response?.data?.message ||
+          error.message ||
+          'Error al actualizar el perfil'
+      );
     }
   };
 
   const loadProfile = async () => {
     try {
-      const response = await userService.obtenerPerfil();
+      console.log('Iniciando carga de perfil...');
 
-      // Verificar si la respuesta está en data
-      const userData = response.data || response;
+      // Agregar un timeout a la petición
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(
+          () => reject(new Error('Timeout al cargar el perfil')),
+          10000
+        )
+      );
 
-      if (!userData) {
-        throw new Error('No se recibieron datos del servidor');
+      const response = await Promise.race([
+        userService.obtenerPerfil(),
+        timeoutPromise,
+      ]);
+
+      console.log('Respuesta raw del servidor:', response);
+
+      // Si la respuesta es undefined o null
+      if (!response) {
+        throw new Error('No se recibió respuesta del servidor');
       }
 
+      // Si la respuesta tiene un error
+      if (response.error) {
+        throw new Error(response.error);
+      }
+
+      // Asumiendo que la respuesta viene directamente con los datos del usuario
+      const profileData = response;
+      console.log('Datos del perfil:', profileData);
+
       setFormData({
-        firstName: userData.firstName || '',
-        lastName: userData.lastName || '',
-        username: userData.username || '',
-        email: userData.email || '',
+        firstName: profileData.firstName || '',
+        lastName: profileData.lastName || '',
+        username: profileData.username || '',
+        email: profileData.email || '',
         password: '********',
         confirmPassword: '********',
-        city: userData.city === 'No especificado' ? '' : userData.city,
-        address: userData.address === 'No especificado' ? '' : userData.address,
-        phoneNumber: userData.phoneNumber || '',
-        birthDate: userData.birthDate,
+        city:
+          profileData.city && profileData.city !== 'No especificado'
+            ? profileData.city
+            : '',
+        address:
+          profileData.address && profileData.address !== 'No especificado'
+            ? profileData.address
+            : '',
+        phoneNumber: profileData.phoneNumber || '',
+        birthDate: profileData.birthDate || null,
       });
     } catch (error) {
-      console.error('Error al cargar el perfil:', error);
-      alert('Error al cargar el perfil del usuario');
+      console.error('Error al cargar el perfil:', {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+        stack: error.stack,
+      });
+
+      // Mostrar un mensaje más amigable al usuario
+      alert(
+        'No se pudo cargar tu perfil. Por favor, intenta de nuevo más tarde.'
+      );
+
+      // Establecer valores vacíos pero mantener el formato
+      setFormData({
+        firstName: '',
+        lastName: '',
+        username: '',
+        email: '',
+        password: '********',
+        confirmPassword: '********',
+        city: '',
+        address: '',
+        phoneNumber: '',
+        birthDate: null,
+      });
     }
   };
 
