@@ -18,8 +18,11 @@ import { useAxiosFetch } from '@/services/api/getfetch';
 import MapMarker from '@components/Map/MapMarker';
 import DetailModal from '@components/Map/ViewDetailModal';
 import { useRequest } from '@/services/api/fetchingdata';
-import { mapStyles, modalStyles } from '@/components/Map/styles';
+import { mapStyles, modalStyles, getDynamicMapStyles } from '@/components/Map/styles';
 import { YowPetTheme } from '@theme/Colors';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { StatusBar } from 'react-native';
 
 export default function MapScreen() {
   const mapRef = useRef(null);
@@ -30,7 +33,7 @@ export default function MapScreen() {
   const { datos, loading, error, refetch } = useAxiosFetch(
     'place/all',
     refreshKey,
-    false
+    false,
   );
   const { requestData, loading: saving } = useRequest();
   const [locationAddress, setLocationAddress] = useState('');
@@ -51,6 +54,9 @@ export default function MapScreen() {
   const [followUserLocation, setFollowUserLocation] = useState(true);
 
   const [isLoading, setIsLoading] = useState(true); // Estado para el loader
+  const [mapType, setMapType] = useState('standard');
+  const insets = useSafeAreaInsets();
+  const dynamicStyles = getDynamicMapStyles(insets);
 
   useEffect(() => {
     (async () => {
@@ -80,15 +86,31 @@ export default function MapScreen() {
     useCallback(() => {
       console.log('Pantalla de mapa enfocada - actualizando datos');
       refetch();
-      return () => {};
-    }, [])
+      return () => {
+      };
+    }, []),
   );
+  // Añade este useEffect después de los demás useEffects
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      StatusBar.setTranslucent(true);
+      StatusBar.setBackgroundColor('transparent');
+    }
+
+    // Opcional: limpieza al desmontar el componente
+    return () => {
+      if (Platform.OS === 'android') {
+        StatusBar.setTranslucent(false);
+        StatusBar.setBackgroundColor('#000000');
+      }
+    };
+  }, []);
 
   const handleSearch = () => {
     if (!searchQuery.trim()) return;
 
     const foundMarker = datos.find(marker =>
-      marker.name.toLowerCase().includes(searchQuery.toLowerCase())
+      marker.name.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
     if (foundMarker && mapRef.current) {
@@ -106,7 +128,7 @@ export default function MapScreen() {
     } else {
       Alert.alert(
         'No encontrado',
-        'No se encontró ningún marcador con ese nombre.'
+        'No se encontró ningún marcador con ese nombre.',
       );
     }
   };
@@ -191,7 +213,7 @@ export default function MapScreen() {
       ) : (
         <>
           <View
-            style={[mapStyles.topBar, Platform.OS === 'ios' && { zIndex: 10 }]}
+            style={[dynamicStyles.topBar, Platform.OS === 'ios' && { zIndex: 10 }]}
           >
             {selectedFilter !== 'All' ? (
               <>
@@ -252,6 +274,9 @@ export default function MapScreen() {
               ref={mapRef}
               style={{ flex: 1 }}
               showsUserLocation
+              zoomEnabled={true}
+              showsMyLocationButton={false}
+              mapType={mapType}
               followsUserLocation={followUserLocation}
               initialRegion={{
                 latitude: location.latitude,
@@ -272,7 +297,7 @@ export default function MapScreen() {
                     break;
                   case 'Tiendas':
                     pinColor = 'blue';
-                    icon = 'store';
+                    icon = 'shop';
                     break;
                   case 'Pet-Friendly':
                     pinColor = 'green';
@@ -307,7 +332,7 @@ export default function MapScreen() {
           <TouchableOpacity
             onPress={() => setModalVisible(true)}
             style={[
-              mapStyles.addbutton,
+              dynamicStyles.addbutton,
               Platform.OS === 'ios' && { zIndex: 8 },
             ]}
           >
@@ -330,8 +355,8 @@ export default function MapScreen() {
               }
             }}
             style={[
-              mapStyles.addbutton,
-              { bottom: 250, backgroundColor: '#3498db' },
+              dynamicStyles.addbutton,
+              dynamicStyles.userLocationButton,
               Platform.OS === 'ios' && { zIndex: 8 },
             ]}
           >
@@ -340,32 +365,95 @@ export default function MapScreen() {
             </Text>
           </TouchableOpacity>
 
+          {/* Botón para cambiar el tipo de mapa */}
+          <TouchableOpacity
+            onPress={() => {
+              // Cambia cíclicamente entre los diferentes tipos de mapa
+              setMapType(prevType => {
+                switch (prevType) {
+                  case 'standard':
+                    return 'satellite';
+                  case 'satellite':
+                    return 'hybrid';
+                  case 'hybrid':
+                    return 'terrain';
+                  case 'terrain':
+                    return 'standard';
+                  default:
+                    return 'standard';
+                }
+              });
+            }}
+            style={[
+              dynamicStyles.addbutton,
+              dynamicStyles.mapTypeButton,
+              Platform.OS === 'ios' && { zIndex: 8 },
+            ]}
+          >
+            <Text style={mapStyles.addbuttontext}>
+              <AntDesign name="eye" size={24} color="white" />
+            </Text>
+          </TouchableOpacity>
+
           {/* Botones de filtro */}
           <View
             style={[
-              mapStyles.filterBox,
+              dynamicStyles.filterBox,
               Platform.OS === 'ios' && { zIndex: 7 },
             ]}
           >
-            {filters.map(filter => (
-              <TouchableOpacity
-                key={filter}
-                onPress={() => setSelectedFilter(filter)}
-                style={[
-                  mapStyles.filterButton,
-                  selectedFilter === filter && mapStyles.selectedButton,
-                ]}
-              >
-                <Text
+            {filters.map(filter => {
+              // Determinar qué icono usar según el filtro
+              let iconName;
+              let englishLabel;
+
+              switch (filter) {
+                case 'Veterinarios':
+                  iconName = 'hospital-building';
+                  englishLabel = 'Vets';
+                  break;
+                case 'Tiendas':
+                  iconName = 'store';
+                  englishLabel = 'Stores';
+                  break;
+                case 'Pet-Friendly':
+                  iconName = 'paw';
+                  englishLabel = 'For Pets';
+                  break;
+                case 'Parques':
+                  iconName = 'tree';
+                  englishLabel = 'Parks';
+                  break;
+                default:
+                  iconName = 'map-marker';
+                  englishLabel = filter;
+              }
+
+              return (
+                <TouchableOpacity
+                  key={filter}
+                  onPress={() => setSelectedFilter(filter)}
                   style={[
-                    mapStyles.filterText,
-                    selectedFilter === filter && mapStyles.selectedText,
+                    mapStyles.filterButton,
+                    selectedFilter === filter && mapStyles.selectedButton,
                   ]}
                 >
-                  {filter}
-                </Text>
-              </TouchableOpacity>
-            ))}
+                  <MaterialCommunityIcons
+                    name={iconName}
+                    size={20} // Tamaño uniforme para todos los iconos
+                    color={selectedFilter === filter ? YowPetTheme.brand.white : YowPetTheme.brand.support}
+                  />
+                  <Text
+                    style={[
+                      mapStyles.filterText,
+                      selectedFilter === filter && mapStyles.selectedText,
+                    ]}
+                  >
+                    {englishLabel}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
           </View>
 
           {/* Modal de detalles */}
