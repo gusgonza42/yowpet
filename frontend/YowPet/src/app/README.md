@@ -8,7 +8,7 @@ src/app/
 ├── +not-found.jsx       # Pantalla de error 404
 ├── (auth)/              # Grupo de autenticación
 │   ├── _layout.jsx      # Layout de auth
-│   ├── login.jsx        # Pantalla de login
+│   ├── auth.jsx        # Pantalla de login
 │   └── register.jsx     # Pantalla de registro
 ├── (tabs)/              # Grupo de tabs principales
 │   ├── _layout.jsx      # Layout de tabs

@@ -7,24 +7,23 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-
-import org.springframework.security.core.userdetails.User;
 
 /**
  * Servicio para la gestión de tokens JWT.
  */
 @Service
 public class JwtTokenUtils {
-    @Value( "${jwt.secret}" )
+    @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value( "${jwt.expiration}" )
+    @Value("${jwt.expiration}")
     private long jwtExpirationInMs;
 
-    @Value( "${jwt.refreshThreshold}" )
+    @Value("${jwt.refreshThreshold}")
     private long refreshThresholdInMs;
 
     /**
@@ -32,12 +31,22 @@ public class JwtTokenUtils {
      *
      * @return el token JWT generado
      */
-    public String generateToken( String username ) {
-        return JWT.create( )
-                .withSubject( username )
-                .withIssuedAt( new Date( ) )
-                .withExpiresAt( new Date( System.currentTimeMillis( ) + jwtExpirationInMs ) )
-                .sign( Algorithm.HMAC256( secretKey ) );
+    public String generateToken(String username, int userId) {
+        return JWT.create()
+                .withSubject(username)
+                .withClaim("userId", userId)
+                .withIssuedAt(new Date())
+                .withExpiresAt(new Date(System.currentTimeMillis() + jwtExpirationInMs))
+                .sign(Algorithm.HMAC256(secretKey));
+    }
+
+    // Método para extraer el ID del usuario
+    public int extractUserId(String token) {
+        return JWT.require(Algorithm.HMAC256(secretKey))
+                .build()
+                .verify(token)
+                .getClaim("userId")
+                .asInt();
     }
 
     /**
@@ -46,13 +55,13 @@ public class JwtTokenUtils {
      * @param token el token JWT a verificar
      * @return true si el token es válido, false en caso contrario
      */
-    public boolean isValidToken( String token ) {
+    public boolean isValidToken(String token) {
         try {
-            JWTVerifier verifier = JWT.require( Algorithm.HMAC256( secretKey ) )
-                    .build( );
-            DecodedJWT jwt = verifier.verify( token );
-            return jwt.getExpiresAt( ).after( new Date( ) );
-        } catch ( JWTVerificationException e ) {
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey))
+                    .build();
+            DecodedJWT jwt = verifier.verify(token);
+            return jwt.getExpiresAt().after(new Date());
+        } catch (JWTVerificationException e) {
             return false;
         }
     }
@@ -63,8 +72,8 @@ public class JwtTokenUtils {
      * @param token el token JWT a verificar
      * @return true si el token ha expirado, false en caso contrario
      */
-    public boolean isTokenExpired( String token ) {
-        return extractExpiration( token ).before( new Date( ) );
+    public boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
     }
 
     /**
@@ -73,18 +82,24 @@ public class JwtTokenUtils {
      * @param token el token JWT a verificar
      * @return true si el token está cerca de expirar, false en caso contrario
      */
-    public boolean isTokenNearExpiry( String token ) {
-        return extractExpiration( token ).before( new Date( System.currentTimeMillis( ) + refreshThresholdInMs ) );
+    public boolean isTokenNearExpiry(String token) {
+        return extractExpiration(token).before(new Date(System.currentTimeMillis() + refreshThresholdInMs));
     }
 
     /**
      * Refresca un token JWT para un usuario dado.
      *
-     * @param username el nombre de usuario para el cual se refrescará el token
+     * @param token el nombre de usuario para el cual se refrescará el token
      * @return el nuevo token JWT generado
      */
-    public String refreshToken( String username ) {
-        return generateToken( username );
+    public String refreshToken(String token) {
+        try {
+            String username = extractUsername(token);
+            int userId = extractUserId(token);
+            return generateToken(username, userId);
+        } catch (Exception e) {
+            throw new JWTVerificationException("Error al refrescar el token");
+        }
     }
 
     /**
@@ -93,10 +108,10 @@ public class JwtTokenUtils {
      * @param token el token JWT del cual se extraerá la autenticación
      * @return un objeto UsernamePasswordAuthenticationToken con la autenticación del usuario
      */
-    public UsernamePasswordAuthenticationToken getAuthentication( String token ) {
-        String username = extractUsername( token );
-        User userDetails = new User( username , "" , java.util.Collections.emptyList( ) );
-        return new UsernamePasswordAuthenticationToken( userDetails , null , userDetails.getAuthorities( ) );
+    public UsernamePasswordAuthenticationToken getAuthentication(String token) {
+        String username = extractUsername(token);
+        User userDetails = new User(username, "", java.util.Collections.emptyList());
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
     /**
@@ -105,11 +120,11 @@ public class JwtTokenUtils {
      * @param token el token JWT del cual se extraerá el nombre de usuario
      * @return el nombre de usuario extraído del token
      */
-    public String extractUsername( String token ) {
-        return JWT.require( Algorithm.HMAC256( secretKey ) )
-                .build( )
-                .verify( token )
-                .getSubject( );
+    public String extractUsername(String token) {
+        return JWT.require(Algorithm.HMAC256(secretKey))
+                .build()
+                .verify(token)
+                .getSubject();
     }
 
     /**
@@ -118,10 +133,10 @@ public class JwtTokenUtils {
      * @param token el token JWT del cual se extraerá la fecha de expiración
      * @return la fecha de expiración del token
      */
-    private Date extractExpiration( String token ) {
-        return JWT.require( Algorithm.HMAC256( secretKey ) )
-                .build( )
-                .verify( token )
-                .getExpiresAt( );
+    private Date extractExpiration(String token) {
+        return JWT.require(Algorithm.HMAC256(secretKey))
+                .build()
+                .verify(token)
+                .getExpiresAt();
     }
 }

@@ -1,906 +1,726 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
+CREATE DATABASE IF NOT EXISTS `yowpet` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci */;
+USE `yowpet`;
+-- MySQL dump 10.13  Distrib 8.0.41, for Win64 (x86_64)
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 20, 2025 at 07:06 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `yowpet`
---
-
-DELIMITER $$
---
--- Procedures
---
-CREATE DEFINER=`root`@`localhost` PROCEDURE `completeReservation` (IN `p_id` INT)   BEGIN
-update reservations set status = 2 where id = p_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createallergy` (IN `p_id` INT, IN `p_name` VARCHAR(255))   BEGIN
-    INSERT INTO allergies (id, name) 
-    VALUES (p_id, p_name);
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createAnimalCategory` (IN `p_name` VARCHAR(255))   BEGIN
-    INSERT INTO animalcategory (name) 
-    VALUES (p_name);
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createbreed` (IN `p_animalCatId` INT, IN `p_breedName` VARCHAR(255))   BEGIN
-    INSERT INTO breed (animal_category_id, name) 
-    VALUES (p_animalCatId, p_breedName);
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createCaregiverWorker` (IN `p_user_id` INT, IN `p_speciality` VARCHAR(255), IN `p_experience_years` INT, IN `p_hourly_rate` DECIMAL(10,2), IN `p_rating` DECIMAL(3,2), IN `p_review` TEXT, IN `p_description` TEXT, IN `p_service_worker` VARCHAR(255), IN `p_status_active_work` BOOLEAN)   BEGIN
-    INSERT INTO caregiver_worker (
-        user_id, speciality, experience_years, hourly_rate, rating, review, 
-        description, service_worker, status_active_work
-    ) VALUES (
-        p_user_id, p_speciality, p_experience_years, p_hourly_rate, p_rating, 
-        p_review, p_description, p_service_worker, p_status_active_work
-    );
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createLesson` (IN `p_title` VARCHAR(255), IN `p_content` TEXT, IN `p_estado` INT)   BEGIN
-    INSERT INTO lesson (title, content, estado)
-    VALUES (p_title, p_content, p_estado);
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `CreateLessonReview` (IN `p_lesson_id` BIGINT, IN `p_user_id` BIGINT, IN `p_rating` DOUBLE, IN `p_comment` TEXT)   BEGIN
-    INSERT INTO lesson_reviews (lesson_id, user_id, rating, comment, estado)
-    VALUES (p_lesson_id, p_user_id, ROUND(p_rating, 1), p_comment, 1);
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createPet` (IN `p_name` VARCHAR(255), IN `p_birthDate` DATE, IN `p_gender` VARCHAR(10), IN `p_sterilized` INT, IN `p_profilePicture` VARCHAR(255), IN `p_ownerId` INT, IN `p_breed` INT, IN `p_status` INT, IN `p_description` TEXT, IN `p_emergencyContact` VARCHAR(255), IN `p_updatedAt` TIMESTAMP)   BEGIN
-    INSERT INTO pets (name, birth_date, gender, sterilized, profile_picture, owner_id, breed, status,
-                      description, emergency_contact, updated_at, created_at)
-    VALUES (p_name, p_birthDate, p_gender, p_sterilized, p_profilePicture, p_ownerId, p_breed,
-            p_status, p_description, p_emergencyContact, p_updatedAt, NOW());
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createPlace` (IN `p_name` VARCHAR(255), IN `p_address` VARCHAR(255), IN `p_addresscode` VARCHAR(50))   BEGIN
-    INSERT INTO places (name, address, addresscode, estado)
-    VALUES (p_name, p_address, p_addresscode, 1);
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createPlaceReview` (IN `p_rating` DOUBLE, IN `p_comment` VARCHAR(255), IN `p_place` INT, IN `p_user` INT)   BEGIN
-    INSERT INTO place_reviews (rating, comment, estado, place, user)
-    VALUES (ROUND(p_rating, 1), p_comment, 1, p_place, p_user);
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createReservation` (IN `p_user_id` INT, IN `p_caregiver_id` INT, IN `p_reservation_date` DATE, IN `p_details` VARCHAR(255))   BEGIN
-    INSERT INTO reservations (user_id, caregiver_id, reservation_date, details, status)
-    VALUES (p_user_id, p_caregiver_id, p_reservation_date, p_details, 1);
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createUser` (IN `p_first_name` VARCHAR(255), IN `p_last_name` VARCHAR(255), IN `p_email` VARCHAR(255), IN `p_password` VARCHAR(255), IN `p_city` VARCHAR(255), IN `p_address` VARCHAR(255), IN `p_phone_number` VARCHAR(20), IN `p_zip_code` INT, IN `p_gender` VARCHAR(50), IN `p_profile_picture` VARCHAR(255), IN `p_role` INT, IN `p_languages` TEXT, IN `p_payment_method` VARCHAR(255), IN `p_birth_date` DATE)   BEGIN
-    INSERT INTO user (first_name, last_name, email, password, city, address, phone_number, zip_code, gender, profile_picture, role, languages, payment_method, birth_date, created_at)
-    VALUES (p_first_name, p_last_name, p_email, p_password, p_city, p_address, p_phone_number, p_zip_code, p_gender, p_profile_picture, p_role, p_languages, p_payment_method, p_birth_date, NOW());
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteallergy` (IN `p_allergyId` INT)   BEGIN
-    DELETE FROM allergies WHERE id = p_allergyId;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAnimalCategory` (IN `p_animalCategId` INT)   BEGIN
-    DELETE FROM animalcategory WHERE id = p_animalCategId;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deletebreed` (IN `p_breedId` INT)   BEGIN
-    DELETE FROM breed 
-    WHERE id = p_breedId;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCaregiverWorker` (IN `p_id` INT)   BEGIN
-    DELETE FROM caregiver_worker WHERE id = p_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteLesson` (IN `p_id` INT)   BEGIN
-    DELETE FROM lesson WHERE id = p_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deletePet` (IN `p_id` INT)   BEGIN
-    UPDATE pets
-    SET status = 0, deleted_at = NOW()
-    WHERE id = p_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deletePlace` (IN `p_id` INT)   BEGIN
-    UPDATE places
-    SET estado = 0, updated_at = NOW()
-    WHERE id = p_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deletePlaceReview` (IN `p_id` INT)   BEGIN
-    UPDATE place_reviews
-    SET estado = 0
-    WHERE id = p_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteReservation` (IN `p_id` INT)   BEGIN
-    UPDATE reservations SET status = 0 WHERE id = p_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUser` (IN `p_user_id` INT)   BEGIN
-    UPDATE user 
-    SET status = 0,  -- Assuming 0 means inactive
-        deleted_at = NOW(),
-        updated_at = NOW()
-    WHERE id = p_user_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `disableCaregiverWorker` (IN `p_id` INT)   BEGIN
-    UPDATE caregiver_worker
-    SET status_active_work = 0
-    WHERE id = p_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getActiveUsers` ()   BEGIN
-    SELECT * FROM user WHERE status = 1;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllCaregiverWorkers` ()   BEGIN
-    SELECT * FROM caregiver_worker;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getallergies` ()   BEGIN
-    SELECT id, name FROM allergies;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getallergy` (IN `p_allergyId` INT)   BEGIN
-    SELECT id, name 
-    FROM allergies 
-    WHERE id = p_allergyId;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getallergys` ()   BEGIN
-    SELECT id, name, photo FROM Allergy;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllLessonReviews` ()   BEGIN
-    SELECT * FROM lesson_reviews WHERE estado <> 0;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllLessons` ()   BEGIN
-    SELECT * FROM lesson;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllPets` ()   BEGIN
-    SELECT * FROM pets WHERE status = 1;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllPlaceReviews` ()   BEGIN
-    SELECT * FROM place_reviews WHERE estado != 0;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllPlaces` ()   BEGIN
-    SELECT * FROM places WHERE estado <> 0;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAnimalCategories` ()   BEGIN
-    SELECT id, name FROM animalcategory;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAnimalCategory` (IN `p_animalCategId` INT)   BEGIN
-    SELECT id, name
-    FROM animalcategory 
-    WHERE id = p_animalCategId;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAvailableCaregiverWorkers` (IN `p_status_active_work` BOOLEAN)   BEGIN
-    SELECT * FROM caregiver_worker WHERE status_active_work = p_status_active_work;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getCaregiverWorker` (IN `p_id` INT)   BEGIN
-    SELECT * FROM caregiver_worker WHERE id = p_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getCaregiverWorkersByCategory` (IN `p_animal_cat_id` INT)   BEGIN
-    SELECT cw.* FROM caregiver_worker cw
-    JOIN caregiver_worker_category cwc ON cw.id = cwc.caregiver_id
-    WHERE cwc.category_id = p_animal_cat_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getCaregiverWorkersByRating` (IN `p_rating` DECIMAL(3,2))   BEGIN
-    SELECT * FROM caregiver_worker WHERE rating >= p_rating ORDER BY rating DESC;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getCaregiverWorkersBySpeciality` (IN `p_speciality` VARCHAR(255))   BEGIN
-    SELECT * FROM caregiver_worker WHERE speciality = p_speciality;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getCaregiverWorkersByUser` (IN `p_user_id` INT)   BEGIN
-    SELECT * FROM caregiver_worker WHERE user_id = p_user_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getLesson` (IN `p_id` INT)   BEGIN
-    SELECT * FROM lesson WHERE id = p_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetLessonReviewById` (IN `review_id` BIGINT)   BEGIN
-    SELECT * FROM lesson_reviews WHERE id = review_id AND estado <> 0;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getLessonsByEstado` (IN `p_estado` INT)   BEGIN
-    SELECT * FROM lesson WHERE estado = p_estado;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getPet` (IN `p_id` INT)   BEGIN
-    SELECT * FROM pets WHERE id = p_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getPetsByStatus` (IN `p_status` INT)   BEGIN
-    SELECT * FROM pets WHERE status = p_status;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getPlace` (IN `p_id` INT)   BEGIN
-    SELECT * FROM places WHERE id = p_id AND estado <> 0;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getPlaceReview` (IN `p_id` INT)   BEGIN
-    SELECT * FROM place_reviews
-    WHERE id = p_id AND estado != 0;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getPlaceReviewsByIdandEstado` (IN `p_id` INT, IN `p_estado` INT)   BEGIN
-    SELECT * FROM place_reviews WHERE id = p_id AND estado = p_estado;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getPlaceReviewsByPlace` (IN `p_place` INT)   BEGIN
-    SELECT * FROM place_reviews WHERE place = p_place AND estado != 0;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getPlaceReviewsByPlaceAndUser` (IN `p_place` INT, IN `p_user` INT)   BEGIN
-    SELECT * FROM place_reviews WHERE place = p_place AND user = p_user AND estado != 0;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getPlaceReviewsByUser` (IN `p_user` INT)   BEGIN
-    SELECT * FROM place_reviews WHERE user = p_user AND estado != 0;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getPlacesByStatus` (IN `p_status` INT)   BEGIN
-    SELECT * FROM places WHERE estado = p_status;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getReservationById` (IN `p_id` INT)   BEGIN
-    SELECT * FROM reservations WHERE id = p_id AND status != 0;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getReservationsByCareGiver` (IN `p_caregiver_id` INT)   BEGIN
-    SELECT * FROM reservations WHERE caregiver_id = p_caregiver_id AND status = 1;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getReservationsByStatus` (IN `p_status` INT)   BEGIN
-    SELECT * FROM reservations WHERE status = p_status;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getReservationsByUser` (IN `p_user_id` INT)   BEGIN
-    SELECT * FROM reservations WHERE user_id = p_user_id AND status = 1;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getUser` (IN `p_user_id` INT)   BEGIN
-    SELECT * FROM user WHERE id = p_user_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserByEmail` (IN `p_email` VARCHAR(255))   BEGIN
-    SELECT * FROM user WHERE email = p_email;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getUsers` ()   BEGIN
-    SELECT * FROM user;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `searchallergy` (IN `p_searchTerm` VARCHAR(255))   BEGIN
-    SELECT id, name 
-    FROM allergies 
-    WHERE name LIKE CONCAT('%', p_searchTerm, '%');
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `searchAnimalCategory` (IN `p_searchTerm` VARCHAR(255))   BEGIN
-    SELECT id, name 
-    FROM animalcategory 
-    WHERE name LIKE CONCAT('%', p_searchTerm, '%');
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `searchCaregiverWorkers` (IN `p_search_term` VARCHAR(255))   BEGIN
-    SELECT * FROM caregiver_worker 
-    WHERE speciality LIKE p_search_term 
-       OR description LIKE p_search_term
-       OR service_worker LIKE p_search_term;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `SearchLessonReviewsByRating` (IN `review_rating` DOUBLE)   BEGIN
-    SELECT * FROM lesson_reviews WHERE ROUND(rating, 1) = review_rating AND estado <> 0;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `searchLessons` (IN `p_search_term` VARCHAR(255))   BEGIN
-    SELECT * FROM lesson
-    WHERE title LIKE p_search_term
-       OR content LIKE p_search_term;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `searchPets` (IN `p_search` VARCHAR(255))   BEGIN
-    SELECT * FROM pets WHERE name LIKE CONCAT('%', p_search, '%') AND status = 1;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `searchPlaceReviews` (IN `p_rating` DOUBLE)   BEGIN
-    SELECT * FROM place_reviews
-    WHERE ROUND(rating, 1) = ROUND(p_rating, 1) AND estado != 0;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `searchPlaces` (IN `p_searchTerm` VARCHAR(255))   BEGIN
-    SELECT * FROM places
-    WHERE (name LIKE CONCAT('%', p_searchTerm, '%') OR address LIKE CONCAT('%', p_searchTerm, '%'))
-    AND estado <> 0;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `searchUsers` (IN `p_searchTerm` VARCHAR(255))   BEGIN
-    SELECT * FROM user
-    WHERE first_name LIKE CONCAT('%', p_searchTerm, '%')
-       OR last_name LIKE CONCAT('%', p_searchTerm, '%')
-       OR email LIKE CONCAT('%', p_searchTerm, '%');
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `SoftDeleteLessonReview` (IN `review_id` BIGINT)   BEGIN
-    UPDATE lesson_reviews SET estado = 0 WHERE id = review_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateallergy` (IN `p_allergyId` INT, IN `p_allergyName` VARCHAR(255))   BEGIN
-    UPDATE allergies 
-    SET name = p_allergyName
-    WHERE id = p_allergyId;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAnimalCategory` (IN `p_animalCategId` INT, IN `p_animalCategName` VARCHAR(255))   BEGIN
-    UPDATE animalcategory 
-    SET name = p_animalCategName
-    WHERE id = p_animalCategId;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updatebreed` (IN `p_breedId` INT, IN `p_breedName` VARCHAR(255))   BEGIN
-    UPDATE breed 
-    SET name = p_breedName
-    WHERE id = p_breedId;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCaregiverWorker` (IN `p_id` INT, IN `p_user_id` INT, IN `p_speciality` VARCHAR(255), IN `p_experience_years` INT, IN `p_hourly_rate` DECIMAL(10,2), IN `p_rating` DECIMAL(3,2), IN `p_review` TEXT, IN `p_description` TEXT, IN `p_service_worker` VARCHAR(255), IN `p_status_active_work` BOOLEAN)   BEGIN
-    UPDATE caregiver_worker
-    SET 
-        user_id = p_user_id,
-        speciality = p_speciality,
-        experience_years = p_experience_years,
-        hourly_rate = p_hourly_rate,
-        rating = p_rating,
-        review = p_review,
-        description = p_description,
-        service_worker = p_service_worker,
-        status_active_work = p_status_active_work
-    WHERE id = p_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateLesson` (IN `p_id` INT, IN `p_title` VARCHAR(255), IN `p_content` TEXT, IN `p_estado` INT)   BEGIN
-    UPDATE lesson
-    SET title = p_title,
-        content = p_content,
-        estado = p_estado
-    WHERE id = p_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `UpdateLessonReview` (IN `review_id` BIGINT, IN `new_rating` DOUBLE, IN `new_comment` TEXT, IN `new_estado` INT)   BEGIN
-    UPDATE lesson_reviews
-    SET rating = ROUND(new_rating, 1),
-        comment = new_comment,
-        estado = new_estado
-    WHERE id = review_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePet` (IN `p_id` INT, IN `p_name` VARCHAR(255), IN `p_birthDate` DATE, IN `p_gender` VARCHAR(10), IN `p_sterilized` INT, IN `p_profilePicture` VARCHAR(255), IN `p_ownerId` INT, IN `p_breed` INT, IN `p_status` INT, IN `p_description` TEXT, IN `p_emergencyContact` VARCHAR(255), IN `p_updatedAt` TIMESTAMP)   BEGIN
-    UPDATE pets
-    SET name = p_name, birth_date = p_birthDate, gender = p_gender, sterilized = p_sterilized,
-        profile_picture = p_profilePicture, owner_id = p_ownerId, breed = p_breed,
-        status = p_status, description = p_description, emergency_contact = p_emergencyContact,
-        updated_at = p_updatedAt
-    WHERE id = p_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePlace` (IN `p_id` INT, IN `p_name` VARCHAR(255), IN `p_address` VARCHAR(255), IN `p_addresscode` VARCHAR(50))   BEGIN
-    UPDATE places
-    SET name = p_name, address = p_address, addresscode = p_addresscode, updated_at = NOW()
-    WHERE id = p_id AND estado <> 0;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePlaceReview` (IN `p_id` INT, IN `p_rating` DOUBLE, IN `p_comment` VARCHAR(255))   BEGIN
-    UPDATE place_reviews
-    SET rating = ROUND(p_rating, 1), comment = p_comment
-    WHERE id = p_id AND estado != 0;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateReservation` (IN `p_id` INT, IN `p_reservation_date` DATE, IN `p_details` VARCHAR(255))   BEGIN
-    UPDATE reservations
-    SET reservation_date = p_reservation_date, details = p_details
-    WHERE id = p_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUser` (IN `p_user_id` INT, IN `p_first_name` VARCHAR(255), IN `p_last_name` VARCHAR(255), IN `p_email` VARCHAR(255), IN `p_city` VARCHAR(255), IN `p_address` VARCHAR(255), IN `p_phone_number` VARCHAR(20), IN `p_zip_code` INT, IN `p_gender` VARCHAR(50), IN `p_profile_picture` VARCHAR(255), IN `p_role` INT, IN `p_languages` TEXT, IN `p_payment_method` VARCHAR(255), IN `p_birth_date` DATE)   BEGIN
-    UPDATE user 
-    SET first_name = p_first_name,
-        last_name = p_last_name,
-        email = p_email,
-        city = p_city,
-        address = p_address,
-        phone_number = p_phone_number,
-        zip_code = p_zip_code,
-        gender = p_gender,
-        profile_picture = p_profile_picture,
-        role = p_role,
-        languages = p_languages,
-        payment_method = p_payment_method,
-        birth_date = p_birth_date,
-        updated_at = NOW()
-    WHERE id = p_user_id;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserProfile` (IN `p_user_id` INT, IN `p_first_name` VARCHAR(255), IN `p_last_name` VARCHAR(255), IN `p_email` VARCHAR(255), IN `p_city` VARCHAR(255), IN `p_address` VARCHAR(255), IN `p_phone_number` VARCHAR(20), IN `p_zip_code` INT, IN `p_gender` VARCHAR(50), IN `p_profile_picture` VARCHAR(255), IN `p_languages` TEXT, IN `p_payment_method` VARCHAR(255), IN `p_birth_date` DATE)   BEGIN
-    UPDATE user
-    SET first_name = p_first_name,
-        last_name = p_last_name,
-        email = p_email,
-        city = p_city,
-        address = p_address,
-        phone_number = p_phone_number,
-        zip_code = p_zip_code,
-        gender = p_gender,
-        profile_picture = p_profile_picture,
-        languages = p_languages,
-        payment_method = p_payment_method,
-        birth_date = p_birth_date,
-        updated_at = NOW()
-    WHERE id = p_user_id;
-END$$
-
-DELIMITER ;
-
--- --------------------------------------------------------
+-- Host: 127.0.0.1    Database: yowpet
+-- ------------------------------------------------------
+-- Server version	5.5.5-10.4.32-MariaDB
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT = @@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS = @@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION = @@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE = @@TIME_ZONE */;
+/*!40103 SET TIME_ZONE = '+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS = @@UNIQUE_CHECKS, UNIQUE_CHECKS = 0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS = 0 */;
+/*!40101 SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES = @@SQL_NOTES, SQL_NOTES = 0 */;
 
 --
 -- Table structure for table `allergies`
 --
 
-CREATE TABLE `allergies` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `photo` tinyblob DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `allergies`;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `allergies`
+(
+    `id`    int(11)     NOT NULL AUTO_INCREMENT,
+    `name`  varchar(45) NOT NULL,
+    `photo` blob DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 11
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- --------------------------------------------------------
+--
+-- Dumping data for table `allergies`
+--
+
+LOCK TABLES `allergies` WRITE;
+/*!40000 ALTER TABLE `allergies`
+    DISABLE KEYS */;
+INSERT INTO `allergies`
+VALUES (1, 'Insects', NULL),
+       (2, 'Pollen', NULL),
+       (3, 'Dust Mites', NULL),
+       (4, 'Mold', NULL),
+       (5, 'Pet Dander', NULL),
+       (6, 'Certain Foods', NULL),
+       (7, 'Medications', NULL),
+       (8, 'Latex', NULL),
+       (9, 'Insect Stings', NULL),
+       (10, 'Cockroaches', NULL);
+/*!40000 ALTER TABLE `allergies`
+    ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `animalcategory`
 --
 
-CREATE TABLE `animalcategory` (
-  `id` int(11) NOT NULL,
-  `ac_name` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `animalcategory`;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `animalcategory`
+(
+    `id`   int(11)      NOT NULL AUTO_INCREMENT,
+    `name` varchar(100) NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `name` (`name`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 16
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `animalcategory`
 --
 
-INSERT INTO `animalcategory` (`id`, `ac_name`) VALUES
-(1, 'Cats'),
-(2, 'Dogs');
-
--- --------------------------------------------------------
+LOCK TABLES `animalcategory` WRITE;
+/*!40000 ALTER TABLE `animalcategory`
+    DISABLE KEYS */;
+INSERT INTO `animalcategory`
+VALUES (3, 'Bird'),
+       (2, 'Cat'),
+       (14, 'Chinchilla'),
+       (1, 'Dog'),
+       (13, 'Ferret'),
+       (5, 'Fish'),
+       (12, 'Guinea Pig'),
+       (6, 'Hamster'),
+       (15, 'Hermit Crab'),
+       (9, 'Horse'),
+       (10, 'Lizard'),
+       (4, 'Rabbit'),
+       (8, 'Snake'),
+       (7, 'Turtle');
+/*!40000 ALTER TABLE `animalcategory`
+    ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `breed`
 --
 
-CREATE TABLE `breed` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `animal_category` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `breed`;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `breed`
+(
+    `id`        int(11) NOT NULL AUTO_INCREMENT,
+    `name`      varchar(100) DEFAULT NULL,
+    `categoria` int(11) NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `categoria` (`categoria`),
+    CONSTRAINT `breed_ibfk_1` FOREIGN KEY (`categoria`) REFERENCES `animalcategory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 21
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `breed`
 --
 
-INSERT INTO `breed` (`id`, `name`, `animal_category`) VALUES
-(1, 'Chihuahua', 1);
-
--- --------------------------------------------------------
+LOCK TABLES `breed` WRITE;
+/*!40000 ALTER TABLE `breed`
+    DISABLE KEYS */;
+INSERT INTO `breed`
+VALUES (1, 'Golden Retriever', 1),
+       (2, 'Persian', 2),
+       (3, 'African Grey Parrot', 3),
+       (4, 'Bunny', 4),
+       (5, 'Goldfish', 5),
+       (6, 'Dwarf Hamster', 6),
+       (7, 'Red-Eared Slider', 7),
+       (8, 'Python', 8),
+       (9, 'Arabian Horse', 9),
+       (10, 'Gecko', 10),
+       (11, 'Labrador Retriever', 1),
+       (12, 'German Shepherd', 1),
+       (13, 'Siamese', 2),
+       (14, 'Maine Coon', 2),
+       (15, 'firess', 4),
+       (16, 'Lovebird', 3),
+       (17, 'Lionhead', 4),
+       (18, 'Flemish Giant', 4),
+       (19, 'Betta', 5),
+       (20, 'Angelfish', 5);
+/*!40000 ALTER TABLE `breed`
+    ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Table structure for table `caregiver_worker`
+-- Table structure for table `caregiver_workers`
 --
 
-CREATE TABLE `caregiver_worker` (
-  `id` int(11) NOT NULL,
-  `created_at` datetime(6) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `experience_years` int(11) DEFAULT NULL,
-  `hourly_rate` double DEFAULT NULL,
-  `rating` float DEFAULT NULL,
-  `review` varchar(255) DEFAULT NULL,
-  `service_worker` varchar(255) DEFAULT NULL,
-  `speciality` varchar(255) DEFAULT NULL,
-  `status_active_work` bit(1) DEFAULT NULL,
-  `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
+DROP TABLE IF EXISTS `caregiver_workers`;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `caregiver_workers`
+(
+    `id`                 int(11)        NOT NULL AUTO_INCREMENT,
+    `user_id`            int(11)        NOT NULL,
+    `speciality`         varchar(255)   NOT NULL,
+    `experience_years`   int(11)        NOT NULL CHECK (`experience_years` >= 0),
+    `hourly_rate`        decimal(10, 2) NOT NULL CHECK (`hourly_rate` >= 0),
+    `rating`             decimal(3, 2)           DEFAULT NULL CHECK (`rating` >= 0 and `rating` <= 5),
+    `review`             text                    DEFAULT NULL,
+    `description`        text                    DEFAULT NULL,
+    `service_worker`     varchar(255)            DEFAULT NULL,
+    `status_active_work` tinyint(1)              DEFAULT 1,
+    `created_at`         timestamp      NOT NULL DEFAULT current_timestamp(),
+    PRIMARY KEY (`id`),
+    KEY `idx_caregiver_user` (`user_id`),
+    KEY `idx_caregiver_status` (`status_active_work`),
+    CONSTRAINT `fk_caregiver_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 6
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `lessons`
+-- Dumping data for table `caregiver_workers`
 --
 
-CREATE TABLE `lessons` (
-  `id` int(11) NOT NULL,
-  `content` text NOT NULL,
-  `estado` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+LOCK TABLES `caregiver_workers` WRITE;
+/*!40000 ALTER TABLE `caregiver_workers`
+    DISABLE KEYS */;
+INSERT INTO `caregiver_workers`
+VALUES (1, 3, 'Dog Walking and Training', 5, 25.00, 4.80, 'Excellent with large breeds!',
+        'Certified dog trainer with experience in obedience training', 'Dog Walker, Trainer', 1, '2025-01-15 08:00:00'),
+       (2, 5, 'Exotic Pet Care', 3, 30.00, 4.65, 'Very knowledgeable about reptiles',
+        'Specialized in reptiles and exotic pets', 'Exotic Pet Sitter', 1, '2025-02-10 09:30:00'),
+       (3, 8, 'Cat Specialist', 7, 20.00, 4.90, 'My cats love her!',
+        'Feline behavior specialist with veterinary assistant experience', 'Cat Sitter, Groomer', 1,
+        '2025-03-05 10:15:00'),
+       (4, 10, 'Small Mammal Expert', 4, 18.00, 4.75, 'Takes great care of my rabbits',
+        'Experienced with rabbits, guinea pigs, and hamsters', 'Small Pet Sitter', 1, '2025-01-20 13:00:00'),
+       (5, 2, 'All-Pet Caregiver', 6, 22.00, 4.85, 'Reliable for all types of pets',
+        'General pet care with first aid certification', 'Pet Sitter, Walker', 0, '2025-02-28 15:45:00');
+/*!40000 ALTER TABLE `caregiver_workers`
+    ENABLE KEYS */;
+UNLOCK TABLES;
 
--- --------------------------------------------------------
+--
+-- Table structure for table `ilness`
+--
+
+DROP TABLE IF EXISTS `ilness`;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ilness`
+(
+    `pet`     int(11)          DEFAULT NULL,
+    `allergy` int(11)          DEFAULT NULL,
+    `state`   int(11) NOT NULL DEFAULT 1 COMMENT '1= still affected\n2= Healed'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ilness`
+--
+
+LOCK TABLES `ilness` WRITE;
+/*!40000 ALTER TABLE `ilness`
+    DISABLE KEYS */;
+INSERT INTO `ilness`
+VALUES (1, 0, 1),
+       (1, 1, 2),
+       (2, 2, 1),
+       (2, 3, 1),
+       (3, 4, 2),
+       (3, 5, 1),
+       (4, 6, 1),
+       (4, 7, 2),
+       (5, 8, 1),
+       (5, 9, 2);
+/*!40000 ALTER TABLE `ilness`
+    ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `lesson_reviews`
 --
 
-CREATE TABLE `lesson_reviews` (
-  `id` int(11) NOT NULL,
-  `comment` text DEFAULT NULL,
-  `estado` int(11) NOT NULL,
-  `rating` double NOT NULL,
-  `lesson_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `pet`
---
-
-CREATE TABLE `pet` (
-  `id` int(11) NOT NULL,
-  `birth_date` date DEFAULT NULL,
-  `created_at` datetime(6) DEFAULT NULL,
-  `deleted_at` datetime(6) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `emergency_contact` varchar(255) DEFAULT NULL,
-  `gender` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `profile_picture` varchar(255) DEFAULT NULL,
-  `status` int(11) DEFAULT NULL,
-  `sterilized` int(11) NOT NULL,
-  `updated_at` datetime(6) DEFAULT NULL,
-  `animalcategory_id` int(11) DEFAULT NULL,
-  `breed_id` int(11) DEFAULT NULL,
-  `owner_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
+DROP TABLE IF EXISTS `lesson_reviews`;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lesson_reviews`
+(
+    `id`         int(11)   NOT NULL AUTO_INCREMENT,
+    `lesson_id`  int(11)   NOT NULL,
+    `user_id`    int(11)   NOT NULL,
+    `rating`     double    NOT NULL CHECK (`rating` >= 0 and `rating` <= 5),
+    `comment`    text               DEFAULT NULL,
+    `status`     tinyint(4)         DEFAULT 1 CHECK (`status` in (0, 1)),
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    PRIMARY KEY (`id`),
+    KEY `idx_lesson_reviews_lesson` (`lesson_id`),
+    KEY `idx_lesson_reviews_user` (`user_id`),
+    CONSTRAINT `fk_lesson` FOREIGN KEY (`lesson_id`) REFERENCES `lessons` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 7
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `pet_allergies`
+-- Dumping data for table `lesson_reviews`
 --
 
-CREATE TABLE `pet_allergies` (
-  `pet_id` int(11) NOT NULL,
-  `allergy_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
+LOCK TABLES `lesson_reviews` WRITE;
+/*!40000 ALTER TABLE `lesson_reviews`
+    DISABLE KEYS */;
+INSERT INTO `lesson_reviews`
+VALUES (1, 1, 1, 5, 'Great introduction to dog training! Very clear instructions.', 1, '2025-01-12 13:30:00',
+        '2025-01-12 13:30:00'),
+       (2, 1, 4, 4.9, 'Perfecto!', 0, '2025-01-14 15:45:00', '2025-04-11 19:39:02'),
+       (3, 2, 7, 5, 'Finally understand why my cat behaves the way it does!', 1, '2025-01-18 09:20:00',
+        '2025-01-18 09:20:00'),
+       (4, 3, 9, 3, 'Good basics but needs more detail on water chemistry.', 1, '2025-02-08 11:10:00',
+        '2025-02-08 11:10:00'),
+       (5, 4, 2, 5, 'Perfect for new rabbit owners like me!', 1, '2025-02-22 14:30:00', '2025-02-22 14:30:00'),
+       (6, 1, 1, 4.7, 'Muy bien!', 1, '2025-04-11 19:39:55', '2025-04-11 19:39:55');
+/*!40000 ALTER TABLE `lesson_reviews`
+    ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Table structure for table `places`
+-- Table structure for table `lessons`
 --
 
-CREATE TABLE `places` (
-  `id` int(11) NOT NULL,
-  `address` varchar(255) NOT NULL,
-  `addresscode` varchar(45) NOT NULL,
-  `estado` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `lessons`;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lessons`
+(
+    `id`         int(11)      NOT NULL AUTO_INCREMENT,
+    `title`      varchar(255) NOT NULL,
+    `content`    text         NOT NULL,
+    `status`     tinyint(4)            DEFAULT 1 CHECK (`status` in (0, 1)),
+    `created_at` timestamp    NOT NULL DEFAULT current_timestamp(),
+    `updated_at` timestamp    NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 8
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- --------------------------------------------------------
+--
+-- Dumping data for table `lessons`
+--
+
+LOCK TABLES `lessons` WRITE;
+/*!40000 ALTER TABLE `lessons`
+    DISABLE KEYS */;
+INSERT INTO `lessons`
+VALUES (1, 'Basic Dog Obedience Training',
+        'Learn the fundamentals of training your dog including sit, stay, and come commands.', 1, '2025-01-10 09:00:00',
+        '2025-01-10 09:00:00'),
+       (2, 'Cat Behavior 101', 'Understanding feline behavior and how to create a cat-friendly environment.', 0,
+        '2025-01-15 10:30:00', '2025-04-10 20:10:47'),
+       (3, 'Aquarium Setup for Beginners', 'Step-by-step guide to setting up your first freshwater aquarium.', 1,
+        '2025-02-05 13:00:00', '2025-02-10 15:30:00'),
+       (4, 'Small Mammal Care Basics', 'Essential care tips for rabbits, guinea pigs, and hamsters.', 1,
+        '2025-02-20 08:00:00', '2025-02-25 10:45:00'),
+       (5, 'Avian Nutrition Guide', 'Proper diet and nutrition for pet birds of all sizes.', 1, '2025-03-01 12:15:00',
+        '2025-03-05 09:30:00'),
+       (6, 'M13', 'Proyecto de desarrollo de aplicaciones multiplataforma', 1, '2025-04-10 20:06:39',
+        '2025-04-10 20:06:39'),
+       (7, 'M08', 'Programación multimedia y dispositivos móviles', 1, '2025-04-10 20:08:00', '2025-04-10 20:08:00');
+/*!40000 ALTER TABLE `lessons`
+    ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `pets`
+--
+
+DROP TABLE IF EXISTS `pets`;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pets`
+(
+    `id`                int(11)                NOT NULL AUTO_INCREMENT,
+    `users_id`          int(11)                NOT NULL,
+    `animal_id`         int(11)                NOT NULL,
+    `name`              varchar(100)                    DEFAULT NULL,
+    `description`       varchar(250)                    DEFAULT NULL,
+    `birthdate`         date                            DEFAULT NULL,
+    `gender`            enum ('female','male') NOT NULL,
+    `strlization`       enum ('yes','no')      NOT NULL DEFAULT 'no',
+    `photo`             blob                            DEFAULT NULL,
+    `profile_picture`   blob                            DEFAULT NULL,
+    `breed`             int(11)                         DEFAULT NULL,
+    `emergency_contact` varchar(45)                     DEFAULT NULL,
+    `created_at`        datetime               NOT NULL DEFAULT current_timestamp(),
+    `updated_at`        datetime                        DEFAULT NULL,
+    `deleted_at`        datetime                        DEFAULT NULL,
+    `status`            int(11)                NOT NULL DEFAULT 1 COMMENT '1 -- active\n2 -- inactive',
+    PRIMARY KEY (`id`, `status`),
+    KEY `users_id` (`users_id`),
+    KEY `animal_id` (`animal_id`),
+    CONSTRAINT `pets_ibfk_1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `pets_ibfk_2` FOREIGN KEY (`animal_id`) REFERENCES `breed` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 23
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pets`
+--
+
+LOCK TABLES `pets` WRITE;
+/*!40000 ALTER TABLE `pets`
+    DISABLE KEYS */;
+INSERT INTO `pets`
+VALUES (1, 1, 1, 'Buddy', NULL, '2020-05-10', 'male', 'yes', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL, NULL, 1),
+       (2, 2, 2, 'Whiskers', NULL, '2019-06-15', 'female', 'yes', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL,
+        NULL, 1),
+       (3, 3, 3, 'Polly', NULL, '2021-02-01', 'female', 'yes', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL, NULL,
+        1),
+       (4, 4, 4, 'Thumper', NULL, '2018-11-20', 'male', 'yes', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL, NULL,
+        1),
+       (5, 5, 5, 'Goldie', NULL, '2022-07-07', 'female', 'yes', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL, NULL,
+        1),
+       (6, 6, 6, 'Hammy', NULL, '2021-09-09', 'male', 'yes', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL, NULL, 1),
+       (7, 7, 7, 'Speedy', NULL, '2017-03-30', 'female', 'yes', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL, NULL,
+        1),
+       (8, 8, 8, 'Slither', NULL, '2020-12-25', 'male', 'yes', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL, NULL,
+        1),
+       (9, 9, 9, 'Thunder', NULL, '2016-08-17', 'male', 'yes', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL, NULL,
+        1),
+       (10, 10, 10, 'Scaly', NULL, '2019-04-22', 'female', 'yes', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL,
+        NULL, 1),
+       (11, 1, 1, 'Buddy', NULL, '2020-05-10', 'male', 'no', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL, NULL, 1),
+       (12, 2, 2, 'Whiskers', NULL, '2019-06-15', 'female', 'no', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL,
+        NULL, 1),
+       (13, 3, 3, 'Polly', NULL, '2021-02-01', 'female', 'no', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL, NULL,
+        1),
+       (14, 4, 4, 'Thumper', NULL, '2018-11-20', 'male', 'no', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL, NULL,
+        1),
+       (15, 5, 5, 'Goldie', NULL, '2022-07-07', 'female', 'no', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL, NULL,
+        1),
+       (16, 6, 6, 'Hammy', NULL, '2021-09-09', 'male', 'no', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL, NULL, 1),
+       (17, 7, 7, 'Speedy', NULL, '2017-03-30', 'female', 'no', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL, NULL,
+        1),
+       (18, 8, 8, 'Slither', NULL, '2020-12-25', 'male', 'no', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL, NULL,
+        1),
+       (19, 9, 9, 'Thunder', NULL, '2016-08-17', 'male', 'no', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL, NULL,
+        1),
+       (20, 10, 10, 'Scaly', NULL, '2019-04-22', 'female', 'no', NULL, NULL, 1, NULL, '2025-04-03 13:59:16', NULL, NULL,
+        1),
+       (21, 2, 2, 'Whiskers', NULL, '2019-06-14', 'female', 'yes', NULL, NULL, 1, NULL, '2025-04-04 12:55:48',
+        '2025-04-04 12:58:52', '2025-04-04 12:58:52', 0),
+       (22, 2, 2, 'Whiskers', NULL, '2019-06-14', 'female', 'yes', NULL, NULL, 1, NULL, '2025-04-10 22:44:56',
+        '2025-04-10 22:44:56', NULL, 1);
+/*!40000 ALTER TABLE `pets`
+    ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `place_reviews`
 --
 
-CREATE TABLE `place_reviews` (
-  `id` int(11) NOT NULL,
-  `comment` text DEFAULT NULL,
-  `estado` int(11) NOT NULL,
-  `rating` double NOT NULL,
-  `place_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `reservation`
---
-
-CREATE TABLE `reservation` (
-  `r_id` int(11) NOT NULL,
-  `r_details` varchar(255) DEFAULT NULL,
-  `r_reservation_cancelled_at` datetime(6) DEFAULT NULL,
-  `r_reservation_completed_at` datetime(6) DEFAULT NULL,
-  `r_reservation_date` datetime(6) DEFAULT NULL,
-  `r_status` int(11) DEFAULT NULL,
-  `r_care_giver_id` int(11) DEFAULT NULL,
-  `r_user_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
+DROP TABLE IF EXISTS `place_reviews`;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `place_reviews`
+(
+    `id`       int(11) NOT NULL AUTO_INCREMENT,
+    `place_id` int(11) NOT NULL,
+    `user_id`  int(11) NOT NULL,
+    `rating`   int(11) NOT NULL,
+    `comment`  text             DEFAULT NULL,
+    `status`   int(11) NOT NULL DEFAULT 2 COMMENT '2= Active\\n1= deleted',
+    PRIMARY KEY (`id`),
+    KEY `place_id` (`place_id`),
+    KEY `user_id` (`user_id`),
+    CONSTRAINT `place_reviews_ibfk_1` FOREIGN KEY (`place_id`) REFERENCES `places` (`id`),
+    CONSTRAINT `place_reviews_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 13
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `user`
+-- Dumping data for table `place_reviews`
 --
 
-CREATE TABLE `user` (
-  `id` int(11) NOT NULL,
-  `address` varchar(150) DEFAULT NULL,
-  `birth_date` date DEFAULT NULL,
-  `city` varchar(255) DEFAULT NULL,
-  `created_at` date DEFAULT NULL,
-  `deleted_at` datetime(6) DEFAULT NULL,
-  `email` varchar(255) NOT NULL,
-  `first_name` varchar(255) NOT NULL,
-  `gender` varchar(255) DEFAULT NULL,
-  `languages` varchar(255) DEFAULT NULL,
-  `last_name` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `payment_method` varchar(255) DEFAULT NULL,
-  `phone_number` int(11) DEFAULT NULL,
-  `profile_picture` varchar(255) DEFAULT NULL,
-  `role` int(11) DEFAULT NULL,
-  `status` int(11) NOT NULL DEFAULT 1,
-  `updated_at` datetime(6) DEFAULT NULL,
-  `zip_code` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+LOCK TABLES `place_reviews` WRITE;
+/*!40000 ALTER TABLE `place_reviews`
+    DISABLE KEYS */;
+INSERT INTO `place_reviews`
+VALUES (1, 1, 1, 5, 'Beautiful park with great areas for dogs to play!', 2),
+       (2, 1, 3, 5, 'Perfecto!', 2),
+       (3, 2, 5, 3, 'Good service but expensive for routine checkups.', 2),
+       (4, 3, 7, 5, 'My dog loves this park! Always clean and well-maintained.', 2),
+       (5, 4, 9, 2, 'Nice atmosphere but limited space for cats to roam.', 2),
+       (6, 6, 2, 4, 'Great variety of animals but crowded on weekends.', 2),
+       (7, 7, 4, 5, 'Fantastic reptile exhibits with knowledgeable staff.', 2),
+       (8, 8, 6, 3, 'Interesting fish but some tanks need maintenance.', 2),
+       (9, 9, 8, 5, 'Excellent facilities for horse boarding and lessons.', 2),
+       (10, 10, 10, 4, 'Good selection of pet supplies at reasonable prices.', 2),
+       (11, 1, 1, 5, 'Muy bien!', 1),
+       (12, 1, 1, 5, 'Muy bien!', 1);
+/*!40000 ALTER TABLE `place_reviews`
+    ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Dumping data for table `user`
+-- Table structure for table `places`
 --
 
-INSERT INTO `user` (`id`, `address`, `birth_date`, `city`, `created_at`, `deleted_at`, `email`, `first_name`, `gender`, `languages`, `last_name`, `password`, `payment_method`, `phone_number`, `profile_picture`, `role`, `status`, `updated_at`, `zip_code`) VALUES
-(1, 'c/ camp d\'arriassa', '1997-12-12', 'Barcelona', '2025-03-20', NULL, 'gusgonza@yowpet.com', 'gustavo', 'male', NULL, 'gonzales', 'gusgonza', 'paypal', 123456789, NULL, 2, 1, NULL, 12345),
-(2, 'NuevaDireccion', '1990-01-01', 'NuevaCiudad', '2025-03-20', NULL, 'nuevoemail@example.com', 'NuevoNombre', 'NuevoGenero', NULL, 'NuevoApellido', 'gusgonza', 'paypal', 1234567890, NULL, 2, 1, '2025-03-20 18:46:17.000000', 12345),
-(3, 'c/ camp d\'arriassa', '1997-12-12', 'Barcelona', '2025-03-20', NULL, 'gusgonzaaa@yowpet.com', 'gustavo', 'male', NULL, 'gonzales', 'gusgonza', 'paypal', 123456789, NULL, 2, 1, NULL, 12345),
-(4, 'c/ camp d\'arriassa', '1997-12-12', 'Barcelona', '2025-03-20', NULL, 'gusgonzaaaa@yowpet.com', 'gustavo', 'male', NULL, 'gonzales', 'gusgonza', 'paypal', 123456789, NULL, 2, 1, NULL, 12345),
-(5, 'c/ camp d\'arriassa', '1997-12-12', 'Barcelona', '2025-03-20', '2025-03-20 18:46:44.000000', 'gusgonzaaaaa@yowpet.com', 'gustavo', 'male', NULL, 'gonzales', 'gusgonza', 'paypal', 123456789, NULL, 2, 0, '2025-03-20 18:46:44.000000', 12345);
+DROP TABLE IF EXISTS `places`;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `places`
+(
+    `id`          int(11)        NOT NULL AUTO_INCREMENT,
+    `name`        varchar(100)   NOT NULL,
+    `address`     varchar(255)   NOT NULL,
+    `addresscode` varchar(45)    NOT NULL,
+    `estado`      int(11)        NOT NULL DEFAULT 1,
+    `filter`      varchar(45)             DEFAULT NULL,
+    `latitude`    decimal(10, 8) NOT NULL,
+    `longitude`   decimal(11, 8) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 27
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Indexes for dumped tables
+-- Dumping data for table `places`
 --
 
---
--- Indexes for table `allergies`
---
-ALTER TABLE `allergies`
-  ADD PRIMARY KEY (`id`);
+LOCK TABLES `places` WRITE;
+/*!40000 ALTER TABLE `places`
+    DISABLE KEYS */;
+INSERT INTO `places`
+VALUES (1, 'Central Park', '123 Park Ave, City', 'P1001', 1, NULL, 0.00000000, 0.00000000),
+       (2, 'Pet Hospital', '456 Vet St, City', 'P1002', 1, NULL, 0.00000000, 0.00000000),
+       (3, 'Dog Park', '789 Bark Blvd, City', 'P1003', 1, NULL, 0.00000000, 0.00000000),
+       (4, 'Cat Café', '101 Meow Lane, City', 'P1004', 1, NULL, 0.00000000, 0.00000000),
+       (5, 'El Corte Inglés Plaza de Catalunya', 'Pl. de Catalunya, 14, L\'Eixample, Barcelona', '08002', 0, NULL,
+        0.00000000, 0.00000000),
+       (6, 'Zoo', '303 Safari Circle, City', 'P1006', 1, NULL, 0.00000000, 0.00000000),
+       (7, 'Reptile House', '404 Slither Way, City', 'P1007', 1, NULL, 0.00000000, 0.00000000),
+       (8, 'Fish Aquarium', '505 Swim Path, City', 'P1008', 1, NULL, 0.00000000, 0.00000000),
+       (9, 'Horse Stable', '606 Gallop Trail, City', 'P1009', 1, NULL, 0.00000000, 0.00000000),
+       (10, 'Pet Store', '707 Treat Drive, City', 'P1010', 1, NULL, 0.00000000, 0.00000000),
+       (11, 'ILERNA Barcelona - Centro de Formación Profesional',
+        'Carrer de Santa Carolina, 1, Horta-Guinardó, Barcelona', '08025', 1, NULL, 0.00000000, 0.00000000),
+       (12, 'Clinica Vet Barcelona', 'Carrer de València, 123', '08011', 1, 'Veterinarios', 41.38510000, 2.17340000),
+       (13, 'Pet Shop Central', 'Gran Via de les Corts Catalanes, 456', '08015', 1, 'Tiendas', 41.38550000, 2.16320000),
+       (14, 'Dog Cafe BCN', 'Carrer de Blai, 20', '08004', 1, 'Pet-Friendly', 41.37310000, 2.16280000),
+       (15, 'Parque Canino Sur', 'Parc de l\'Espanya Industrial', '08014', 1, 'Parques', 41.37560000, 2.14020000),
+       (16, 'Vet Express', 'Avinguda Diagonal, 600', '08021', 1, 'Veterinarios', 41.39060000, 2.13810000),
+       (17, 'Mascotas y Más', 'Carrer de Sants, 300', '08028', 1, 'Tiendas', 41.37530000, 2.12750000),
+       (18, 'Bark & Brew', 'Passeig de Sant Joan, 35', '08010', 1, 'Pet-Friendly', 41.39520000, 2.17420000),
+       (19, 'Jardines Felices', 'Parc de la Ciutadella', '08003', 1, 'Parques', 41.38890000, 2.19260000),
+       (20, 'Animal Care Center', 'Carrer de Mallorca, 200', '08036', 0, 'Veterinarios', 41.39170000, 2.15990000),
+       (21, 'Todo para Tu Mascota', 'Carrer de Girona, 90', '08009', 1, 'Tiendas', 41.39730000, 2.17500000),
+       (22, 'Café Perruno', 'Carrer de Pau Claris, 150', '08037', 1, 'Pet-Friendly', 41.39580000, 2.16730000),
+       (23, 'Plaza de las Mascotas', 'Parc Joan Miró', '08015', 1, 'Parques', 41.38050000, 2.14960000),
+       (24, 'ILERNA Barcelona - Centro de Formación Profesional',
+        'Carrer de Santa Carolina, 1, Horta-Guinardó, Barcelona', '08025', 1, 'pet-friendly', 10.00000000, 10.00000000),
+       (25, 'Gardenia', '25, Barcelona, Catalunya', '08018', 1, 'Parques', 41.39005060, 2.18160052),
+       (26, 'Dogpital', 'Eixample, Barcelona, Cataluña', '08013', 1, 'Veterinarios', 41.40343756, 2.18022387);
+/*!40000 ALTER TABLE `places`
+    ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Indexes for table `animalcategory`
---
-ALTER TABLE `animalcategory`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `breed`
---
-ALTER TABLE `breed`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `animalCateg-breed` (`animal_category`);
-
---
--- Indexes for table `caregiver_worker`
---
-ALTER TABLE `caregiver_worker`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `UK6hrx0sri455lkuiubifa4dpf2` (`user_id`);
-
---
--- Indexes for table `lessons`
---
-ALTER TABLE `lessons`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `lesson_reviews`
---
-ALTER TABLE `lesson_reviews`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `FK90gegnnfjaic7xheojnxwtbws` (`lesson_id`),
-  ADD KEY `FKoge6kdft9f7rwt6iljcgnolm` (`user_id`);
-
---
--- Indexes for table `pet`
---
-ALTER TABLE `pet`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `FK7fm256m71dr1wrbuumi04i40a` (`animalcategory_id`),
-  ADD KEY `FK7fw2rh2krkt5y9ojy3ab2f7xi` (`breed_id`);
-
---
--- Indexes for table `pet_allergies`
---
-ALTER TABLE `pet_allergies`
-  ADD KEY `FKh1mhujchr2ggol1f1nogy5i38` (`allergy_id`),
-  ADD KEY `FK5q8sif78kgtha4kslonf8yx5b` (`pet_id`);
-
---
--- Indexes for table `places`
---
-ALTER TABLE `places`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `place_reviews`
---
-ALTER TABLE `place_reviews`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `FKi8bi6hpjt1nub7cx7udqg5jq0` (`place_id`),
-  ADD KEY `FKgcxnx543yrguumyeacdmxrm8j` (`user_id`);
-
---
--- Indexes for table `reservation`
---
-ALTER TABLE `reservation`
-  ADD PRIMARY KEY (`r_id`),
-  ADD KEY `FKgjssj0wdacmog1c63t276as83` (`r_care_giver_id`),
-  ADD KEY `FKqhb04f2r956vlwmhlibnwfviu` (`r_user_id`);
-
---
--- Indexes for table `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `UKob8kqyqqgmefl0aco34akdtpes` (`email`);
-
---
--- AUTO_INCREMENT for dumped tables
+-- Table structure for table `reservations`
 --
 
---
--- AUTO_INCREMENT for table `allergies`
---
-ALTER TABLE `allergies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+DROP TABLE IF EXISTS `reservations`;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `reservations`
+(
+    `reservation_id`         int(11)                                              NOT NULL AUTO_INCREMENT,
+    `user_id`                int(11)                                              NOT NULL,
+    `caregiver_id`           int(11)                                              NOT NULL,
+    `pet_id`                 int(11)                                              NOT NULL,
+    `reservation_date`       datetime                                             NOT NULL,
+    `status`                 enum ('pending','confirmed','completed','cancelled') NOT NULL DEFAULT 'pending',
+    `details`                varchar(100)                                                  DEFAULT NULL,
+    `reservationCancelledAt` datetime                                                      DEFAULT NULL,
+    `reservationCompletedAt` datetime                                                      DEFAULT NULL,
+    PRIMARY KEY (`reservation_id`),
+    KEY `user_id` (`user_id`),
+    KEY `caregiver_id` (`caregiver_id`),
+    KEY `pet_id` (`pet_id`),
+    CONSTRAINT `reservations_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+    CONSTRAINT `reservations_ibfk_2` FOREIGN KEY (`caregiver_id`) REFERENCES `users` (`id`),
+    CONSTRAINT `reservations_ibfk_3` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 16
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- AUTO_INCREMENT for table `animalcategory`
---
-ALTER TABLE `animalcategory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `breed`
---
-ALTER TABLE `breed`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `caregiver_worker`
---
-ALTER TABLE `caregiver_worker`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `lessons`
---
-ALTER TABLE `lessons`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `lesson_reviews`
---
-ALTER TABLE `lesson_reviews`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `pet`
---
-ALTER TABLE `pet`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `places`
---
-ALTER TABLE `places`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `place_reviews`
---
-ALTER TABLE `place_reviews`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `reservation`
---
-ALTER TABLE `reservation`
-  MODIFY `r_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `user`
---
-ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- Constraints for dumped tables
+-- Dumping data for table `reservations`
 --
 
---
--- Constraints for table `breed`
---
-ALTER TABLE `breed`
-  ADD CONSTRAINT `animalCateg-breed` FOREIGN KEY (`animal_category`) REFERENCES `animalcategory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+LOCK TABLES `reservations` WRITE;
+/*!40000 ALTER TABLE `reservations`
+    DISABLE KEYS */;
+INSERT INTO `reservations`
+VALUES (1, 1, 2, 3, '2025-04-10 10:00:00', 'pending', 'Need dog walking for 1 hour in Central Park', NULL, NULL),
+       (2, 2, 3, 4, '2025-04-11 11:30:00', 'confirmed', 'Cat sitting for weekend while away', NULL,
+        '2025-04-12 11:30:00'),
+       (3, 3, 4, 5, '2025-04-12 09:15:00', 'completed', 'Daily fish tank maintenance for 1 week', NULL,
+        '2025-04-13 09:15:00'),
+       (4, 4, 5, 6, '2025-04-13 14:45:00', 'cancelled', 'Hamster care during vacation', '2025-04-12 14:45:00', NULL),
+       (5, 5, 6, 7, '2025-04-14 16:30:00', 'pending', 'Turtle tank cleaning service', NULL, NULL),
+       (6, 6, 7, 8, '2025-04-15 08:00:00', 'confirmed', NULL, NULL, NULL),
+       (7, 7, 8, 9, '2025-04-16 12:20:00', 'completed', NULL, NULL, NULL),
+       (8, 8, 9, 10, '2025-04-17 15:10:00', 'pending', NULL, NULL, NULL),
+       (9, 9, 10, 1, '2025-04-18 10:50:00', 'confirmed', NULL, NULL, NULL),
+       (10, 10, 1, 2, '2025-04-19 13:40:00', 'completed', NULL, NULL, NULL),
+       (11, 1, 3, 1, '2025-04-20 09:00:00', 'pending', 'Dog training session - basic commands', NULL, NULL),
+       (12, 4, 1, 4, '2025-04-21 14:00:00', 'confirmed', 'Rabbit nail trimming and health check', NULL, NULL),
+       (13, 7, 4, 7, '2025-04-22 11:00:00', 'pending', 'Turtle tank deep cleaning', NULL, NULL),
+       (14, 9, 2, 9, '2025-04-23 16:30:00', 'confirmed', 'Horse grooming and exercise', NULL, NULL),
+       (15, 2, 5, 2, '2025-04-24 10:15:00', 'completed', 'Cat sitting for 3 days', NULL, '2025-04-27 10:15:00');
+/*!40000 ALTER TABLE `reservations`
+    ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Constraints for table `caregiver_worker`
+-- Table structure for table `users`
 --
-ALTER TABLE `caregiver_worker`
-  ADD CONSTRAINT `FK6hrx0sri455lkuiubifa4dpf2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users`
+(
+    `id`            int(11)                   NOT NULL AUTO_INCREMENT,
+    `firstname`     varchar(100)              NOT NULL,
+    `lastname`      varchar(100)              NOT NULL,
+    `email`         varchar(100)              NOT NULL,
+    `password`      varchar(255)              NOT NULL,
+    `address`       varchar(255)              NOT NULL,
+    `rol`           int(11)                   NOT NULL DEFAULT 2,
+    `telephone`     varchar(45)                        DEFAULT NULL,
+    `gender`        enum ('female','male','') NOT NULL,
+    `photo`         blob                               DEFAULT NULL,
+    `state`         int(11)                   NOT NULL DEFAULT 1,
+    `postalcode`    varchar(20)               NOT NULL,
+    `birthdate`     date                               DEFAULT NULL,
+    `languages`     varchar(100)                       DEFAULT 'English',
+    `emergencynum`  varchar(45)                        DEFAULT NULL,
+    `paymentmethod` enum ('buzime','tarjeta','paypal') DEFAULT NULL,
+    `city`          varchar(100)                       DEFAULT NULL,
+    `latitud`       decimal(10, 7)                     DEFAULT NULL,
+    `longitud`      decimal(10, 7)                     DEFAULT NULL,
+    `createdat`     datetime                  NOT NULL DEFAULT current_timestamp(),
+    `updatedAt`     datetime                           DEFAULT NULL,
+    `deletedAt`     datetime                           DEFAULT NULL,
+    `username`      varchar(100)                       DEFAULT NULL,
+    `Token`         longtext                           DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `email` (`email`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 19
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Constraints for table `lesson_reviews`
+-- Dumping data for table `users`
 --
-ALTER TABLE `lesson_reviews`
-  ADD CONSTRAINT `FK90gegnnfjaic7xheojnxwtbws` FOREIGN KEY (`lesson_id`) REFERENCES `lessons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FKoge6kdft9f7rwt6iljcgnolm` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
---
--- Constraints for table `pet`
---
-ALTER TABLE `pet`
-  ADD CONSTRAINT `FK7fm256m71dr1wrbuumi04i40a` FOREIGN KEY (`animalcategory_id`) REFERENCES `animalcategory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK7fw2rh2krkt5y9ojy3ab2f7xi` FOREIGN KEY (`breed_id`) REFERENCES `breed` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users`
+    DISABLE KEYS */;
+INSERT INTO `users`
+VALUES (1, 'Alice', 'Smith', 'alice@example.com', 'hashedpassword1', '123 Maple Street, New York, NY', 1,
+        '212-555-1234', 'female', NULL, 1, '10001', '1990-01-01', 'English, Spanish', '212-555-4321', 'tarjeta',
+        'New York', 40.7128000, -74.0060000, '2025-04-02 17:27:46', '2025-04-03 19:32:58', NULL, 'alicesmith', NULL),
+       (2, 'Bob', 'Johnson', 'bob@example.com', 'hashedpassword2', '456 Oak Avenue, Los Angeles, CA', 2, '310-555-2345',
+        'male', NULL, 1, '90001', '1985-05-15', 'English', '310-555-5432', 'buzime', 'Los Angeles', 34.0522000,
+        -118.2437000, '2025-04-02 17:27:46', NULL, NULL, 'bobjohnson', NULL),
+       (3, 'Charlie', 'Brown', 'charlie@example.com', 'hashedpassword3', '789 Blvd, City', 1, '1231231234', 'male',
+        NULL, 1, '10003', '1992-08-22', 'English', '7654321098', 'tarjeta', NULL, 51.5074000, -0.1278000,
+        '2025-04-02 17:27:46', NULL, NULL, NULL, NULL),
+       (4, 'Daisy', 'Miller', 'daisy@example.com', 'hashedpassword4', '101 Lane, City', 0, '2345678901', 'female', NULL,
+        1, '10004', '1995-12-11', 'English', '6543210987', 'buzime', NULL, 48.8566000, 2.3522000, '2025-04-02 17:27:46',
+        '2025-04-03 19:33:01', NULL, NULL, NULL),
+       (5, 'Ethan', 'Hunt', 'ethan@example.com', 'hashedpassword5', '202 Road, City', 2, '3456789012', 'male', NULL, 2,
+        '10005', '1988-07-30', 'English', '5432109876', 'tarjeta', NULL, -33.8688000, 151.2093000,
+        '2025-04-02 17:27:46', NULL, NULL, NULL, NULL),
+       (6, 'Fiona', 'Clark', 'fiona@example.com', 'hashedpassword6', '303 Circle, City', 3, '4567890123', 'female',
+        NULL, 2, '10006', '1997-09-15', 'English', '4321098765', 'buzime', NULL, 35.6895000, 139.6917000,
+        '2025-04-02 17:27:46', '2025-04-03 18:32:08', '2025-04-03 18:32:08', NULL, NULL),
+       (7, 'George', 'Lee', 'george@example.com', 'hashedpassword7', '404 Way, City', 3, '5678901234', 'male', NULL, 2,
+        '10007', '1993-04-05', 'English', '3210987654', 'tarjeta', NULL, 37.7749000, -122.4194000,
+        '2025-04-02 17:27:46', '2025-04-03 18:42:14', '2025-04-03 18:42:14', NULL, NULL),
+       (8, 'Hannah', 'Taylor', 'hannah@example.com', 'hashedpassword8', '505 Path, City', 2, '6789012345', 'female',
+        NULL, 2, '10008', '1991-06-20', 'English', '2109876543', 'buzime', NULL, 55.7558000, 37.6173000,
+        '2025-04-02 17:27:46', NULL, NULL, NULL, NULL),
+       (9, 'Ian', 'Moore', 'ian@example.com', 'hashedpassword9', '606 Trail, City', 3, '7890123456', 'male', NULL, 1,
+        '10009', '1986-03-12', 'English', '1098765432', 'tarjeta', NULL, 41.9028000, 12.4964000, '2025-04-02 17:27:46',
+        NULL, NULL, NULL, NULL),
+       (10, 'Jane', 'White', 'jane@example.com', 'hashedpassword10', '707 Drive, City', 1, '8901234567', 'female', NULL,
+        1, '10010', '1999-11-25', 'English', '9876543210', 'buzime', NULL, 52.5200000, 13.4050000,
+        '2025-04-02 17:27:46', NULL, NULL, NULL, NULL),
+       (11, 'gustavo', 'gonzales', 'gusgonza@yowpet.com', 'gusgonza', 'c/ camp d\'arriassa', 2, '123456789', 'male',
+        NULL, 1, '12345', '1997-12-12', NULL, NULL, 'paypal', 'Barcelona', NULL, NULL, '2025-04-03 18:12:00',
+        '2025-04-03 18:12:00', NULL, NULL, NULL),
+       (12, 'Karen', 'Wilson', 'karen@example.com', 'hashedpassword11', '789 Pine Road, Chicago, IL', 2, '312-555-3456',
+        'female', NULL, 1, '60601', '1988-11-22', 'English, French', '312-555-6543', 'paypal', 'Chicago', 41.8781000,
+        -87.6298000, '2025-03-15 10:00:00', NULL, NULL, 'karenwilson', NULL),
+       (13, 'Michael', 'Davis', 'michael@example.com', 'hashedpassword12', '101 Elm Lane, Houston, TX', 1,
+        '713-555-4567', 'male', NULL, 1, '77001', '1993-07-18', 'English, Spanish', '713-555-7654', 'tarjeta',
+        'Houston', 29.7604000, -95.3698000, '2025-03-20 11:30:00', NULL, NULL, 'michaeldavis', NULL),
+       (14, 'Sarah', 'Martinez', 'sarah@example.com', 'hashedpassword13', '202 Cedar Blvd, Phoenix, AZ', 3,
+        '602-555-5678', 'female', NULL, 1, '85001', '1995-04-30', 'English', '602-555-8765', 'buzime', 'Phoenix',
+        33.4484000, -112.0740000, '2025-04-01 09:15:00', NULL, NULL, 'sarahmartinez', NULL),
+       (15, 'David', 'Anderson', 'david@example.com', 'hashedpassword14', '303 Birch Street, Philadelphia, PA', 2,
+        '215-555-6789', 'male', NULL, 1, '19101', '1987-09-12', 'English, German', '215-555-9876', 'tarjeta',
+        'Philadelphia', 39.9526000, -75.1652000, '2025-04-05 14:45:00', NULL, NULL, 'davidanderson', NULL),
+       (16, 'Manuel', 'Pharon', 'mano@yowpet.com', '$2a$10$uePByNH2Teo02fgLrNQ4YuEX7FbAFPlKy7paTxTCBr4Yz5.QFyVDK',
+        'No especificado', 2, '', '', _binary 'No especificado', 1, '0', NULL, NULL, NULL, NULL, 'No especificado',
+        NULL, NULL, '2025-04-10 17:28:23', '2025-04-10 17:28:23', NULL, 'Mano',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJNYW5vIiwiaWF0IjoxNzQ0NDk2ODE4LCJleHAiOjE3NDQ1MDA0MTh9.OVAFoDu-MrteSWGx-ursG6-X3H3zVIbo-bJkYwsshBk'),
+       (17, 'Gustavo', 'Gonzales', 'gusgonza@gmail.com', '$2a$10$odQuO5pzRbnXI2pgVlseqOWrfSeBjP2pnQWZ5T.P4KJZ0mdAtheFa',
+        'No especificado', 2, '', '', _binary 'No especificado', 1, '0', NULL, NULL, NULL, NULL, 'No especificado',
+        NULL, NULL, '2025-05-08 10:55:27', '2025-05-09 11:49:09', NULL, NULL,
+        null);
+/*!40000 ALTER TABLE `users`
+    ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE = @OLD_TIME_ZONE */;
 
---
--- Constraints for table `pet_allergies`
---
-ALTER TABLE `pet_allergies`
-  ADD CONSTRAINT `FK5q8sif78kgtha4kslonf8yx5b` FOREIGN KEY (`pet_id`) REFERENCES `pet` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FKh1mhujchr2ggol1f1nogy5i38` FOREIGN KEY (`allergy_id`) REFERENCES `allergies` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+/*!40101 SET SQL_MODE = @OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS = @OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS = @OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES = @OLD_SQL_NOTES */;
 
---
--- Constraints for table `place_reviews`
---
-ALTER TABLE `place_reviews`
-  ADD CONSTRAINT `FKgcxnx543yrguumyeacdmxrm8j` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FKi8bi6hpjt1nub7cx7udqg5jq0` FOREIGN KEY (`place_id`) REFERENCES `places` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `reservation`
---
-ALTER TABLE `reservation`
-  ADD CONSTRAINT `FKgjssj0wdacmog1c63t276as83` FOREIGN KEY (`r_care_giver_id`) REFERENCES `caregiver_worker` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FKqhb04f2r956vlwmhlibnwfviu` FOREIGN KEY (`r_user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- Dump completed on 2025-05-09 12:46:28
