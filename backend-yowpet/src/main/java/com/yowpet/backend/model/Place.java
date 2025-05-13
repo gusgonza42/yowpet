@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -20,6 +21,19 @@ public class Place {
     private String address;
 
     private String addresscode;
+
+    private String filter;
+
+    private BigDecimal latitude;
+    private BigDecimal longitude;
+
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
 
     private int estado = status_active;
 
@@ -61,6 +75,22 @@ public class Place {
 
     public void setEstado(int estado) {
         this.estado = estado;
+    }
+
+    public BigDecimal getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(BigDecimal longitude) {
+        this.longitude = longitude;
+    }
+
+    public BigDecimal getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(BigDecimal latitude) {
+        this.latitude = latitude;
     }
 
     @Override

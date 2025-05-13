@@ -1,4 +1,3 @@
-DROP DATABASE  IF EXISTS `yowpet`;
 CREATE DATABASE  IF NOT EXISTS `yowpet` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci */;
 USE `yowpet`;
 -- MySQL dump 10.13  Distrib 8.0.41, for Win64 (x86_64)
@@ -26,10 +25,10 @@ DROP TABLE IF EXISTS `allergies`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `allergies` (
-                             `id` int(11) NOT NULL AUTO_INCREMENT,
-                             `name` varchar(45) NOT NULL,
-                             `photo` blob DEFAULT NULL,
-                             PRIMARY KEY (`id`)
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `photo` blob DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -51,10 +50,10 @@ DROP TABLE IF EXISTS `animalcategory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `animalcategory` (
-                                  `id` int(11) NOT NULL AUTO_INCREMENT,
-                                  `name` varchar(100) NOT NULL,
-                                  PRIMARY KEY (`id`),
-                                  UNIQUE KEY `name` (`name`)
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -76,12 +75,12 @@ DROP TABLE IF EXISTS `breed`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `breed` (
-                         `id` int(11) NOT NULL AUTO_INCREMENT,
-                         `name` varchar(100) DEFAULT NULL,
-                         `categoria` int(11) NOT NULL,
-                         PRIMARY KEY (`id`),
-                         KEY `categoria` (`categoria`),
-                         CONSTRAINT `breed_ibfk_1` FOREIGN KEY (`categoria`) REFERENCES `animalcategory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `categoria` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `categoria` (`categoria`),
+  CONSTRAINT `breed_ibfk_1` FOREIGN KEY (`categoria`) REFERENCES `animalcategory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -103,21 +102,21 @@ DROP TABLE IF EXISTS `caregiver_workers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `caregiver_workers` (
-                                     `id` int(11) NOT NULL AUTO_INCREMENT,
-                                     `user_id` int(11) NOT NULL,
-                                     `speciality` varchar(255) NOT NULL,
-                                     `experience_years` int(11) NOT NULL CHECK (`experience_years` >= 0),
-                                     `hourly_rate` decimal(10,2) NOT NULL CHECK (`hourly_rate` >= 0),
-                                     `rating` decimal(3,2) DEFAULT NULL CHECK (`rating` >= 0 and `rating` <= 5),
-                                     `review` text DEFAULT NULL,
-                                     `description` text DEFAULT NULL,
-                                     `service_worker` varchar(255) DEFAULT NULL,
-                                     `status_active_work` tinyint(1) DEFAULT 1,
-                                     `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-                                     PRIMARY KEY (`id`),
-                                     KEY `idx_caregiver_user` (`user_id`),
-                                     KEY `idx_caregiver_status` (`status_active_work`),
-                                     CONSTRAINT `fk_caregiver_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `speciality` varchar(255) NOT NULL,
+  `experience_years` int(11) NOT NULL CHECK (`experience_years` >= 0),
+  `hourly_rate` decimal(10,2) NOT NULL CHECK (`hourly_rate` >= 0),
+  `rating` decimal(3,2) DEFAULT NULL CHECK (`rating` >= 0 and `rating` <= 5),
+  `review` text DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `service_worker` varchar(255) DEFAULT NULL,
+  `status_active_work` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_caregiver_user` (`user_id`),
+  KEY `idx_caregiver_status` (`status_active_work`),
+  CONSTRAINT `fk_caregiver_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -139,9 +138,9 @@ DROP TABLE IF EXISTS `ilness`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ilness` (
-                          `pet` int(11) DEFAULT NULL,
-                          `allergy` int(11) DEFAULT NULL,
-                          `state` int(11) NOT NULL DEFAULT 1 COMMENT '1= still affected\n2= Healed'
+  `pet` int(11) DEFAULT NULL,
+  `allergy` int(11) DEFAULT NULL,
+  `state` int(11) NOT NULL DEFAULT 1 COMMENT '1= still affected\n2= Healed'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -163,19 +162,19 @@ DROP TABLE IF EXISTS `lesson_reviews`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `lesson_reviews` (
-                                  `id` int(11) NOT NULL AUTO_INCREMENT,
-                                  `lesson_id` int(11) NOT NULL,
-                                  `user_id` int(11) NOT NULL,
-                                  `rating` double NOT NULL CHECK (`rating` >= 0 and `rating` <= 5),
-                                  `comment` text DEFAULT NULL,
-                                  `status` tinyint(4) DEFAULT 1 CHECK (`status` in (0,1)),
-                                  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-                                  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-                                  PRIMARY KEY (`id`),
-                                  KEY `idx_lesson_reviews_lesson` (`lesson_id`),
-                                  KEY `idx_lesson_reviews_user` (`user_id`),
-                                  CONSTRAINT `fk_lesson` FOREIGN KEY (`lesson_id`) REFERENCES `lessons` (`id`) ON DELETE CASCADE,
-                                  CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `lesson_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `rating` double NOT NULL CHECK (`rating` >= 0 and `rating` <= 5),
+  `comment` text DEFAULT NULL,
+  `status` tinyint(4) DEFAULT 1 CHECK (`status` in (0,1)),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_lesson_reviews_lesson` (`lesson_id`),
+  KEY `idx_lesson_reviews_user` (`user_id`),
+  CONSTRAINT `fk_lesson` FOREIGN KEY (`lesson_id`) REFERENCES `lessons` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -197,13 +196,13 @@ DROP TABLE IF EXISTS `lessons`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `lessons` (
-                           `id` int(11) NOT NULL AUTO_INCREMENT,
-                           `title` varchar(255) NOT NULL,
-                           `content` text NOT NULL,
-                           `status` tinyint(4) DEFAULT 1 CHECK (`status` in (0,1)),
-                           `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-                           `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-                           PRIMARY KEY (`id`)
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `content` text NOT NULL,
+  `status` tinyint(4) DEFAULT 1 CHECK (`status` in (0,1)),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -225,27 +224,27 @@ DROP TABLE IF EXISTS `pets`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `pets` (
-                        `id` int(11) NOT NULL AUTO_INCREMENT,
-                        `users_id` int(11) NOT NULL,
-                        `animal_id` int(11) NOT NULL,
-                        `name` varchar(100) DEFAULT NULL,
-                        `description` varchar(250) DEFAULT NULL,
-                        `birthdate` date DEFAULT NULL,
-                        `gender` enum('female','male') NOT NULL,
-                        `strlization` enum('yes','no') NOT NULL DEFAULT 'no',
-                        `photo` blob DEFAULT NULL,
-                        `profile_picture` blob DEFAULT NULL,
-                        `breed` int(11) DEFAULT NULL,
-                        `emergency_contact` varchar(45) DEFAULT NULL,
-                        `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-                        `updated_at` datetime DEFAULT NULL,
-                        `deleted_at` datetime DEFAULT NULL,
-                        `status` int(11) NOT NULL DEFAULT 1 COMMENT '1 -- active\n2 -- inactive',
-                        PRIMARY KEY (`id`,`status`),
-                        KEY `users_id` (`users_id`),
-                        KEY `animal_id` (`animal_id`),
-                        CONSTRAINT `pets_ibfk_1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-                        CONSTRAINT `pets_ibfk_2` FOREIGN KEY (`animal_id`) REFERENCES `breed` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `users_id` int(11) NOT NULL,
+  `animal_id` int(11) NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `description` varchar(250) DEFAULT NULL,
+  `birthdate` date DEFAULT NULL,
+  `gender` enum('female','male') NOT NULL,
+  `strlization` enum('yes','no') NOT NULL DEFAULT 'no',
+  `photo` blob DEFAULT NULL,
+  `profile_picture` blob DEFAULT NULL,
+  `breed` int(11) DEFAULT NULL,
+  `emergency_contact` varchar(45) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 1 COMMENT '1 -- active\n2 -- inactive',
+  PRIMARY KEY (`id`,`status`),
+  KEY `users_id` (`users_id`),
+  KEY `animal_id` (`animal_id`),
+  CONSTRAINT `pets_ibfk_1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `pets_ibfk_2` FOREIGN KEY (`animal_id`) REFERENCES `breed` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -267,17 +266,17 @@ DROP TABLE IF EXISTS `place_reviews`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `place_reviews` (
-                                 `id` int(11) NOT NULL AUTO_INCREMENT,
-                                 `place_id` int(11) NOT NULL,
-                                 `user_id` int(11) NOT NULL,
-                                 `rating` int(11) NOT NULL,
-                                 `comment` text DEFAULT NULL,
-                                 `status` int(11) NOT NULL DEFAULT 2 COMMENT '2= Active\\n1= deleted',
-                                 PRIMARY KEY (`id`),
-                                 KEY `place_id` (`place_id`),
-                                 KEY `user_id` (`user_id`),
-                                 CONSTRAINT `place_reviews_ibfk_1` FOREIGN KEY (`place_id`) REFERENCES `places` (`id`),
-                                 CONSTRAINT `place_reviews_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `place_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `rating` int(11) NOT NULL,
+  `comment` text DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 2 COMMENT '2= Active\\n1= deleted',
+  PRIMARY KEY (`id`),
+  KEY `place_id` (`place_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `place_reviews_ibfk_1` FOREIGN KEY (`place_id`) REFERENCES `places` (`id`),
+  CONSTRAINT `place_reviews_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -299,13 +298,16 @@ DROP TABLE IF EXISTS `places`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `places` (
-                          `id` int(11) NOT NULL AUTO_INCREMENT,
-                          `name` varchar(100) NOT NULL,
-                          `address` varchar(255) NOT NULL,
-                          `addresscode` varchar(45) NOT NULL,
-                          `estado` int(11) NOT NULL DEFAULT 1,
-                          PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `addresscode` varchar(45) NOT NULL,
+  `estado` int(11) NOT NULL DEFAULT 1,
+  `filter` varchar(45) DEFAULT NULL,
+  `latitude` decimal(10,8) NOT NULL,
+  `longitude` decimal(11,8) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -314,7 +316,7 @@ CREATE TABLE `places` (
 
 LOCK TABLES `places` WRITE;
 /*!40000 ALTER TABLE `places` DISABLE KEYS */;
-INSERT INTO `places` VALUES (1,'Central Park','123 Park Ave, City','P1001',1),(2,'Pet Hospital','456 Vet St, City','P1002',1),(3,'Dog Park','789 Bark Blvd, City','P1003',1),(4,'Cat Café','101 Meow Lane, City','P1004',1),(5,'El Corte Inglés Plaza de Catalunya','Pl. de Catalunya, 14, L\'Eixample, Barcelona','08002',0),(6,'Zoo','303 Safari Circle, City','P1006',1),(7,'Reptile House','404 Slither Way, City','P1007',1),(8,'Fish Aquarium','505 Swim Path, City','P1008',1),(9,'Horse Stable','606 Gallop Trail, City','P1009',1),(10,'Pet Store','707 Treat Drive, City','P1010',1),(11,'ILERNA Barcelona - Centro de Formación Profesional','Carrer de Santa Carolina, 1, Horta-Guinardó, Barcelona','08025',1);
+INSERT INTO `places` VALUES (1,'Central Park','123 Park Ave, City','P1001',1,NULL,0.00000000,0.00000000),(2,'Pet Hospital','456 Vet St, City','P1002',1,NULL,0.00000000,0.00000000),(3,'Dog Park','789 Bark Blvd, City','P1003',1,NULL,0.00000000,0.00000000),(4,'Cat Café','101 Meow Lane, City','P1004',1,NULL,0.00000000,0.00000000),(5,'El Corte Inglés Plaza de Catalunya','Pl. de Catalunya, 14, L\'Eixample, Barcelona','08002',0,NULL,0.00000000,0.00000000),(6,'Zoo','303 Safari Circle, City','P1006',1,NULL,0.00000000,0.00000000),(7,'Reptile House','404 Slither Way, City','P1007',1,NULL,0.00000000,0.00000000),(8,'Fish Aquarium','505 Swim Path, City','P1008',1,NULL,0.00000000,0.00000000),(9,'Horse Stable','606 Gallop Trail, City','P1009',1,NULL,0.00000000,0.00000000),(10,'Pet Store','707 Treat Drive, City','P1010',1,NULL,0.00000000,0.00000000),(11,'ILERNA Barcelona - Centro de Formación Profesional','Carrer de Santa Carolina, 1, Horta-Guinardó, Barcelona','08025',1,NULL,0.00000000,0.00000000),(12,'Clinica Vet Barcelona','Carrer de València, 123','08011',1,'Veterinarios',41.38510000,2.17340000),(13,'Pet Shop Central','Gran Via de les Corts Catalanes, 456','08015',1,'Tiendas',41.38550000,2.16320000),(14,'Dog Cafe BCN','Carrer de Blai, 20','08004',1,'Pet-Friendly',41.37310000,2.16280000),(15,'Parque Canino Sur','Parc de l\'Espanya Industrial','08014',1,'Parques',41.37560000,2.14020000),(16,'Vet Express','Avinguda Diagonal, 600','08021',1,'Veterinarios',41.39060000,2.13810000),(17,'Mascotas y Más','Carrer de Sants, 300','08028',1,'Tiendas',41.37530000,2.12750000),(18,'Bark & Brew','Passeig de Sant Joan, 35','08010',1,'Pet-Friendly',41.39520000,2.17420000),(19,'Jardines Felices','Parc de la Ciutadella','08003',1,'Parques',41.38890000,2.19260000),(20,'Animal Care Center','Carrer de Mallorca, 200','08036',0,'Veterinarios',41.39170000,2.15990000),(21,'Todo para Tu Mascota','Carrer de Girona, 90','08009',1,'Tiendas',41.39730000,2.17500000),(22,'Café Perruno','Carrer de Pau Claris, 150','08037',1,'Pet-Friendly',41.39580000,2.16730000),(23,'Plaza de las Mascotas','Parc Joan Miró','08015',1,'Parques',41.38050000,2.14960000),(24,'ILERNA Barcelona - Centro de Formación Profesional','Carrer de Santa Carolina, 1, Horta-Guinardó, Barcelona','08025',1,'pet-friendly',10.00000000,10.00000000),(25,'Gardenia','25, Barcelona, Catalunya','08018',1,'Parques',41.39005060,2.18160052),(26,'Dogpital','Eixample, Barcelona, Cataluña','08013',1,'Veterinarios',41.40343756,2.18022387);
 /*!40000 ALTER TABLE `places` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -326,22 +328,22 @@ DROP TABLE IF EXISTS `reservations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reservations` (
-                                `reservation_id` int(11) NOT NULL AUTO_INCREMENT,
-                                `user_id` int(11) NOT NULL,
-                                `caregiver_id` int(11) NOT NULL,
-                                `pet_id` int(11) NOT NULL,
-                                `reservation_date` datetime NOT NULL,
-                                `status` enum('pending','confirmed','completed','cancelled') NOT NULL DEFAULT 'pending',
-                                `details` varchar(100) DEFAULT NULL,
-                                `reservationCancelledAt` datetime DEFAULT NULL,
-                                `reservationCompletedAt` datetime DEFAULT NULL,
-                                PRIMARY KEY (`reservation_id`),
-                                KEY `user_id` (`user_id`),
-                                KEY `caregiver_id` (`caregiver_id`),
-                                KEY `pet_id` (`pet_id`),
-                                CONSTRAINT `reservations_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-                                CONSTRAINT `reservations_ibfk_2` FOREIGN KEY (`caregiver_id`) REFERENCES `users` (`id`),
-                                CONSTRAINT `reservations_ibfk_3` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`)
+  `reservation_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `caregiver_id` int(11) NOT NULL,
+  `pet_id` int(11) NOT NULL,
+  `reservation_date` datetime NOT NULL,
+  `status` enum('pending','confirmed','completed','cancelled') NOT NULL DEFAULT 'pending',
+  `details` varchar(100) DEFAULT NULL,
+  `reservationCancelledAt` datetime DEFAULT NULL,
+  `reservationCompletedAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`reservation_id`),
+  KEY `user_id` (`user_id`),
+  KEY `caregiver_id` (`caregiver_id`),
+  KEY `pet_id` (`pet_id`),
+  CONSTRAINT `reservations_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `reservations_ibfk_2` FOREIGN KEY (`caregiver_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `reservations_ibfk_3` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -363,33 +365,33 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
-                         `id` int(11) NOT NULL AUTO_INCREMENT,
-                         `firstname` varchar(100) NOT NULL,
-                         `lastname` varchar(100) NOT NULL,
-                         `email` varchar(100) NOT NULL,
-                         `password` varchar(255) NOT NULL,
-                         `address` varchar(255) NOT NULL,
-                         `rol` int(11) NOT NULL DEFAULT 2,
-                         `telephone` varchar(45) DEFAULT NULL,
-                         `gender` enum('female','male','') NOT NULL,
-                         `photo` blob DEFAULT NULL,
-                         `state` int(11) NOT NULL DEFAULT 1,
-                         `postalcode` varchar(20) NOT NULL,
-                         `birthdate` date DEFAULT NULL,
-                         `languages` varchar(100) DEFAULT 'English',
-                         `emergencynum` varchar(45) DEFAULT NULL,
-                         `paymentmethod` enum('buzime','tarjeta','paypal') DEFAULT NULL,
-                         `city` varchar(100) DEFAULT NULL,
-                         `latitud` decimal(10,7) DEFAULT NULL,
-                         `longitud` decimal(10,7) DEFAULT NULL,
-                         `createdat` datetime NOT NULL DEFAULT current_timestamp(),
-                         `updatedAt` datetime DEFAULT NULL,
-                         `deletedAt` datetime DEFAULT NULL,
-                         `username` varchar(100) DEFAULT NULL,
-                         `Token` longtext DEFAULT NULL,
-                         PRIMARY KEY (`id`),
-                         UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `firstname` varchar(100) NOT NULL,
+  `lastname` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `rol` int(11) NOT NULL DEFAULT 2,
+  `telephone` varchar(45) DEFAULT NULL,
+  `gender` enum('female','male','') NOT NULL,
+  `photo` blob DEFAULT NULL,
+  `state` int(11) NOT NULL DEFAULT 1,
+  `postalcode` varchar(20) NOT NULL,
+  `birthdate` date DEFAULT NULL,
+  `languages` varchar(100) DEFAULT 'English',
+  `emergencynum` varchar(45) DEFAULT NULL,
+  `paymentmethod` enum('buzime','tarjeta','paypal') DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `latitud` decimal(10,7) DEFAULT NULL,
+  `longitud` decimal(10,7) DEFAULT NULL,
+  `createdat` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime DEFAULT NULL,
+  `deletedAt` datetime DEFAULT NULL,
+  `username` varchar(100) DEFAULT NULL,
+  `Token` longtext DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -398,7 +400,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Alice','Smith','alice@example.com','hashedpassword1','123 Maple Street, New York, NY',1,'212-555-1234','female',NULL,1,'10001','1990-01-01','English, Spanish','212-555-4321','tarjeta','New York',40.7128000,-74.0060000,'2025-04-02 17:27:46','2025-04-03 19:32:58',NULL,'alicesmith',NULL),(2,'Bob','Johnson','bob@example.com','hashedpassword2','456 Oak Avenue, Los Angeles, CA',2,'310-555-2345','male',NULL,1,'90001','1985-05-15','English','310-555-5432','buzime','Los Angeles',34.0522000,-118.2437000,'2025-04-02 17:27:46',NULL,NULL,'bobjohnson',NULL),(3,'Charlie','Brown','charlie@example.com','hashedpassword3','789 Blvd, City',1,'1231231234','male',NULL,1,'10003','1992-08-22','English','7654321098','tarjeta',NULL,51.5074000,-0.1278000,'2025-04-02 17:27:46',NULL,NULL,NULL,NULL),(4,'Daisy','Miller','daisy@example.com','hashedpassword4','101 Lane, City',0,'2345678901','female',NULL,1,'10004','1995-12-11','English','6543210987','buzime',NULL,48.8566000,2.3522000,'2025-04-02 17:27:46','2025-04-03 19:33:01',NULL,NULL,NULL),(5,'Ethan','Hunt','ethan@example.com','hashedpassword5','202 Road, City',2,'3456789012','male',NULL,2,'10005','1988-07-30','English','5432109876','tarjeta',NULL,-33.8688000,151.2093000,'2025-04-02 17:27:46',NULL,NULL,NULL,NULL),(6,'Fiona','Clark','fiona@example.com','hashedpassword6','303 Circle, City',3,'4567890123','female',NULL,2,'10006','1997-09-15','English','4321098765','buzime',NULL,35.6895000,139.6917000,'2025-04-02 17:27:46','2025-04-03 18:32:08','2025-04-03 18:32:08',NULL,NULL),(7,'George','Lee','george@example.com','hashedpassword7','404 Way, City',3,'5678901234','male',NULL,2,'10007','1993-04-05','English','3210987654','tarjeta',NULL,37.7749000,-122.4194000,'2025-04-02 17:27:46','2025-04-03 18:42:14','2025-04-03 18:42:14',NULL,NULL),(8,'Hannah','Taylor','hannah@example.com','hashedpassword8','505 Path, City',2,'6789012345','female',NULL,2,'10008','1991-06-20','English','2109876543','buzime',NULL,55.7558000,37.6173000,'2025-04-02 17:27:46',NULL,NULL,NULL,NULL),(9,'Ian','Moore','ian@example.com','hashedpassword9','606 Trail, City',3,'7890123456','male',NULL,1,'10009','1986-03-12','English','1098765432','tarjeta',NULL,41.9028000,12.4964000,'2025-04-02 17:27:46',NULL,NULL,NULL,NULL),(10,'Jane','White','jane@example.com','hashedpassword10','707 Drive, City',1,'8901234567','female',NULL,1,'10010','1999-11-25','English','9876543210','buzime',NULL,52.5200000,13.4050000,'2025-04-02 17:27:46',NULL,NULL,NULL,NULL),(11,'gustavo','gonzales','gusgonza@yowpet.com','gusgonza','c/ camp d\'arriassa',2,'123456789','male',NULL,1,'12345','1997-12-12',NULL,NULL,'paypal','Barcelona',NULL,NULL,'2025-04-03 18:12:00','2025-04-03 18:12:00',NULL,NULL,NULL),(12,'Karen','Wilson','karen@example.com','hashedpassword11','789 Pine Road, Chicago, IL',2,'312-555-3456','female',NULL,1,'60601','1988-11-22','English, French','312-555-6543','paypal','Chicago',41.8781000,-87.6298000,'2025-03-15 10:00:00',NULL,NULL,'karenwilson',NULL),(13,'Michael','Davis','michael@example.com','hashedpassword12','101 Elm Lane, Houston, TX',1,'713-555-4567','male',NULL,1,'77001','1993-07-18','English, Spanish','713-555-7654','tarjeta','Houston',29.7604000,-95.3698000,'2025-03-20 11:30:00',NULL,NULL,'michaeldavis',NULL),(14,'Sarah','Martinez','sarah@example.com','hashedpassword13','202 Cedar Blvd, Phoenix, AZ',3,'602-555-5678','female',NULL,1,'85001','1995-04-30','English','602-555-8765','buzime','Phoenix',33.4484000,-112.0740000,'2025-04-01 09:15:00',NULL,NULL,'sarahmartinez',NULL),(15,'David','Anderson','david@example.com','hashedpassword14','303 Birch Street, Philadelphia, PA',2,'215-555-6789','male',NULL,1,'19101','1987-09-12','English, German','215-555-9876','tarjeta','Philadelphia',39.9526000,-75.1652000,'2025-04-05 14:45:00',NULL,NULL,'davidanderson',NULL),(16,'Manuel','Pharon','mano@yowpet.com','$2a$10$uePByNH2Teo02fgLrNQ4YuEX7FbAFPlKy7paTxTCBr4Yz5.QFyVDK','No especificado',2,'','',_binary 'No especificado',1,'0',NULL,NULL,NULL,NULL,'No especificado',NULL,NULL,'2025-04-10 17:28:23','2025-04-10 17:28:23',NULL,'Mano','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJNYW5vIiwiaWF0IjoxNzQ0NDk2ODE4LCJleHAiOjE3NDQ1MDA0MTh9.OVAFoDu-MrteSWGx-ursG6-X3H3zVIbo-bJkYwsshBk');
+INSERT INTO `users` VALUES (1,'Alice','Smith','alice@example.com','hashedpassword1','123 Maple Street, New York, NY',1,'212-555-1234','female',NULL,1,'10001','1990-01-01','English, Spanish','212-555-4321','tarjeta','New York',40.7128000,-74.0060000,'2025-04-02 17:27:46','2025-04-03 19:32:58',NULL,'alicesmith',NULL),(2,'Bob','Johnson','bob@example.com','hashedpassword2','456 Oak Avenue, Los Angeles, CA',2,'310-555-2345','male',NULL,1,'90001','1985-05-15','English','310-555-5432','buzime','Los Angeles',34.0522000,-118.2437000,'2025-04-02 17:27:46',NULL,NULL,'bobjohnson',NULL),(3,'Charlie','Brown','charlie@example.com','hashedpassword3','789 Blvd, City',1,'1231231234','male',NULL,1,'10003','1992-08-22','English','7654321098','tarjeta',NULL,51.5074000,-0.1278000,'2025-04-02 17:27:46',NULL,NULL,NULL,NULL),(4,'Daisy','Miller','daisy@example.com','hashedpassword4','101 Lane, City',0,'2345678901','female',NULL,1,'10004','1995-12-11','English','6543210987','buzime',NULL,48.8566000,2.3522000,'2025-04-02 17:27:46','2025-04-03 19:33:01',NULL,NULL,NULL),(5,'Ethan','Hunt','ethan@example.com','hashedpassword5','202 Road, City',2,'3456789012','male',NULL,2,'10005','1988-07-30','English','5432109876','tarjeta',NULL,-33.8688000,151.2093000,'2025-04-02 17:27:46',NULL,NULL,NULL,NULL),(6,'Fiona','Clark','fiona@example.com','hashedpassword6','303 Circle, City',3,'4567890123','female',NULL,2,'10006','1997-09-15','English','4321098765','buzime',NULL,35.6895000,139.6917000,'2025-04-02 17:27:46','2025-04-03 18:32:08','2025-04-03 18:32:08',NULL,NULL),(7,'George','Lee','george@example.com','hashedpassword7','404 Way, City',3,'5678901234','male',NULL,2,'10007','1993-04-05','English','3210987654','tarjeta',NULL,37.7749000,-122.4194000,'2025-04-02 17:27:46','2025-04-03 18:42:14','2025-04-03 18:42:14',NULL,NULL),(8,'Hannah','Taylor','hannah@example.com','hashedpassword8','505 Path, City',2,'6789012345','female',NULL,2,'10008','1991-06-20','English','2109876543','buzime',NULL,55.7558000,37.6173000,'2025-04-02 17:27:46',NULL,NULL,NULL,NULL),(9,'Ian','Moore','ian@example.com','hashedpassword9','606 Trail, City',3,'7890123456','male',NULL,1,'10009','1986-03-12','English','1098765432','tarjeta',NULL,41.9028000,12.4964000,'2025-04-02 17:27:46',NULL,NULL,NULL,NULL),(10,'Jane','White','jane@example.com','hashedpassword10','707 Drive, City',1,'8901234567','female',NULL,1,'10010','1999-11-25','English','9876543210','buzime',NULL,52.5200000,13.4050000,'2025-04-02 17:27:46',NULL,NULL,NULL,NULL),(11,'gustavo','gonzales','gusgonza@yowpet.com','gusgonza','c/ camp d\'arriassa',2,'123456789','male',NULL,1,'12345','1997-12-12',NULL,NULL,'paypal','Barcelona',NULL,NULL,'2025-04-03 18:12:00','2025-04-03 18:12:00',NULL,NULL,NULL),(12,'Karen','Wilson','karen@example.com','hashedpassword11','789 Pine Road, Chicago, IL',2,'312-555-3456','female',NULL,1,'60601','1988-11-22','English, French','312-555-6543','paypal','Chicago',41.8781000,-87.6298000,'2025-03-15 10:00:00',NULL,NULL,'karenwilson',NULL),(13,'Michael','Davis','michael@example.com','hashedpassword12','101 Elm Lane, Houston, TX',1,'713-555-4567','male',NULL,1,'77001','1993-07-18','English, Spanish','713-555-7654','tarjeta','Houston',29.7604000,-95.3698000,'2025-03-20 11:30:00',NULL,NULL,'michaeldavis',NULL),(14,'Sarah','Martinez','sarah@example.com','hashedpassword13','202 Cedar Blvd, Phoenix, AZ',3,'602-555-5678','female',NULL,1,'85001','1995-04-30','English','602-555-8765','buzime','Phoenix',33.4484000,-112.0740000,'2025-04-01 09:15:00',NULL,NULL,'sarahmartinez',NULL),(15,'David','Anderson','david@example.com','hashedpassword14','303 Birch Street, Philadelphia, PA',2,'215-555-6789','male',NULL,1,'19101','1987-09-12','English, German','215-555-9876','tarjeta','Philadelphia',39.9526000,-75.1652000,'2025-04-05 14:45:00',NULL,NULL,'davidanderson',NULL),(16,'Manuel','Pharon','mano@yowpet.com','$2a$10$uePByNH2Teo02fgLrNQ4YuEX7FbAFPlKy7paTxTCBr4Yz5.QFyVDK','No especificado',2,'','',_binary 'No especificado',1,'0',NULL,NULL,NULL,NULL,'No especificado',NULL,NULL,'2025-04-10 17:28:23','2025-04-10 17:28:23',NULL,'Mano','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJNYW5vIiwiaWF0IjoxNzQ0NDk2ODE4LCJleHAiOjE3NDQ1MDA0MTh9.OVAFoDu-MrteSWGx-ursG6-X3H3zVIbo-bJkYwsshBk'),(18,'Manuel','Pharon','gusgonza@gmail.com','$2a$10$ar2XZ3ekS8/DJbnfxXUKSeKn5W4IwgXfWuqNDnEC9Q4098IQ73lJC','No especificado',2,'','',_binary 'No especificado',1,'0',NULL,NULL,NULL,NULL,'No especificado',NULL,NULL,'2025-05-08 10:55:27','2025-05-09 11:49:09',NULL,NULL,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJndXNnb256YUBnbWFpbC5jb20iLCJpYXQiOjE3NDY3ODQxNDksImV4cCI6MTc0Njc4Nzc0OX0.MKiZo6CpGD2LyqXB4i2Q4LumARnBKPvAi6CO_p4TjNc');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -411,4 +413,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-22 16:57:01
+-- Dump completed on 2025-05-09 12:46:28
