@@ -709,6 +709,10 @@ VALUES (1, 'Alice', 'Smith', 'alice@example.com', 'hashedpassword1', '123 Maple 
        (17, 'Gustavo', 'Gonzales', 'gusgonza@gmail.com', '$2a$10$odQuO5pzRbnXI2pgVlseqOWrfSeBjP2pnQWZ5T.P4KJZ0mdAtheFa',
         'No especificado', 2, '', '', _binary 'No especificado', 1, '0', NULL, NULL, NULL, NULL, 'No especificado',
         NULL, NULL, '2025-05-08 10:55:27', '2025-05-09 11:49:09', NULL, NULL,
+        null),
+       (18, 'Denys', 'Chechul', 'denys@gmail.com', '$2a$10$odQuO5pzRbnXI2pgVlseqOWrfSeBjP2pnQWZ5T.P4KJZ0mdAtheFa',
+        'No especificado', 2, '', '', _binary 'No especificado', 1, '0', NULL, NULL, NULL, NULL, 'No especificado',
+        NULL, NULL, '2025-05-08 10:55:27', '2025-05-09 11:49:09', NULL, NULL,
         null);
 /*!40000 ALTER TABLE `users`
     ENABLE KEYS */;
