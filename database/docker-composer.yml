@@ -11,10 +11,10 @@ services:
       MYSQL_PASSWORD: admin
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./sql/yowpet_script_init.sql:/docker-entrypoint-initdb.d/01_yowpet_script_init.sql
+      - ./sql/yowpet.sql:/docker-entrypoint-initdb.d/01_yowpet.sql
     networks:
       - yowpet-network
-    command: --init-file /docker-entrypoint-initdb.d/01_yowpet_script_init.sql
+    command: --init-file /docker-entrypoint-initdb.d/01_yowpet.sql
 
 
 networks:
