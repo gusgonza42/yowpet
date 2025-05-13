@@ -29,7 +29,7 @@ function BackButton() {
       }}
     >
       <Ionicons name="arrow-back" size={24} color="black" />
-      <Text style={{ color: 'black', fontSize: 16, marginLeft: 5 }}>Back</Text>
+      <Text style={{ color: 'black', fontSize: 16, marginLeft: 5 }}>Volver</Text>
     </TouchableOpacity>
   );
 }
