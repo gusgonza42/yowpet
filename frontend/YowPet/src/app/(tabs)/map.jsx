@@ -17,6 +17,7 @@ import { useAxiosFetch } from '@/services/api/getfetch';
 import MapMarker from '../Map/MapMarker';
 import DetailModal from '../Map/ViewDetailModal';
 import { useRef } from 'react';
+import { YowPetTheme } from '@/theme/Colors';
 
 export default function MapScreen() {
   const mapRef = useRef(null); // Reference to the MapView component
@@ -150,7 +151,7 @@ export default function MapScreen() {
               }}
               style={mapstyles.iconButton}
             >
-              <Text style={mapstyles.iconText}> <AntDesign name="arrowleft" size={20} color="white" /></Text>
+              <Text style={mapstyles.iconText}> <AntDesign name="arrowleft" size={20} color="black" /></Text>
             </TouchableOpacity>
             <View style={mapstyles.searchContainershortened}>
               <TextInput
@@ -161,7 +162,7 @@ export default function MapScreen() {
                 style={mapstyles.searchInput}
                 returnKeyType="search"
               />
-            </View>{' '}
+            </View>
           </>
         ) : (
           <View style={mapstyles.searchContainer}>
@@ -306,7 +307,7 @@ export default function MapScreen() {
           >
             <View
               style={{
-                backgroundColor: '#fff',
+                backgroundColor: '#A0B3FF',
                 padding: 16,
                 paddingBottom: 32,
                 borderTopLeftRadius: 20,
@@ -358,14 +359,14 @@ export default function MapScreen() {
                   setIsSelectingLocation(true); // Enable selecting on map
                 }}
                 style={{
-                  backgroundColor: 'orange',
+                  backgroundColor: '#F6BBA9',
                   paddingVertical: 12,
                   marginTop: 20,
                   borderRadius: 8,
                   alignItems: 'center',
                 }}
               >
-                <Text style={{ color: 'white', fontWeight: 'bold' }}>
+                <Text style={{ color: YowPetTheme.support, fontWeight: 'bold' }}>
                   Select Location on Map
                 </Text>
               </TouchableOpacity>
@@ -374,14 +375,14 @@ export default function MapScreen() {
               <TouchableOpacity
                 onPress={handleAddLocation}
                 style={{
-                  backgroundColor: 'green',
+                  backgroundColor: '#FBE186',
                   paddingVertical: 12,
                   marginTop: 20,
                   borderRadius: 8,
                   alignItems: 'center',
                 }}
               >
-                <Text style={{ color: 'white', fontWeight: 'bold' }}>
+                <Text style={{ color: YowPetTheme.support, fontWeight: 'bold' }}>
                   Save Location
                 </Text>
               </TouchableOpacity>

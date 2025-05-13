@@ -19,7 +19,7 @@ const DetailModal = ({ selectedMarker, onClose }) => {
       >
         <View
           style={{
-            backgroundColor: '#fff',
+            backgroundColor: '#A0B3FF',
             padding: 16,
             paddingBottom: 32,
             borderTopLeftRadius: 20,
