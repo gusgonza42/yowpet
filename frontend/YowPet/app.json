@@ -6,34 +6,43 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logos/yowpet_fondo.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "description": "Aplicación para gestión y cuidado de mascotas",
     "primaryColor": "#4CAF50",
     "newArchEnabled": true,
+     "jsEngine": "jsc",
     "splash": {
       "image": "./assets/logos/yowpet.png",
       "resizeMode": "contain",
       "backgroundColor": "#0E333C"
     },
-    "runtimeVersion": {
-      "policy": "sdkVersion"
-    },
     "ios": {
       "supportsTablet": true,
-      "icon": "./assets/logos/yowpet.png",
-      "bundleIdentifier": "com.yowpet.app"
+      "icon": "./assets/logos/yowpet.png"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/logos/yowpet.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#ffffff",
+        "package": "com.anonymous.YowPet",
+        "googleMapsApiKey": "AIzaSyDK3339yIBqQ3b7obl2pOmMJpByzsKUt2Q"
       },
-      "package": "com.yowpet.app"
+      "permissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.INTERNET",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.INTERNET",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ],
+      "package": "com.anonymous.YowPet"
     },
     "web": {
       "bundler": "metro",
       "favicon": "./assets/logos/icon.png",
-      "name": "YowPet - Cuidado de Mascotas"
+      "name": "YowPet - Cuiado de Mascotas"
     },
     "plugins": [
       "expo-router",
@@ -45,10 +54,6 @@
     ],
     "experiments": {
       "tsconfigPaths": true
-    },
-    "updates": {
-      "enabled": true,
-      "checkAutomatically": "ON_LOAD"
     }
   }
 }

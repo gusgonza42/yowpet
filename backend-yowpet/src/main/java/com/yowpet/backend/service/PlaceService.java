@@ -55,6 +55,7 @@ public class PlaceService {
     // CREATE place
     public ResponseEntity<Void> createPlace(Place place) {
         try {
+            System.out.println(place);
             placeRepo.createPlace(place);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (Exception e) {

@@ -5,7 +5,7 @@ DROP PROCEDURE IF EXISTS updateallergy;
 DROP PROCEDURE IF EXISTS deleteallergy;
 DROP PROCEDURE IF EXISTS getallergy;
 DROP PROCEDURE IF EXISTS searchallergy;
-DROP PROCEDURE IF EXISTS getallergies;
+DROP PROCEDURE IF EXISTS getallergys;
 
 DELIMITER $$
 -- Create an Allergy
