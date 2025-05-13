@@ -1,69 +1,73 @@
 import { Calender } from '@/components/auth/styles';
+import { useRequest } from '@/services/api/fetchingdata';
 import { YowPetTheme } from '@/theme/Colors';
 import { ScreenContainer } from '@components/global/ScreenContainer';
-import React, { useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 
-const remindersData = {
-  '2025-05-14': [
-    { id: '1', title: 'Vet Appointment at 10:00 AM' },
-    { id: '2', title: 'Dog Food Pickup at 3:00 PM' },
-  ],
-  '2025-05-15': [
-    { id: '3', title: 'Playdate at the Park at 4:00 PM' },
-  ],
+export default function CalendarScreen() {
+// Get local date in YYYY-MM-DD format (not UTC)
+const formatLocalDate = (date: Date) =>
+  date.toLocaleDateString('sv-SE'); // "sv-SE" = ISO-like format (YYYY-MM-DD)
+
+// Usage
+const today = formatLocalDate(new Date());
+
+  const [selectedDate, setSelectedDate] = useState(today);
+  const [reminders, setReminders] = useState([]);
+  const { requestData,responseData, loading } = useRequest();
+
+const fetchRemindersForDate = async (date: string) => {
+  try {
+     await requestData('GET', `/agenda?date=${date}`);
+    setReminders(responseData || []);
+  } catch (error) {
+    console.log('Error fetching reminders:', error);
+    setReminders([]);
+  }
 };
 
-export default function CalendarScreen() {
-  const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
-const [selectedDate, setSelectedDate] = useState(today);
+
+const handleChooseDate = async (dateString: string) => {
+  setSelectedDate(dateString);
+  await fetchRemindersForDate(dateString); // dateString is already in YYYY-MM-DD
+};
 
 
-  const reminders = remindersData[selectedDate] || [];
+
+  // Automatically fetch reminders for today on mount
+  useEffect(() => {
+    fetchRemindersForDate(today);
+  }, []);
 
   return (
     <ScreenContainer>
-
-    <View style={Calender.container}>
-      <Calendar
-        onDayPress={day => setSelectedDate(day.dateString)}
-        markedDates={{
-          ...Object.keys(remindersData).reduce((acc, date) => {
-            acc[date] = { marked: true, dotColor: '#A0B3FF' };
-            return acc;
-          }, {}),
-          ...(selectedDate && {
+      <View style={Calender.container}>
+        <Calendar
+          onDayPress={day => handleChooseDate(day.dateString)}
+          markedDates={{
             [selectedDate]: {
               selected: true,
               selectedColor: YowPetTheme.brand.primary,
-              marked: true,
             },
-          }),
-        }}
-        style={Calender.calendar}
-      />
+          }}
+          style={Calender.calendar}
+        />
 
-      <View style={Calender.reminderContainer}>
-        <Text style={Calender.title}>Reminders for {selectedDate || '...'}</Text>
-        {reminders.length > 0 ? (
-          <FlatList
-            data={reminders}
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => (
-              <View style={Calender.reminderCard}>
-                <Text style={Calender.reminderText}>🔔 {item.title}</Text>
+        <View style={Calender.reminderContainer}>
+          <Text style={Calender.title}>Reminders for {selectedDate}</Text>
+          {reminders.length > 0 ? (
+           reminders.map((reminder, index) => (
+              <View key={index} style={Calender.reminderCard}>
+                <Text style={Calender.reminderText}>🔔 {reminder.title}</Text>
               </View>
-            )}
-          />
-        ) : (
-          <Text style={{ color: '#555' }}>No reminders for this day.</Text>
-        )}
+            ))
+          ) : (
+            <Text style={{ color: '#555' }}>No reminders for this day.</Text>
+          )}
+        </View>
       </View>
-    </View>
-
     </ScreenContainer>
   );
 }
-
-
