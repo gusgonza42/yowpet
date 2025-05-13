@@ -149,7 +149,6 @@ export const styles = {
     },
   }),
 
-
   footer: StyleSheet.create({
     forgotPasswordText: {
       marginTop: getResponsiveValue(isSmallDevice ? 10 : 15, 18),
@@ -329,14 +328,16 @@ export const styles = {
       position: 'absolute',
       left: 12,
       top: '50%',
-      transform: Platform.OS === 'web' ? 'translateY(-12px)' : [{ translateY: -12 }],
+      transform:
+        Platform.OS === 'web' ? 'translateY(-12px)' : [{ translateY: -12 }],
       zIndex: 2,
     },
     iconRight: {
       position: 'absolute',
       right: 12,
       top: '50%',
-      transform: Platform.OS === 'web' ? 'translateY(-12px)' : [{ translateY: -12 }],
+      transform:
+        Platform.OS === 'web' ? 'translateY(-12px)' : [{ translateY: -12 }],
       zIndex: 2,
       cursor: 'pointer',
     },
@@ -398,36 +399,6 @@ export const styles = {
   }),
 };
 
-export const Calender = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#A0B3FF",
-    borderRadius: 10,
-    paddingVertical: 20,
-    padding: 16
-  },
-  calendar: {
-    marginBottom: 20
-  },
-  reminderContainer: {
-    flex: 1
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 8
-  },
-  reminderCard: {
-    backgroundColor: '#f2f2f2',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 8,
-  },
-  reminderText: {
-    fontSize: 16
-  },
-});
-
 // Agregar evento de redimensionamiento para web
 if (Platform.OS === 'web') {
   Dimensions.addEventListener('change', () => {
@@ -437,4 +408,3 @@ if (Platform.OS === 'web') {
     // Aquí podrías implementar un sistema de actualización de estado global si lo necesitas
   });
 }
-

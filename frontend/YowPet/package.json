@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "scripts": {
-    "start": "expo start --port 3000 --tunnel",
+    "start": "expo start --port 3000",
     "def": "expo start --port 3000",
     "android": "expo start --android --port 3000",
     "ios": "expo start --ios --port 3000",
@@ -53,7 +53,8 @@
     "yowpet": "file:",
     "yowpet-app": "file:",
     "yup": "^1.6.1",
-    "zustand": "^5.0.3"
+    "zustand": "^5.0.3",
+    "@react-native-community/datetimepicker": "8.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.10",

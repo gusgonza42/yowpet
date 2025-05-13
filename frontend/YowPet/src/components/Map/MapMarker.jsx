@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Marker } from 'react-native-maps';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { styleMarker } from '@/components/auth/LoginForm/styles';
+import { styleMarker } from '@/components/Map/styles';
 
 const MapMarker = ({ marker, pinColor, icon, onPress }) => {
   const coordinate = useMemo(
@@ -19,25 +19,28 @@ const MapMarker = ({ marker, pinColor, icon, onPress }) => {
   }
 
   return (
-    <Marker coordinate={coordinate} onPress={onPress}>
-    <View style={styleMarker.customMarkerContainer}>
-      <View
-        style={[
-          styleMarker.markerCircle,
-          { borderColor: pinColor } // dynamic border
-        ]}
-      >
-        <MaterialCommunityIcons name={icon} size={20} color={pinColor} />
+    <Marker
+      coordinate={coordinate}
+      onPress={onPress}
+      tracksViewChanges={Platform.OS === 'ios' ? false : undefined}
+    >
+      <View style={styleMarker.customMarkerContainer}>
+        <View
+          style={[
+            styleMarker.markerCircle,
+            { borderColor: pinColor }, // dynamic border
+          ]}
+        >
+          <MaterialCommunityIcons name={icon} size={20} color={pinColor} />
+        </View>
+        <View
+          style={[
+            styleMarker.markerTail,
+            { borderTopColor: pinColor }, // triangle tail color
+          ]}
+        />
       </View>
-      <View
-        style={[
-          styleMarker.markerTail,
-          { borderTopColor: pinColor } // triangle tail color
-        ]}
-      />
-    </View>
-  </Marker>
-  
+    </Marker>
   );
 };
 

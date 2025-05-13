@@ -8,12 +8,12 @@ import { FormFooter } from '@components/auth/FormFooter';
 import { PasswordStrengthIndicator } from '@components/auth/PasswordStrengthIndicator';
 
 export const AuthForm = ({
-                           isLogin,
-                           formikProps,
-                           toggleVisibility,
-                           handleForgotPassword,
-                           fadeAnim,
-                         }) => {
+  isLogin,
+  formikProps,
+  toggleVisibility,
+  handleForgotPassword,
+  fadeAnim,
+}) => {
   const {
     values,
     handleChange,
@@ -106,7 +106,7 @@ export const AuthForm = ({
               toggleVisibility(
                 setFieldValue,
                 'confirmPassword',
-                values.confirmPasswordVisible,
+                values.confirmPasswordVisible
               )
             }
             icon="lock-check"
@@ -142,8 +142,12 @@ export const AuthForm = ({
         loading={isSubmitting}
       >
         {isSubmitting
-          ? (isLogin ? 'Iniciando sesión...' : 'Registrando...')
-          : (isLogin ? 'Iniciar sesión' : 'Registrarse')}
+          ? isLogin
+            ? 'Iniciando sesión...'
+            : 'Registrando...'
+          : isLogin
+            ? 'Iniciar sesión'
+            : 'Registrarse'}
       </Button>
 
       <FormFooter isLogin={isLogin} onForgotPassword={handleForgotPassword} />
