@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import {
+  ActivityIndicator,
   Alert,
   Modal,
   Platform,
@@ -18,6 +19,7 @@ import MapMarker from '@components/Map/MapMarker';
 import DetailModal from '@components/Map/ViewDetailModal';
 import { useRequest } from '@/services/api/fetchingdata';
 import { mapStyles, modalStyles } from '@/components/Map/styles';
+import { YowPetTheme } from '@theme/Colors';
 
 export default function MapScreen() {
   const mapRef = useRef(null);
@@ -45,21 +47,27 @@ export default function MapScreen() {
   const [isSelectingLocation, setIsSelectingLocation] = useState(false);
   const filters = ['Veterinarios', 'Tiendas', 'Pet-Friendly', 'Parques'];
   const [searchQuery, setSearchQuery] = useState('');
-  // Nuevo estado para controlar si seguir la ubicación del usuario
+  // Estado para controlar si seguir la ubicación del usuario
   const [followUserLocation, setFollowUserLocation] = useState(true);
 
-  
-  
-  
+  const [isLoading, setIsLoading] = useState(true); // Estado para el loader
+
   useEffect(() => {
     (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.log('Permission denied');
-        return;
+      setIsLoading(true); // Iniciar carga
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          console.log('Permission denied');
+          return;
+        }
+        const loc = await Location.getCurrentPositionAsync({});
+        setLocation(loc.coords);
+      } catch (error) {
+        console.error('Error getting location:', error);
+      } finally {
+        setIsLoading(false); // Finalizar carga siempre, incluso si hay error
       }
-      const loc = await Location.getCurrentPositionAsync({});
-      setLocation(loc.coords);
     })();
   }, []);
 
@@ -175,263 +183,288 @@ export default function MapScreen() {
 
   return (
     <View style={mapStyles.container}>
-      <View style={[mapStyles.topBar, Platform.OS === 'ios' && { zIndex: 10 }]}>
-        {selectedFilter !== 'All' ? (
-          <>
-            <TouchableOpacity
-              onPress={() => {
-                setSelectedFilter('All');
-                setSearchQuery('');
-              }}
-              style={mapStyles.iconButton}
-            >
-              <Text style={mapStyles.iconText}>
-                <AntDesign name="arrowleft" size={20} color="black" />
-              </Text>
-            </TouchableOpacity>
-            <View style={mapStyles.searchContainershortened}>
-              <TextInput
-                placeholder="🔍 Buscar aquí..."
-                placeholderTextColor="#999"
-                value={searchQuery}
-                onChangeText={setSearchQuery}
-                onSubmitEditing={() => handleSearch()}
-                style={mapStyles.searchInput}
-                returnKeyType="search"
-              />
-            </View>
-          </>
-        ) : (
-          <View style={mapStyles.searchContainer}>
-            <TextInput
-              placeholder="🔍 Buscar aquí..."
-              placeholderTextColor="#999"
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              onSubmitEditing={() => handleSearch()}
-              style={mapStyles.searchInput}
-              returnKeyType="search"
-            />
+      {isLoading ? (
+        <View style={mapStyles.loaderContainer}>
+          <ActivityIndicator size="large" color={YowPetTheme.brand.accent} />
+          <Text style={mapStyles.loaderText}>Cargando mapa...</Text>
+        </View>
+      ) : (
+        <>
+          <View
+            style={[mapStyles.topBar, Platform.OS === 'ios' && { zIndex: 10 }]}
+          >
+            {selectedFilter !== 'All' ? (
+              <>
+                <TouchableOpacity
+                  onPress={() => {
+                    setSelectedFilter('All');
+                    setSearchQuery('');
+                  }}
+                  style={mapStyles.iconButton}
+                >
+                  <Text style={mapStyles.iconText}>
+                    <AntDesign name="arrowleft" size={20} color="black" />
+                  </Text>
+                </TouchableOpacity>
+                <View style={mapStyles.searchContainershortened}>
+                  <TextInput
+                    placeholder="🔍 Buscar aquí..."
+                    placeholderTextColor="#999"
+                    value={searchQuery}
+                    onChangeText={setSearchQuery}
+                    onSubmitEditing={() => handleSearch()}
+                    style={mapStyles.searchInput}
+                    returnKeyType="search"
+                  />
+                </View>
+              </>
+            ) : (
+              <View style={mapStyles.searchContainer}>
+                <TextInput
+                  placeholder="🔍 Buscar aquí..."
+                  placeholderTextColor="#999"
+                  value={searchQuery}
+                  onChangeText={setSearchQuery}
+                  onSubmitEditing={() => handleSearch()}
+                  style={mapStyles.searchInput}
+                  returnKeyType="search"
+                />
+              </View>
+            )}
           </View>
-        )}
-      </View>
 
-      {isSelectingLocation && (
-        <Text
-          style={{
-            textAlign: 'center',
-            backgroundColor: 'white',
-            padding: 8,
-            zIndex: Platform.OS === 'ios' ? 5 : 1,
-          }}
-        >
-          Toca en el mapa para elegir ubicación
-        </Text>
-      )}
-
-      {/* Mapa */}
-      {location && (
-        <MapView
-          ref={mapRef}
-          style={{ flex: 1 }}
-          showsUserLocation
-          followsUserLocation={followUserLocation}
-          initialRegion={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01,
-          }}
-          onPress={isSelectingLocation ? handleSelectLocation : null}
-          onPanDrag={handleMapDrag}
-          onRegionChangeComplete={handleMapDrag}
-        >
-          {filteredMarkers.map(marker => {
-            let pinColor, icon;
-            switch (marker.filter) {
-              case 'Veterinarios':
-                pinColor = 'red';
-                icon = 'hospital-building';
-                break;
-              case 'Tiendas':
-                pinColor = 'blue';
-                icon = 'store';
-                break;
-              case 'Pet-Friendly':
-                pinColor = 'green';
-                icon = 'dog';
-                break;
-              case 'Parques':
-                pinColor = 'cyan';
-                icon = 'tree';
-                break;
-              default:
-                pinColor = 'gray';
-                icon = 'map-marker';
-            }
-
-            return (
-              <MapMarker
-                key={marker.id}
-                marker={marker}
-                pinColor={pinColor}
-                icon={icon}
-                onPress={() => setSelectedMarker(marker)}
-              />
-            );
-          })}
-          {newLocation.latitude && newLocation.longitude && (
-            <Marker coordinate={newLocation} pinColor="purple" />
+          {isSelectingLocation && (
+            <Text
+              style={{
+                textAlign: 'center',
+                backgroundColor: 'white',
+                padding: 8,
+                zIndex: Platform.OS === 'ios' ? 5 : 1,
+              }}
+            >
+              Toca en el mapa para elegir ubicación
+            </Text>
           )}
-        </MapView>
-      )}
 
-      {/* Botón para añadir ubicación */}
-      <TouchableOpacity
-        onPress={() => setModalVisible(true)}
-        style={[mapStyles.addbutton, Platform.OS === 'ios' && { zIndex: 8 }]}
-      >
-        <Text style={mapStyles.addbuttontext}>
-          <AntDesign name="plus" size={24} color="white" />
-        </Text>
-      </TouchableOpacity>
+          {/* Mapa */}
+          {location && (
+            <MapView
+              ref={mapRef}
+              style={{ flex: 1 }}
+              showsUserLocation
+              followsUserLocation={followUserLocation}
+              initialRegion={{
+                latitude: location.latitude,
+                longitude: location.longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+              }}
+              onPress={isSelectingLocation ? handleSelectLocation : null}
+              onPanDrag={handleMapDrag}
+              onRegionChangeComplete={handleMapDrag}
+            >
+              {filteredMarkers.map(marker => {
+                let pinColor, icon;
+                switch (marker.filter) {
+                  case 'Veterinarios':
+                    pinColor = 'red';
+                    icon = 'hospital-building';
+                    break;
+                  case 'Tiendas':
+                    pinColor = 'blue';
+                    icon = 'store';
+                    break;
+                  case 'Pet-Friendly':
+                    pinColor = 'green';
+                    icon = 'dog';
+                    break;
+                  case 'Parques':
+                    pinColor = 'cyan';
+                    icon = 'tree';
+                    break;
+                  default:
+                    pinColor = 'gray';
+                    icon = 'map-marker';
+                }
 
-      {/* Botón para volver a la ubicación del usuario */}
-      <TouchableOpacity
-        onPress={() => {
-          setFollowUserLocation(true);
-          if (location && mapRef.current) {
-            mapRef.current.animateToRegion({
-              latitude: location.latitude,
-              longitude: location.longitude,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01,
-            });
-          }
-        }}
-        style={[
-          mapStyles.addbutton,
-          { bottom: 250, backgroundColor: '#3498db' },
-          Platform.OS === 'ios' && { zIndex: 8 },
-        ]}
-      >
-        <Text style={mapStyles.addbuttontext}>
-          <AntDesign name="enviromento" size={24} color="white" />
-        </Text>
-      </TouchableOpacity>
+                return (
+                  <MapMarker
+                    key={marker.id}
+                    marker={marker}
+                    pinColor={pinColor}
+                    icon={icon}
+                    onPress={() => setSelectedMarker(marker)}
+                  />
+                );
+              })}
+              {newLocation.latitude && newLocation.longitude && (
+                <Marker coordinate={newLocation} pinColor="purple" />
+              )}
+            </MapView>
+          )}
 
-      {/* Botones de filtro */}
-      <View
-        style={[mapStyles.filterBox, Platform.OS === 'ios' && { zIndex: 7 }]}
-      >
-        {filters.map(filter => (
+          {/* Botón para añadir ubicación */}
           <TouchableOpacity
-            key={filter}
-            onPress={() => setSelectedFilter(filter)}
+            onPress={() => setModalVisible(true)}
             style={[
-              mapStyles.filterButton,
-              selectedFilter === filter && mapStyles.selectedButton,
+              mapStyles.addbutton,
+              Platform.OS === 'ios' && { zIndex: 8 },
             ]}
           >
-            <Text
-              style={[
-                mapStyles.filterText,
-                selectedFilter === filter && mapStyles.selectedText,
-              ]}
-            >
-              {filter}
+            <Text style={mapStyles.addbuttontext}>
+              <AntDesign name="plus" size={24} color="white" />
             </Text>
           </TouchableOpacity>
-        ))}
-      </View>
 
-      {/* Modal de detalles */}
-      <DetailModal
-        selectedMarker={selectedMarker}
-        onClose={() => setSelectedMarker(null)}
-      />
-
-      {/* Modal para añadir ubicación */}
-      <Modal
-        visible={isModalVisible}
-        transparent
-        animationType="slide"
-        statusBarTranslucent={Platform.OS === 'ios'}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        {saving ? (
-          <View
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-          >
-            <Text style={{ fontSize: 18 }}>Guardando...</Text>
-          </View>
-        ) : (
-          <Pressable
-            style={modalStyles.container}
+          {/* Botón para volver a la ubicación del usuario */}
+          <TouchableOpacity
             onPress={() => {
-              setModalVisible(false);
-              setNewLocation({ latitude: null, longitude: null });
+              setFollowUserLocation(true);
+              if (location && mapRef.current) {
+                mapRef.current.animateToRegion({
+                  latitude: location.latitude,
+                  longitude: location.longitude,
+                  latitudeDelta: 0.01,
+                  longitudeDelta: 0.01,
+                });
+              }
             }}
+            style={[
+              mapStyles.addbutton,
+              { bottom: 250, backgroundColor: '#3498db' },
+              Platform.OS === 'ios' && { zIndex: 8 },
+            ]}
           >
-            <View style={modalStyles.content}>
-              <Text style={modalStyles.title}>Añadir nueva ubicación</Text>
+            <Text style={mapStyles.addbuttontext}>
+              <AntDesign name="enviromento" size={24} color="white" />
+            </Text>
+          </TouchableOpacity>
 
-              {/* Nombre de la ubicación */}
-              <TextInput
-                placeholder="Nombre de la ubicación"
-                style={modalStyles.input}
-                value={locationName}
-                onChangeText={setLocationName}
-              />
-
-              {/* Selección de filtro */}
-              <View style={modalStyles.filterContainer}>
-                <Text style={modalStyles.filterLabel}>Seleccionar filtro:</Text>
-                <View style={modalStyles.filterOptions}>
-                  {filters.map(filter => (
-                    <TouchableOpacity
-                      key={filter}
-                      onPress={() => setLocationFilter(filter)}
-                      style={[
-                        modalStyles.filterOption,
-                        locationFilter === filter
-                          ? modalStyles.filterOptionActive
-                          : modalStyles.filterOptionInactive,
-                      ]}
-                    >
-                      <Text>{filter}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </View>
-
-              {/* Botón para seleccionar ubicación en el mapa */}
+          {/* Botones de filtro */}
+          <View
+            style={[
+              mapStyles.filterBox,
+              Platform.OS === 'ios' && { zIndex: 7 },
+            ]}
+          >
+            {filters.map(filter => (
               <TouchableOpacity
-                onPress={() => {
-                  setModalVisible(false);
-                  setIsSelectingLocation(true);
-                }}
+                key={filter}
+                onPress={() => setSelectedFilter(filter)}
                 style={[
-                  modalStyles.actionButton,
-                  modalStyles.selectLocationButton,
+                  mapStyles.filterButton,
+                  selectedFilter === filter && mapStyles.selectedButton,
                 ]}
               >
-                <Text style={modalStyles.buttonText}>
-                  Seleccionar ubicación en el mapa
+                <Text
+                  style={[
+                    mapStyles.filterText,
+                    selectedFilter === filter && mapStyles.selectedText,
+                  ]}
+                >
+                  {filter}
                 </Text>
               </TouchableOpacity>
+            ))}
+          </View>
 
-              {/* Botón para guardar */}
-              <TouchableOpacity
-                onPress={handleAddLocation}
-                style={[modalStyles.actionButton, modalStyles.saveButton]}
+          {/* Modal de detalles */}
+          <DetailModal
+            selectedMarker={selectedMarker}
+            onClose={() => setSelectedMarker(null)}
+          />
+
+          {/* Modal para añadir ubicación */}
+          <Modal
+            visible={isModalVisible}
+            transparent
+            animationType="slide"
+            statusBarTranslucent={Platform.OS === 'ios'}
+            onRequestClose={() => setModalVisible(false)}
+          >
+            {saving ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
               >
-                <Text style={modalStyles.buttonText}>Guardar ubicación</Text>
-              </TouchableOpacity>
-            </View>
-          </Pressable>
-        )}
-      </Modal>
+                <Text style={{ fontSize: 18 }}>Guardando...</Text>
+              </View>
+            ) : (
+              <Pressable
+                style={modalStyles.container}
+                onPress={() => {
+                  setModalVisible(false);
+                  setNewLocation({ latitude: null, longitude: null });
+                }}
+              >
+                <View style={modalStyles.content}>
+                  <Text style={modalStyles.title}>Añadir nueva ubicación</Text>
+
+                  {/* Nombre de la ubicación */}
+                  <TextInput
+                    placeholder="Nombre de la ubicación"
+                    style={modalStyles.input}
+                    value={locationName}
+                    onChangeText={setLocationName}
+                  />
+
+                  {/* Selección de filtro */}
+                  <View style={modalStyles.filterContainer}>
+                    <Text style={modalStyles.filterLabel}>
+                      Seleccionar filtro:
+                    </Text>
+                    <View style={modalStyles.filterOptions}>
+                      {filters.map(filter => (
+                        <TouchableOpacity
+                          key={filter}
+                          onPress={() => setLocationFilter(filter)}
+                          style={[
+                            modalStyles.filterOption,
+                            locationFilter === filter
+                              ? modalStyles.filterOptionActive
+                              : modalStyles.filterOptionInactive,
+                          ]}
+                        >
+                          <Text>{filter}</Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  </View>
+
+                  {/* Botón para seleccionar ubicación en el mapa */}
+                  <TouchableOpacity
+                    onPress={() => {
+                      setModalVisible(false);
+                      setIsSelectingLocation(true);
+                    }}
+                    style={[
+                      modalStyles.actionButton,
+                      modalStyles.selectLocationButton,
+                    ]}
+                  >
+                    <Text style={modalStyles.buttonText}>
+                      Seleccionar ubicación en el mapa
+                    </Text>
+                  </TouchableOpacity>
+
+                  {/* Botón para guardar */}
+                  <TouchableOpacity
+                    onPress={handleAddLocation}
+                    style={[modalStyles.actionButton, modalStyles.saveButton]}
+                  >
+                    <Text style={modalStyles.buttonText}>
+                      Guardar ubicación
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </Pressable>
+            )}
+          </Modal>
+        </>
+      )}
     </View>
   );
 }

@@ -1,5 +1,5 @@
 import { Dimensions, Platform, StyleSheet } from 'react-native';
-import { YowPetTheme as yowPetTheme, YowPetTheme } from '@theme/Colors';
+import { YowPetTheme } from '@theme/Colors';
 
 // Obtenemos dimensiones de la pantalla para cálculos relativos
 const { width, height } = Dimensions.get('window');
@@ -160,6 +160,19 @@ export const mapStyles = StyleSheet.create({
   mapContentContainer: {
     flex: 1,
     paddingTop: isIOS ? 90 : 80, // Ajustado según la altura del topBar
+  },
+
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: YowPetTheme.brand.white, // Fondo blanco o el que prefieras
+  },
+  loaderText: {
+    marginTop: 12,
+    fontSize: 16,
+    color: YowPetTheme.brand.support,
+    fontWeight: '500',
   },
 });
 
