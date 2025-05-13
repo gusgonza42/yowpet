@@ -328,14 +328,16 @@ export const styles = {
       position: 'absolute',
       left: 12,
       top: '50%',
-      transform: Platform.OS === 'web' ? 'translateY(-12px)' : [{ translateY: -12 }],
+      transform:
+        Platform.OS === 'web' ? 'translateY(-12px)' : [{ translateY: -12 }],
       zIndex: 2,
     },
     iconRight: {
       position: 'absolute',
       right: 12,
       top: '50%',
-      transform: Platform.OS === 'web' ? 'translateY(-12px)' : [{ translateY: -12 }],
+      transform:
+        Platform.OS === 'web' ? 'translateY(-12px)' : [{ translateY: -12 }],
       zIndex: 2,
       cursor: 'pointer',
     },

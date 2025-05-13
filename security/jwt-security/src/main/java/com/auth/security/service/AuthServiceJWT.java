@@ -84,11 +84,10 @@ public class AuthServiceJWT {
 
             String token = userJWT.getToken();
             if (token == null || !jwtTokenUtils.isValidToken(token)) {
-                token = jwtTokenUtils.generateToken(userJWT.getEmail());
+                // Genera el token con el email y el ID
+                token = jwtTokenUtils.generateToken(userJWT.getEmail(), userJWT.getId());
                 userJWT.setToken(token);
-                printMssg(AuthConstantsJWT.TOKEN_CREATED_OR_UPDATED);
-                userRepositoryJWT.UpdateUsertoken(userJWT.getEmail(),
-                        userJWT.getToken());
+                userRepositoryJWT.UpdateUsertoken(userJWT.getEmail(), token);
             }
 
             printMssg(userJWT.getEmail() + " logged in");
@@ -115,13 +114,13 @@ public class AuthServiceJWT {
                     .body(AuthConstantsJWT.EMAIL_ALREADY_EXISTS);
         }
 
-        String token = jwtTokenUtils.generateToken(authRequestJWT.getEmail());
         UserJWT userJWT = new UserJWT();
         userJWT.setFirstName(authRequestJWT.getFirstName());
         userJWT.setLastName(authRequestJWT.getLastName());
         userJWT.setEmail(authRequestJWT.getEmail());
         userJWT.setPassword(passwordEncoder.encode(authRequestJWT.getPassword()));
-        userJWT.setToken(token);
+
+        // Primero crea el usuario sin token
         userRepositoryJWT.createUser(userJWT.getFirstName(),
                 userJWT.getLastName(),
                 userJWT.getEmail(),
@@ -136,9 +135,18 @@ public class AuthServiceJWT {
                 userJWT.getLanguages(),
                 userJWT.getPaymentMethod(),
                 userJWT.getBirthDate(),
-                userJWT.getToken());
+                null); // Token inicialmente null
 
-        printMssg(userJWT.getEmail() + " registered");
+        // Obtiene el usuario recién creado para tener el ID
+        UserJWT createdUser = userRepositoryJWT.getUserByEmail(authRequestJWT.getEmail());
+
+        // Genera el token con el email y el ID
+        String token = jwtTokenUtils.generateToken(createdUser.getEmail(), createdUser.getId());
+
+        // Actualiza el token en la base de datos
+        userRepositoryJWT.UpdateUsertoken(createdUser.getEmail(), token);
+
+        printMssg(createdUser.getEmail() + " registered with ID: " + createdUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(token);
     }
 

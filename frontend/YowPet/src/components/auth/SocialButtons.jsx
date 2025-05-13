@@ -13,13 +13,25 @@ export const SocialButtons = () => {
       </View>
       <View style={styles.SocialButtons.socialButtonsContainer}>
         <TouchableOpacity style={styles.SocialButtons.socialButton}>
-          <AntDesign name="facebook-square" size={24} color={YowPetTheme.brand.primary} />
+          <AntDesign
+            name="facebook-square"
+            size={24}
+            color={YowPetTheme.brand.primary}
+          />
         </TouchableOpacity>
         <TouchableOpacity style={styles.SocialButtons.socialButton}>
-          <AntDesign name="twitter" size={24} color={YowPetTheme.brand.primary} />
+          <AntDesign
+            name="twitter"
+            size={24}
+            color={YowPetTheme.brand.primary}
+          />
         </TouchableOpacity>
         <TouchableOpacity style={styles.SocialButtons.socialButton}>
-          <AntDesign name="google" size={24} color={YowPetTheme.brand.primary} />
+          <AntDesign
+            name="google"
+            size={24}
+            color={YowPetTheme.brand.primary}
+          />
         </TouchableOpacity>
       </View>
     </>

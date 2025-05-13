@@ -1,7 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { axiosClient } from './clienteAxios';
 
-export const useAxiosFetch = (servlet, refreshKey, intervalTime = 30000) => {
+export const useAxiosFetch = (
+  servlet,
+  refreshKey,
+  enableAutoRefresh = false,
+  intervalTime = 30000
+) => {
   const [datos, setDatos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -9,35 +14,40 @@ export const useAxiosFetch = (servlet, refreshKey, intervalTime = 30000) => {
   const fetchData = async () => {
     try {
       console.log('Iniciando solicitud a:', servlet);
-
+      setLoading(true);
       const response = await axiosClient.get(`/${servlet}`);
-      // console.warn(response)
-      if (response) {
-        console.log('Datos obtenidos: Perfectamente');
-        setDatos(response);
+
+      // Asegurarse que response.data existe y es un array
+      if (response && response.data) {
+        const dataArray = Array.isArray(response.data)
+          ? response.data
+          : [response.data];
+        console.log('Datos obtenidos:', dataArray.length, 'elementos');
+        setDatos(dataArray);
       } else {
-        throw new Error('Formato de respuesta inesperado');
+        setDatos([]); // Si no hay datos, establecer array vacío
       }
     } catch (err) {
       console.error('Error al obtener los datos:', err.message);
       setError(err.message);
+      setDatos([]); // En caso de error, establecer array vacío
     } finally {
       setLoading(false);
     }
   };
 
+  // Ejecutar fetchData cuando cambia servlet o refreshKey
   useEffect(() => {
-    fetchData(); // On mount and when servlet or refreshKey changes
+    fetchData();
   }, [servlet, refreshKey]);
 
+  // Configurar intervalo solo si enableAutoRefresh es true
   useEffect(() => {
-    const interval = setInterval(() => {
-      console.log('Fetching data periodically...');
-      fetchData();
-    }, intervalTime);
+    if (enableAutoRefresh) {
+      const interval = setInterval(fetchData, intervalTime);
+      return () => clearInterval(interval);
+    }
+  }, [enableAutoRefresh, intervalTime]);
 
-    return () => clearInterval(interval); // Clean up
-  }, [intervalTime]);
-
-  return { datos, loading, error };
+  return { datos, loading, error, refetch: fetchData };
 };
