@@ -44,6 +44,7 @@ CREATE PROCEDURE updatenotification(
 BEGIN
     UPDATE agenda
     SET Title = _Title
+<<<<<<< HEAD
     WHERE date = _Date;
 END $$
 
@@ -51,4 +52,7 @@ CREATE PROCEDURE GETALLNOTIFICATION()
 BEGIN
     SELECT date
     FROM agenda;
+=======
+        WHERE date = _Date;
+>>>>>>> origin/develop
 END $$

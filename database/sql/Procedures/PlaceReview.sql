@@ -1,6 +1,5 @@
 -- ----------------- Drop if exist ----------------- --
 
-DROP PROCEDURE IF EXISTS getPlacesByStatus;
 DROP PROCEDURE IF EXISTS createPlaceReview;
 DROP PROCEDURE IF EXISTS updatePlaceReview;
 DROP PROCEDURE IF EXISTS deletePlaceReview;

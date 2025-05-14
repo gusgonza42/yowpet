@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS `yowpet`;
 CREATE DATABASE IF NOT EXISTS `yowpet` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci */;
 USE `yowpet`;
 -- MySQL dump 10.13  Distrib 8.0.41, for Win64 (x86_64)
@@ -707,6 +708,10 @@ VALUES (1, 'Alice', 'Smith', 'alice@example.com', 'hashedpassword1', '123 Maple 
         NULL, NULL, '2025-04-10 17:28:23', '2025-04-10 17:28:23', NULL, 'Mano',
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJNYW5vIiwiaWF0IjoxNzQ0NDk2ODE4LCJleHAiOjE3NDQ1MDA0MTh9.OVAFoDu-MrteSWGx-ursG6-X3H3zVIbo-bJkYwsshBk'),
        (17, 'Gustavo', 'Gonzales', 'gusgonza@gmail.com', '$2a$10$odQuO5pzRbnXI2pgVlseqOWrfSeBjP2pnQWZ5T.P4KJZ0mdAtheFa',
+        'No especificado', 2, '', '', _binary 'No especificado', 1, '0', NULL, NULL, NULL, NULL, 'No especificado',
+        NULL, NULL, '2025-05-08 10:55:27', '2025-05-09 11:49:09', NULL, NULL,
+        null),
+       (18, 'Denys', 'Chechul', 'denys@gmail.com', '$2a$10$odQuO5pzRbnXI2pgVlseqOWrfSeBjP2pnQWZ5T.P4KJZ0mdAtheFa',
         'No especificado', 2, '', '', _binary 'No especificado', 1, '0', NULL, NULL, NULL, NULL, 'No especificado',
         NULL, NULL, '2025-05-08 10:55:27', '2025-05-09 11:49:09', NULL, NULL,
         null);
