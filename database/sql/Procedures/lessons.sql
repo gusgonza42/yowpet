@@ -7,12 +7,6 @@ DROP PROCEDURE IF EXISTS getLesson;
 DROP PROCEDURE IF EXISTS getAllLessons;
 DROP PROCEDURE IF EXISTS searchLessons;
 DROP PROCEDURE IF EXISTS getLessonsByEstado;
-DROP PROCEDURE IF EXISTS GetAllLessonReviews;
-DROP PROCEDURE IF EXISTS GetLessonReviewById;
-DROP PROCEDURE IF EXISTS SearchLessonReviewsByRating;
-DROP PROCEDURE IF EXISTS CreateLessonReview;
-DROP PROCEDURE IF EXISTS UpdateLessonReview;
-DROP PROCEDURE IF EXISTS SoftDeleteLessonReview;
 
 -- Procedure to create a new lessons
 DELIMITER $$

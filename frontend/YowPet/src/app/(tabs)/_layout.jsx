@@ -36,14 +36,20 @@ const TabsLayout = () => {
             shadowRadius: 4.65,
           },
           android: {
-            height: 60,
-            paddingVertical: 4,
+            height: 78,
+            paddingBottom: 30,
+            paddingTop: 10,
             backgroundColor: YowPetTheme.brand.primary,
             position: 'absolute',
             bottom: 20,
             marginHorizontal: 20,
-            borderRadius: 15,
-            elevation: 8,
+            borderRadius: 55,
+            // En lugar de elevation, usa la misma configuración de sombra que iOS
+            elevation: 0,  // Desactiva la sombra predeterminada de Android
+            shadowColor: YowPetTheme.shadow.mediumShadow,
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.3,
+            shadowRadius: 4.65,
           },
           web: {
             height: 70,
@@ -97,9 +103,17 @@ const TabsLayout = () => {
             color: YowPetTheme.brand.white,
             display: isSmallScreen ? 'none' : 'flex',
           },
-          default: {
+          ios: {
             fontSize: 12,
             fontWeight: '600',
+            paddingBottom: 0,
+            color: YowPetTheme.brand.white,
+          },
+          android: {
+            fontSize: 12,
+            fontWeight: '600',
+            paddingBottom: 0,  // Crucial para que se vea como en iOS
+            color: YowPetTheme.brand.white,
           },
         }),
         headerShown: false,
