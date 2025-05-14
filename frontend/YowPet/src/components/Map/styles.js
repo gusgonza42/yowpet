@@ -44,20 +44,22 @@ export const getDynamicMapStyles = (insets = { bottom: 0, top: 0 }) => {
     // Estilos dinámicos para filterBox
     filterBox: {
       position: 'absolute',
-      bottom: 90 + bottomPadding, // Ajuste dinámico según dispositivo
+      bottom: 90 + bottomPadding,
       left: 10,
       right: 10,
       flexDirection: 'row',
       justifyContent: 'space-between',
-      backgroundColor: YowPetTheme.brand.accent,
+      backgroundColor: '#F5F5F7',
       borderRadius: 50,
-      padding: 5,
+      paddingVertical: 3,
+      paddingHorizontal: 5,
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.2,
       shadowRadius: 4,
       elevation: 5,
       zIndex: 10,
+      overflow: 'hidden',
     },
 
     // Botones flotantes con posición dinámica
@@ -143,6 +145,7 @@ export const mapStyles = StyleSheet.create({
     borderRadius: 15,
     marginHorizontal: 2,
     flexDirection: 'column',
+    height: 60,
   },
 
   // Texto de filtro
@@ -300,6 +303,43 @@ export const modalStyles = StyleSheet.create({
   buttonText: {
     fontWeight: 'bold',
     color: YowPetTheme.brand.support,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  headerIcon: {
+    marginRight: 12,
+  },
+  infoContainer: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 16,
+    marginVertical: 8,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  infoText: {
+    fontSize: 15,
+    marginLeft: 10,
+    color: YowPetTheme.brand.support,
+    flex: 1,
+  },
+  closeButton: {
+    backgroundColor: YowPetTheme.brand.accent,
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
 

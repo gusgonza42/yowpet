@@ -292,19 +292,19 @@ export default function MapScreen() {
                 let pinColor, icon;
                 switch (marker.filter) {
                   case 'Veterinarios':
-                    pinColor = 'red';
+                    pinColor = '#E53935';
                     icon = 'hospital-building';
                     break;
                   case 'Tiendas':
-                    pinColor = 'blue';
-                    icon = 'shop';
+                    pinColor = '#1E88E5';
+                    icon = 'store';
                     break;
                   case 'Pet-Friendly':
-                    pinColor = 'green';
+                    pinColor = '#FF9800';
                     icon = 'dog';
                     break;
                   case 'Parques':
-                    pinColor = 'cyan';
+                    pinColor = '#43A047';
                     icon = 'tree';
                     break;
                   default:
@@ -406,47 +406,73 @@ export default function MapScreen() {
               // Determinar qué icono usar según el filtro
               let iconName;
               let englishLabel;
+              let activeColor;
 
               switch (filter) {
                 case 'Veterinarios':
                   iconName = 'hospital-building';
                   englishLabel = 'Vets';
+                  activeColor = '#E53935';
                   break;
                 case 'Tiendas':
                   iconName = 'store';
                   englishLabel = 'Stores';
+                  activeColor = '#1E88E5';
                   break;
                 case 'Pet-Friendly':
                   iconName = 'paw';
                   englishLabel = 'For Pets';
+                  activeColor = '#FF9800';
                   break;
                 case 'Parques':
                   iconName = 'tree';
                   englishLabel = 'Parks';
+                  activeColor = '#43A047';
                   break;
                 default:
                   iconName = 'map-marker';
                   englishLabel = filter;
+                  activeColor = YowPetTheme.brand.accent;
               }
+              const isSelected = selectedFilter === filter;
+
 
               return (
                 <TouchableOpacity
                   key={filter}
-                  onPress={() => setSelectedFilter(filter)}
-                  style={[
-                    mapStyles.filterButton,
-                    selectedFilter === filter && mapStyles.selectedButton,
-                  ]}
+                  onPress={() => {
+                    // Si ya está seleccionado, lo deseleccionamos
+                    if (selectedFilter === filter) {
+                      setSelectedFilter('All');
+                      setSearchQuery('');
+                    } else {
+                      setSelectedFilter(filter);
+                    }
+                  }} style={[
+                  mapStyles.filterButton,
+                  {
+                    borderTopLeftRadius: filter === filters[0] ? 45 : 15,
+                    borderBottomLeftRadius: filter === filters[0] ? 45 : 15,
+                    borderTopRightRadius: filter === filters[filters.length - 1] ? 45 : 15,
+                    borderBottomRightRadius: filter === filters[filters.length - 1] ? 45 : 15,
+                  },
+                  isSelected && {
+                    backgroundColor: `${activeColor}30`,  // Aumenté la opacidad a 30%
+                  },
+                ]}
                 >
                   <MaterialCommunityIcons
                     name={iconName}
-                    size={20} // Tamaño uniforme para todos los iconos
-                    color={selectedFilter === filter ? YowPetTheme.brand.white : YowPetTheme.brand.support}
+                    size={22}
+                    color={isSelected ? activeColor : YowPetTheme.brand.support}
                   />
                   <Text
                     style={[
                       mapStyles.filterText,
-                      selectedFilter === filter && mapStyles.selectedText,
+                      isSelected && {
+                        color: activeColor,
+                        fontWeight: 'bold',
+                      },
                     ]}
                   >
                     {englishLabel}
