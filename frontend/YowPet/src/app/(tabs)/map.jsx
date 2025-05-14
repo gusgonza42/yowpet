@@ -158,7 +158,7 @@ export default function MapScreen() {
   useEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setTranslucent(true);
-      StatusBar.setBackgroundColor('transparent', true); // El segundo parámetro indica que sea completamente transparente
+      StatusBar.setBackgroundColor('transparent', true);
     } else if (Platform.OS === 'ios') {
       StatusBar.setBarStyle('dark-content');
     }
@@ -323,7 +323,7 @@ export default function MapScreen() {
           {isSelectingLocation && (
             <View style={{
               position: 'absolute',
-              top: '15%', // Posicionado más arriba (antes era 50%)
+              top: '15%',
               left: '5%',
               right: '5%',
               width: '90%',
