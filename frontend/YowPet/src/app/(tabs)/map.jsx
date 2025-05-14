@@ -321,16 +321,43 @@ export default function MapScreen() {
           </View>
 
           {isSelectingLocation && (
-            <Text
-              style={{
+            <View style={{
+              position: 'absolute',
+              top: '15%', // Posicionado más arriba (antes era 50%)
+              left: '5%',
+              right: '5%',
+              width: '90%',
+              backgroundColor: 'rgba(0, 0, 0, 0.4)',
+              paddingVertical: 12,
+              paddingHorizontal: 15,
+              borderRadius: 12,
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 999,
+              flexDirection: 'row',
+              marginHorizontal: 'auto',
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.3,
+              shadowRadius: 4,
+              elevation: 8,
+            }}>
+              <MaterialCommunityIcons
+                name="map-marker-plus"
+                size={24}
+                color="white"
+                style={{ marginRight: 10 }}
+              />
+              <Text style={{
+                color: 'white',
+                fontSize: 16,
+                fontWeight: 'bold',
                 textAlign: 'center',
-                backgroundColor: 'white',
-                padding: 8,
-                zIndex: Platform.OS === 'ios' ? 5 : 1,
-              }}
-            >
-              Toca en el mapa para elegir ubicación
-            </Text>
+                flexShrink: 1,
+              }}>
+                Toca en el mapa para elegir ubicación
+              </Text>
+            </View>
           )}
 
           {/* Mapa */}
