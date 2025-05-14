@@ -77,10 +77,74 @@ export default function MapScreen() {
     })();
   }, []);
 
-  useEffect(() => {
-    console.log('Filtro cambiado a:', selectedFilter);
-    refetch();
-  }, [selectedFilter]);
+  // Función para ajustar el mapa a los marcadores filtrados
+  const fitMapToFilteredMarkers = useCallback((markers) => {
+    if (!markers || markers.length === 0 || !location) return;
+
+    // Encontramos los marcadores cercanos a la ubicación actual
+    // (establezco un radio máximo de 50km para considerarlos "cercanos")
+    const nearbyMarkers = markers.filter(marker => {
+      const distance = calculateDistance(
+        location.latitude,
+        location.longitude,
+        marker.latitude,
+        marker.longitude,
+      );
+      return distance <= 50; // 50km como radio máximo
+    });
+
+    // Si no hay marcadores cercanos, usamos todos
+    const markersToShow = nearbyMarkers.length > 0 ? nearbyMarkers : markers;
+
+    // Si solo hay un marcador, centramos en él con zoom cercano
+    if (markersToShow.length === 1) {
+      mapRef.current?.animateToRegion({
+        latitude: markersToShow[0].latitude,
+        longitude: markersToShow[0].longitude,
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05,
+      });
+      return;
+    }
+
+    // Aseguramos de incluir la ubicación del usuario en los límites
+    const latitudes = [...markersToShow.map(m => m.latitude), location.latitude];
+    const longitudes = [...markersToShow.map(m => m.longitude), location.longitude];
+
+    // Calculamos los límites para incluir todos los marcadores y la ubicación del usuario
+    let minLat = Math.min(...latitudes);
+    let maxLat = Math.max(...latitudes);
+    let minLng = Math.min(...longitudes);
+    let maxLng = Math.max(...longitudes);
+
+    // Añadimos un margen
+    const latPadding = (maxLat - minLat) * 0.3;
+    const lngPadding = (maxLng - minLng) * 0.3;
+
+    // Aseguramos que al menos haya un mínimo de delta para el zoom
+    const latDelta = Math.max(maxLat - minLat + latPadding * 2, 0.05);
+    const lngDelta = Math.max(maxLng - minLng + lngPadding * 2, 0.05);
+
+    mapRef.current?.animateToRegion({
+      latitude: (minLat + maxLat) / 2,
+      longitude: (minLng + maxLng) / 2,
+      latitudeDelta: latDelta,
+      longitudeDelta: lngDelta,
+    });
+  }, [location]);
+
+// Función auxiliar para calcular distancias entre coordenadas (en km)
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Radio de la Tierra en km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -90,14 +154,15 @@ export default function MapScreen() {
       };
     }, []),
   );
-  // Añade este useEffect después de los demás useEffects
+
   useEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setTranslucent(true);
-      StatusBar.setBackgroundColor('transparent');
+      StatusBar.setBackgroundColor('transparent', true); // El segundo parámetro indica que sea completamente transparente
+    } else if (Platform.OS === 'ios') {
+      StatusBar.setBarStyle('dark-content');
     }
 
-    // Opcional: limpieza al desmontar el componente
     return () => {
       if (Platform.OS === 'android') {
         StatusBar.setTranslucent(false);
@@ -292,19 +357,19 @@ export default function MapScreen() {
                 let pinColor, icon;
                 switch (marker.filter) {
                   case 'Veterinarios':
-                    pinColor = 'red';
+                    pinColor = '#E53935';
                     icon = 'hospital-building';
                     break;
                   case 'Tiendas':
-                    pinColor = 'blue';
-                    icon = 'shop';
+                    pinColor = '#1E88E5';
+                    icon = 'store';
                     break;
                   case 'Pet-Friendly':
-                    pinColor = 'green';
+                    pinColor = '#FF9800';
                     icon = 'dog';
                     break;
                   case 'Parques':
-                    pinColor = 'cyan';
+                    pinColor = '#43A047';
                     icon = 'tree';
                     break;
                   default:
@@ -406,48 +471,89 @@ export default function MapScreen() {
               // Determinar qué icono usar según el filtro
               let iconName;
               let englishLabel;
+              let activeColor;
 
               switch (filter) {
                 case 'Veterinarios':
                   iconName = 'hospital-building';
-                  englishLabel = 'Vets';
+                  englishLabel = 'Veterinarios';
+                  activeColor = '#E53935';
                   break;
                 case 'Tiendas':
                   iconName = 'store';
-                  englishLabel = 'Stores';
+                  englishLabel = 'Tiendas';
+                  activeColor = '#1E88E5';
                   break;
                 case 'Pet-Friendly':
                   iconName = 'paw';
-                  englishLabel = 'For Pets';
+                  englishLabel = 'PetFriendly';
+                  activeColor = '#FF9800';
                   break;
                 case 'Parques':
                   iconName = 'tree';
-                  englishLabel = 'Parks';
+                  englishLabel = 'Parques';
+                  activeColor = '#43A047';
                   break;
                 default:
                   iconName = 'map-marker';
                   englishLabel = filter;
+                  activeColor = YowPetTheme.brand.accent;
               }
+              const isSelected = selectedFilter === filter;
 
               return (
                 <TouchableOpacity
                   key={filter}
-                  onPress={() => setSelectedFilter(filter)}
+                  onPress={() => {
+                    // Si ya está seleccionado, lo deseleccionamos
+                    if (selectedFilter === filter) {
+                      setSelectedFilter('All');
+                      setSearchQuery('');
+                    } else {
+                      setSelectedFilter(filter);
+                      // Filtramos los marcadores por el filtro seleccionado
+                      const markersOfThisFilter = datos.filter(m => m.filter === filter);
+
+                      // Ajustamos el mapa para mostrar estos marcadores alrededor de tu ubicación
+                      if (markersOfThisFilter.length > 0) {
+                        fitMapToFilteredMarkers(markersOfThisFilter);
+                      }
+                    }
+                  }}
                   style={[
                     mapStyles.filterButton,
-                    selectedFilter === filter && mapStyles.selectedButton,
+                    {
+                      borderTopLeftRadius: filter === filters[0] ? 45 : 15,
+                      borderBottomLeftRadius: filter === filters[0] ? 45 : 15,
+                      borderTopRightRadius: filter === filters[filters.length - 1] ? 45 : 15,
+                      borderBottomRightRadius: filter === filters[filters.length - 1] ? 45 : 15,
+                    },
+                    isSelected && {
+                      backgroundColor: `${activeColor}30`,  // Opacidad al 30%
+                    },
                   ]}
                 >
                   <MaterialCommunityIcons
                     name={iconName}
-                    size={20} // Tamaño uniforme para todos los iconos
-                    color={selectedFilter === filter ? YowPetTheme.brand.white : YowPetTheme.brand.support}
+                    size={22}
+                    color={isSelected ? activeColor : YowPetTheme.brand.support}
                   />
                   <Text
                     style={[
                       mapStyles.filterText,
-                      selectedFilter === filter && mapStyles.selectedText,
+                      {
+                        fontSize: 13,
+                        fontWeight: '600',
+                        letterSpacing: -0.5, // Reduce el espacio entre letras
+                        color: isSelected ? activeColor : YowPetTheme.brand.support,
+                      },
+                      isSelected && {
+                        fontWeight: 'bold',
+                      },
                     ]}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit // Se ajustará automáticamente
+                    minimumFontScale={0.7} // No reducirá más allá del 70%
                   >
                     {englishLabel}
                   </Text>
@@ -476,9 +582,12 @@ export default function MapScreen() {
                   flex: 1,
                   justifyContent: 'center',
                   alignItems: 'center',
+                  backgroundColor: 'rgba(255,255,255,0.8)',
                 }}
               >
-                <Text style={{ fontSize: 18 }}>Guardando...</Text>
+                <ActivityIndicator size="large" color={YowPetTheme.brand.accent} />
+                <Text style={{ fontSize: 18, marginTop: 15, color: YowPetTheme.brand.support }}>Guardando
+                  ubicación...</Text>
               </View>
             ) : (
               <Pressable
@@ -488,12 +597,39 @@ export default function MapScreen() {
                   setNewLocation({ latitude: null, longitude: null });
                 }}
               >
-                <View style={modalStyles.content}>
-                  <Text style={modalStyles.title}>Añadir nueva ubicación</Text>
+                <View style={modalStyles.content} onStartShouldSetResponder={() => true}>
+                  <View style={modalStyles.modalHeader}>
+                    <Text style={modalStyles.title}>Nueva Ubicación</Text>
+                    <TouchableOpacity
+                      style={modalStyles.closeModalButton}
+                      onPress={() => {
+                        setModalVisible(false);
+                        setNewLocation({ latitude: null, longitude: null });
+                      }}
+                    >
+                      <AntDesign name="closecircle" size={24} color={YowPetTheme.brand.support} />
+                    </TouchableOpacity>
+                  </View>
+
+                  {/* Información sobre ubicación seleccionada */}
+                  {newLocation.latitude && newLocation.longitude && (
+                    <View style={modalStyles.locationInfoContainer}>
+                      <Text style={modalStyles.locationInfoText}>
+                        <AntDesign name="enviromento" size={14}
+                                   color="#4A6585" /> {locationAddress || 'Ubicación seleccionada'}
+                      </Text>
+                      {locationPostalCode ? (
+                        <Text style={[modalStyles.locationInfoText, { marginTop: 5 }]}>
+                          <AntDesign name="creditcard" size={14} color="#4A6585" /> Código postal: {locationPostalCode}
+                        </Text>
+                      ) : null}
+                    </View>
+                  )}
 
                   {/* Nombre de la ubicación */}
                   <TextInput
-                    placeholder="Nombre de la ubicación"
+                    placeholder="Nombre del lugar"
+                    placeholderTextColor="#999"
                     style={modalStyles.input}
                     value={locationName}
                     onChangeText={setLocationName}
@@ -501,24 +637,73 @@ export default function MapScreen() {
 
                   {/* Selección de filtro */}
                   <View style={modalStyles.filterContainer}>
-                    <Text style={modalStyles.filterLabel}>
-                      Seleccionar filtro:
-                    </Text>
-                    <View style={modalStyles.filterOptions}>
-                      {filters.map(filter => (
-                        <TouchableOpacity
-                          key={filter}
-                          onPress={() => setLocationFilter(filter)}
-                          style={[
-                            modalStyles.filterOption,
-                            locationFilter === filter
-                              ? modalStyles.filterOptionActive
-                              : modalStyles.filterOptionInactive,
-                          ]}
-                        >
-                          <Text>{filter}</Text>
-                        </TouchableOpacity>
-                      ))}
+                    <Text style={modalStyles.filterLabel}>Categoría:</Text>
+                    <View style={[modalStyles.filterOptions, { overflow: 'scroll' }]}>
+                      {filters.map(filter => {
+                        // Determinar qué icono usar según el filtro
+                        let iconName, activeColor;
+
+                        switch (filter) {
+                          case 'Veterinarios':
+                            iconName = 'hospital-building';
+                            activeColor = '#E53935';
+                            break;
+                          case 'Tiendas':
+                            iconName = 'store';
+                            activeColor = '#1E88E5';
+                            break;
+                          case 'Pet-Friendly':
+                            iconName = 'paw';
+                            activeColor = '#FF9800';
+                            break;
+                          case 'Parques':
+                            iconName = 'tree';
+                            activeColor = '#43A047';
+                            break;
+                          default:
+                            iconName = 'map-marker';
+                            activeColor = YowPetTheme.brand.accent;
+                        }
+
+                        const isSelected = locationFilter === filter;
+
+                        return (
+                          <TouchableOpacity
+                            key={filter}
+                            onPress={() => setLocationFilter(filter)}
+                            style={[
+                              modalStyles.filterOption,
+                              isSelected ?
+                                { backgroundColor: `${activeColor}15`, borderColor: activeColor } :
+                                modalStyles.filterOptionInactive,
+                            ]}
+                          >
+                            <MaterialCommunityIcons
+                              name={iconName}
+                              size={20}
+                              color={isSelected ? activeColor : YowPetTheme.brand.support}
+                              style={{ marginBottom: 3 }}
+                            />
+                            <Text
+                              style={[
+                                modalStyles.filterText,
+                                {
+                                  fontSize: 13,
+                                  fontWeight: '600',
+                                  letterSpacing: -0.5, // Reduce el espacio entre letras
+                                  color: isSelected ? activeColor : YowPetTheme.brand.support,
+                                },
+                                isSelected && { fontWeight: 'bold' },
+                              ]}
+                              numberOfLines={1}
+                              adjustsFontSizeToFit // Se ajustará automáticamente
+                              minimumFontScale={0.7} // No reducirá más allá del 70%
+                            >
+                              {filter}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      })}
                     </View>
                   </View>
 
@@ -533,8 +718,9 @@ export default function MapScreen() {
                       modalStyles.selectLocationButton,
                     ]}
                   >
-                    <Text style={modalStyles.buttonText}>
-                      Seleccionar ubicación en el mapa
+                    <AntDesign name="enviromento" size={20} color="#4A89F3" style={modalStyles.buttonIcon} />
+                    <Text style={[modalStyles.buttonText, modalStyles.selectLocationText]}>
+                      Seleccionar en el mapa
                     </Text>
                   </TouchableOpacity>
 
@@ -542,8 +728,10 @@ export default function MapScreen() {
                   <TouchableOpacity
                     onPress={handleAddLocation}
                     style={[modalStyles.actionButton, modalStyles.saveButton]}
+                    disabled={!newLocation.latitude || !newLocation.longitude || !locationName}
                   >
-                    <Text style={modalStyles.buttonText}>
+                    <AntDesign name="save" size={20} color="white" style={modalStyles.buttonIcon} />
+                    <Text style={[modalStyles.buttonText, modalStyles.saveButtonText]}>
                       Guardar ubicación
                     </Text>
                   </TouchableOpacity>
