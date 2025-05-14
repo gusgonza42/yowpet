@@ -14,6 +14,8 @@ import { YowPetTheme } from '@theme/Colors';
 import { useState, useEffect } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import { educateService } from '../../services/educate/educateService';
+import { BackButton } from '@components/global/BackButton';
+
 
 const { width } = Dimensions.get('window');
 
@@ -44,14 +46,17 @@ export default function EducateScreen() {
 
   if (loading) {
     return (
-      <ScreenContainer backgroundColor={YowPetTheme.brand.primary}>
-        <ActivityIndicator size="large" color={YowPetTheme.brand.primary} />
-      </ScreenContainer>
+        <ScreenContainer backgroundColor={YowPetTheme.brand.white}>
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={YowPetTheme.brand.primary} />
+          </View>
+        </ScreenContainer>
     );
   }
 
   return (
     <ScreenContainer backgroundColor={YowPetTheme.brand.primary}>
+      <BackButton />
       <View style={styles.headerContainer}>
         <Text style={styles.title}>Educa a tu mascota</Text>
         <Text style={styles.subtitle}>Selecciona el nivel de dificultad</Text>
@@ -137,8 +142,8 @@ export default function EducateScreen() {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    paddingTop: 20,
-    paddingBottom: 40,
+    paddingTop: 0,
+    paddingBottom: 30,
     paddingHorizontal: 24,
     backgroundColor: YowPetTheme.brand.primary,
     borderRadius: 24,
@@ -147,8 +152,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: YowPetTheme.background.mainWhite,
     borderRadius: 24,
-    marginTop: -20,
-    paddingTop: 20,
+    paddingTop: 10,
   },
   scrollView: {
     flex: 1,
@@ -162,7 +166,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Bold',
     color: YowPetTheme.background.mainWhite,
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   subtitle: {
     fontSize: 16,
@@ -172,7 +176,7 @@ const styles = StyleSheet.create({
   },
   filterWrapper: {
     paddingHorizontal: 16,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   filterContainer: {
     flexDirection: 'row',
@@ -268,5 +272,10 @@ const styles = StyleSheet.create({
   },
   bottomSpacer: {
     height: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

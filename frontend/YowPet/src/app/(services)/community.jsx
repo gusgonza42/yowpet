@@ -10,6 +10,7 @@ import {
 import { ScreenContainer } from '@components/global/ScreenContainer';
 import { YowPetTheme } from '@theme/Colors';
 import { Ionicons } from '@expo/vector-icons';
+import {BackButton} from "@components/global/BackButton";
 
 const communityData = {
   featuredGroups: [
@@ -58,6 +59,7 @@ const communityData = {
 export default function CommunityScreen() {
   return (
     <ScreenContainer backgroundColor={YowPetTheme.brand.primary}>
+      <BackButton />
       <View style={styles.contentContainer}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>COMUNIDAD</Text>
@@ -169,7 +171,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: YowPetTheme.background.mainWhite,
     borderRadius: 24,
-    marginTop: 10,
   },
   header: {
     flexDirection: 'row',
@@ -180,6 +181,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: YowPetTheme.brand.primary + '20',
     marginBottom: 20,
+    marginTop: 30,
   },
   headerTitle: {
     fontSize: 24,

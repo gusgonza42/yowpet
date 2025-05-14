@@ -7,11 +7,13 @@ import {
   Dimensions,
   TouchableOpacity,
   Animated,
+  ActivityIndicator
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { ScreenContainer } from '@components/global/ScreenContainer';
 import { YowPetTheme } from '@theme/Colors';
 import { ProgressBar } from 'react-native-paper';
+import {BackButton} from "@components/global/BackButton";
 
 const { width } = Dimensions.get('window');
 
@@ -23,6 +25,7 @@ export default function VideoDetailScreen() {
     instructionImages = '',
     steps = '',
   } = useLocalSearchParams();
+  const [imageLoading, setImageLoading] = useState(true);
 
   const imageArray = instructionImages ? instructionImages.split(',') : [];
   const stepArray = steps ? steps.split(',') : [];
@@ -66,7 +69,8 @@ export default function VideoDetailScreen() {
 
   return (
       <ScreenContainer backgroundColor={YowPetTheme.brand.primary}>
-        {/* Encabezado */}
+        <BackButton />
+        {/* Header */}
         <View style={styles.headerContainer}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.subtitle}>Nivel: {difficulty}</Text>
@@ -86,10 +90,23 @@ export default function VideoDetailScreen() {
               style={styles.progressBar}
           />
 
+          {/* Loading indicator for image */}
+          {imageLoading && (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator
+                    size="large"
+                    color={YowPetTheme.brand.support}
+                    style={{ marginVertical: 60 }}
+                />
+              </View>
+          )}
+
           {/* Imagen con transición suave */}
           <Animated.Image
               source={{ uri: data[currentIndex].image }}
               style={[styles.image, { opacity: fadeAnim }]}
+              onLoadStart={() => setImageLoading(true)}
+              onLoadEnd={() => setImageLoading(false)}
           />
 
           <Text style={styles.stepText}>{data[currentIndex].step}</Text>
@@ -125,12 +142,10 @@ export default function VideoDetailScreen() {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    paddingTop: 20,
-    paddingBottom: 20,
+    paddingBottom: 10,
     paddingHorizontal: 24,
     backgroundColor: YowPetTheme.brand.primary,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
+    borderRadius: 24,
     alignItems: 'center',
   },
   title: {
@@ -138,7 +153,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Bold',
     color: '#FFF',
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: 0,
   },
   subtitle: {
     fontSize: 16,
@@ -151,7 +166,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: YowPetTheme.background.mainWhite,
     borderRadius: 24,
-    marginTop: -20,
     padding: 20,
     alignItems: 'center',
   },
@@ -174,17 +188,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   image: {
-    width: width - 40,
+    width: '100%',
     height: 300,
-    borderRadius: 16,
+    borderRadius: 30,
     marginBottom: 20,
+    borderWidth: 0.5,
   },
   stepText: {
     fontSize: 16,
     fontFamily: 'Inter-Regular',
     color: YowPetTheme.text.mainText,
     textAlign: 'center',
-    lineHeight: 24,
+    lineHeight: 28,
     marginBottom: 20,
   },
   navigationContainer: {
@@ -193,9 +208,9 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   navButton: {
-    backgroundColor: YowPetTheme.brand.accent,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
+    backgroundColor: YowPetTheme.button.mainButton,
+    paddingVertical: 8,
+    paddingHorizontal: 18,
     borderRadius: 8,
   },
   navButtonText: {
@@ -205,5 +220,10 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     backgroundColor: YowPetTheme.background.lightGray,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
