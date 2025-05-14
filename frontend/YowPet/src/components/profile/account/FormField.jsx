@@ -11,25 +11,39 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { YowPetTheme } from '@theme/Colors';
 
 export const FormField = ({
-  label,
-  value,
-  icon,
-  isEditing,
-  onChange,
-  options = {},
-}) => {
+                            label,
+                            value,
+                            icon,
+                            isEditing,
+                            onChange,
+                            options = {},
+                            isRequired = false,
+                            hasError = false,
+                          }) => {
   const { keyboardType, secureTextEntry, isDatePicker } = options;
   const [showPicker, setShowPicker] = useState(false);
 
   const handleDateChange = (event, selectedDate) => {
-    setShowPicker(Platform.OS === 'ios');
-    if (event.type === 'dismissed') {
-      return;
+    const currentDate = selectedDate || (value ? new Date(value) : new Date());
+
+    // Ocultar el selector inmediatamente en Android
+    if (Platform.OS === 'android') {
+      setShowPicker(false);
+
+      if (event.type === 'dismissed') {
+        return;
+      }
     }
-    if (selectedDate) {
-      // Formatear la fecha para que coincida con el formato esperado por el servidor
-      const formattedDate = selectedDate.toISOString().split('T')[0];
-      onChange(formattedDate);
+
+    // Actualizar el valor directamente tanto en iOS como en Android
+    const formattedDate = currentDate.toISOString().split('T')[0];
+    onChange(formattedDate);
+
+    // En iOS, cerrar el picker después de un breve retraso
+    if (Platform.OS === 'ios') {
+      setTimeout(() => {
+        setShowPicker(false);
+      }, 500);
     }
   };
 
@@ -67,6 +81,7 @@ export const FormField = ({
       return getPlaceholderText();
     }
   };
+
   const displayValue = () => {
     if (!value || value === '') return getPlaceholderText();
     if (secureTextEntry) return '********';
@@ -75,33 +90,46 @@ export const FormField = ({
   };
 
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, hasError && styles.cardError]}>
       <View style={styles.iconContainer}>{icon}</View>
       <View style={styles.fieldContent}>
-        <Text style={styles.label}>{label}</Text>
+        <View style={styles.labelContainer}>
+          <Text style={styles.label}>{label}</Text>
+          {isRequired && <Text style={styles.required}>*</Text>}
+        </View>
+
         {isEditing ? (
           isDatePicker ? (
             <>
-              <TouchableOpacity onPress={() => setShowPicker(true)}>
-                <View style={styles.input}>
-                  <Text style={[styles.value, !value && styles.placeholder]}>
-                    {displayValue()}
-                  </Text>
-                </View>
+              <TouchableOpacity
+                onPress={() => setShowPicker(true)}
+                activeOpacity={0.6}
+                style={[styles.datePickerButton, hasError && styles.inputError]}
+              >
+                <Text style={[styles.value, !value && styles.placeholder]}>
+                  {displayValue()}
+                </Text>
               </TouchableOpacity>
+
               {showPicker && (
-                <DateTimePicker
-                  value={value ? new Date(value) : new Date()}
-                  mode="date"
-                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                  onChange={handleDateChange}
-                  maximumDate={new Date()}
-                />
+                <View style={Platform.OS === 'ios' ? styles.iosPicker : null}>
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={value ? new Date(value) : new Date()}
+                    mode="date"
+                    is24Hour={true}
+                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                    onChange={handleDateChange}
+                    maximumDate={new Date()}
+                    style={Platform.OS === 'ios' ? styles.iosDatePicker : {}}
+                    themeVariant="light"
+                  />
+                </View>
               )}
             </>
           ) : (
             <TextInput
-              style={styles.input}
+              style={[styles.input, hasError && styles.inputError]}
               value={value}
               onChangeText={onChange}
               keyboardType={keyboardType}
@@ -111,14 +139,19 @@ export const FormField = ({
             />
           )
         ) : (
-          <Text style={[styles.value, !value && styles.placeholder]}>
+          <Text style={[styles.value, !value && styles.placeholder, hasError && styles.valueError]}>
             {displayValue()}
           </Text>
+        )}
+
+        {hasError && isEditing && (
+          <Text style={styles.errorText}>Este campo es obligatorio</Text>
         )}
       </View>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
@@ -131,6 +164,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
+  cardError: {
+    borderColor: '#E53935',
+    borderWidth: 1,
+  },
   iconContainer: {
     marginRight: 16,
     justifyContent: 'center',
@@ -138,22 +175,71 @@ const styles = StyleSheet.create({
   fieldContent: {
     flex: 1,
   },
+  labelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
   label: {
     fontSize: 14,
     color: YowPetTheme.text.softText,
-    marginBottom: 4,
+  },
+  required: {
+    color: '#E53935',
+    fontSize: 14,
+    marginLeft: 4,
   },
   input: {
     fontSize: 16,
     color: YowPetTheme.text.mainText,
     padding: 0,
   },
+  datePickerButton: {
+    paddingVertical: 8,
+    backgroundColor: YowPetTheme.background.softBackground,
+    borderRadius: 6,
+    paddingHorizontal: 8,
+  },
+  inputError: {
+    color: '#E53935',
+  },
   value: {
     fontSize: 16,
     color: YowPetTheme.text.mainText,
   },
+  valueError: {
+    color: '#E53935',
+  },
   placeholder: {
     color: YowPetTheme.text.softText,
     fontStyle: 'italic',
+  },
+  errorText: {
+    color: '#E53935',
+    fontSize: 12,
+    marginTop: 4,
+  },
+  iosDatePicker: {
+    width: '100%',
+    backgroundColor: '#fff',
+    marginTop: 8,
+    height: 200,
+    borderRadius: 8,
+    zIndex: 999,
+  },
+  iosPicker: {
+    backgroundColor: '#ffffff',
+    padding: 10,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    marginVertical: 10,
+    zIndex: 1000,
   },
 });

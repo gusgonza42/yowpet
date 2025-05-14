@@ -11,16 +11,17 @@ import { userService } from '@service/profile/userService';
 export default function AccountScreen() {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
   const [formData, setFormData] = useState({
-    firstName: 'Cargando...',
-    lastName: 'Cargando...',
-    username: 'Cargando...',
-    email: 'Cargando...',
+    firstName: '',
+    lastName: '',
+    username: '',
+    email: '',
     password: '********',
     confirmPassword: '********',
-    city: 'Cargando...',
-    address: 'Cargando...',
-    phoneNumber: 'Cargando...',
+    city: '',
+    address: '',
+    phoneNumber: '',
     birthDate: null,
   });
 
@@ -29,6 +30,14 @@ export default function AccountScreen() {
   }, []);
 
   const handleChange = (field, value) => {
+    // Limpiar error cuando el usuario edita el campo
+    if (fieldErrors[field]) {
+      setFieldErrors(prev => ({
+        ...prev,
+        [field]: false,
+      }));
+    }
+
     setFormData(prev => ({
       ...prev,
       [field]: value,
@@ -37,20 +46,57 @@ export default function AccountScreen() {
 
   const handleSave = async () => {
     try {
-      if (formData.password !== formData.confirmPassword) {
+      // Validar campos requeridos
+      const camposRequeridos = {
+        firstName: 'Nombre',
+        lastName: 'Apellidos',
+        username: 'Usuario',
+        email: 'Email',
+        city: 'Ciudad',
+        address: 'Dirección',
+        phoneNumber: 'Teléfono',
+        birthDate: 'Fecha de nacimiento',
+      };
+
+      // Reiniciar errores
+      const nuevosErrores = {};
+      let tieneErrores = false;
+
+      // Verificar cada campo
+      Object.entries(camposRequeridos).forEach(([campo]) => {
+        if (!formData[campo] || formData[campo].trim() === '') {
+          nuevosErrores[campo] = true;
+          tieneErrores = true;
+        }
+      });
+
+      // Validar contraseñas
+      if (formData.password && formData.confirmPassword &&
+        formData.password !== '********' && formData.password !== formData.confirmPassword) {
+        nuevosErrores.password = true;
+        nuevosErrores.confirmPassword = true;
+        tieneErrores = true;
         alert('Las contraseñas no coinciden');
+      }
+
+      // Actualizar estado de errores
+      setFieldErrors(nuevosErrores);
+
+      // Si hay errores, detener la función
+      if (tieneErrores) {
         return;
       }
 
+      // Continuar con la actualización del perfil
       const dataToUpdate = {
-        firstName: formData.firstName || '',
-        lastName: formData.lastName || '',
-        username: formData.username || '',
-        email: formData.email || '',
-        city: formData.city || 'No especificado',
-        address: formData.address || 'No especificado',
-        phoneNumber: formData.phoneNumber || '',
-        birthDate: formData.birthDate || null,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        username: formData.username,
+        email: formData.email,
+        city: formData.city,
+        address: formData.address,
+        phoneNumber: formData.phoneNumber,
+        birthDate: formData.birthDate,
       };
 
       if (formData.password && formData.password !== '********') {
@@ -58,7 +104,6 @@ export default function AccountScreen() {
       }
 
       const response = await userService.actualizarPerfil(dataToUpdate);
-      console.log('Respuesta actualización:', response);
 
       if (!response || !response.data) {
         throw new Error('Error al actualizar el perfil');
@@ -73,6 +118,7 @@ export default function AccountScreen() {
       });
 
       setIsEditing(false);
+      setFieldErrors({});
       alert('Perfil actualizado correctamente');
     } catch (error) {
       console.error('Error detallado al actualizar:', {
@@ -82,8 +128,8 @@ export default function AccountScreen() {
       });
       alert(
         error.response?.data?.message ||
-          error.message ||
-          'Error al actualizar el perfil'
+        error.message ||
+        'Error al actualizar el perfil',
       );
     }
   };
@@ -96,8 +142,8 @@ export default function AccountScreen() {
       const timeoutPromise = new Promise((_, reject) =>
         setTimeout(
           () => reject(new Error('Timeout al cargar el perfil')),
-          10000
-        )
+          10000,
+        ),
       );
 
       const response = await Promise.race([
@@ -139,6 +185,9 @@ export default function AccountScreen() {
         phoneNumber: profileData.phoneNumber || '',
         birthDate: profileData.birthDate || null,
       });
+
+      // Resetear errores al cargar el perfil
+      setFieldErrors({});
     } catch (error) {
       console.error('Error al cargar el perfil:', {
         message: error.message,
@@ -149,7 +198,7 @@ export default function AccountScreen() {
 
       // Mostrar un mensaje más amigable al usuario
       alert(
-        'No se pudo cargar tu perfil. Por favor, intenta de nuevo más tarde.'
+        'No se pudo cargar tu perfil. Por favor, intenta de nuevo más tarde.',
       );
 
       // Establecer valores vacíos pero mantener el formato
@@ -190,6 +239,8 @@ export default function AccountScreen() {
               }
               isEditing={isEditing}
               onChange={value => handleChange('firstName', value)}
+              isRequired={true}
+              hasError={!!fieldErrors.firstName}
             />
 
             <FormField
@@ -204,6 +255,8 @@ export default function AccountScreen() {
               }
               isEditing={isEditing}
               onChange={value => handleChange('lastName', value)}
+              isRequired={true}
+              hasError={!!fieldErrors.lastName}
             />
 
             <FormField
@@ -218,6 +271,8 @@ export default function AccountScreen() {
               }
               isEditing={isEditing}
               onChange={value => handleChange('username', value)}
+              isRequired={true}
+              hasError={!!fieldErrors.username}
             />
 
             <FormField
@@ -233,6 +288,8 @@ export default function AccountScreen() {
               isEditing={isEditing}
               onChange={value => handleChange('email', value)}
               options={{ keyboardType: 'email-address' }}
+              isRequired={true}
+              hasError={!!fieldErrors.email}
             />
 
             <FormField
@@ -248,6 +305,7 @@ export default function AccountScreen() {
               isEditing={isEditing}
               onChange={value => handleChange('password', value)}
               options={{ secureTextEntry: true }}
+              hasError={!!fieldErrors.password}
             />
 
             {isEditing && (
@@ -264,6 +322,7 @@ export default function AccountScreen() {
                 isEditing={isEditing}
                 onChange={value => handleChange('confirmPassword', value)}
                 options={{ secureTextEntry: true }}
+                hasError={!!fieldErrors.confirmPassword}
               />
             )}
 
@@ -279,6 +338,8 @@ export default function AccountScreen() {
               }
               isEditing={isEditing}
               onChange={value => handleChange('city', value)}
+              isRequired={true}
+              hasError={!!fieldErrors.city}
             />
 
             <FormField
@@ -293,6 +354,8 @@ export default function AccountScreen() {
               }
               isEditing={isEditing}
               onChange={value => handleChange('address', value)}
+              isRequired={true}
+              hasError={!!fieldErrors.address}
             />
 
             <FormField
@@ -308,6 +371,8 @@ export default function AccountScreen() {
               isEditing={isEditing}
               onChange={value => handleChange('phoneNumber', value)}
               options={{ keyboardType: 'phone-pad' }}
+              isRequired={true}
+              hasError={!!fieldErrors.phoneNumber}
             />
 
             <FormField
@@ -323,6 +388,8 @@ export default function AccountScreen() {
               isEditing={isEditing}
               onChange={value => handleChange('birthDate', value)}
               options={{ isDatePicker: true }}
+              isRequired={true}
+              hasError={!!fieldErrors.birthDate}
             />
 
             <ActionButtons
@@ -330,6 +397,7 @@ export default function AccountScreen() {
               onSave={handleSave}
               onCancel={() => {
                 setIsEditing(false);
+                setFieldErrors({});
                 loadProfile();
               }}
               onEdit={() => setIsEditing(true)}

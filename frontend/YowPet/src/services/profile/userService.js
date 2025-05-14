@@ -9,7 +9,7 @@ const decodeJWT = token => {
       atob(base64)
         .split('')
         .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-        .join('')
+        .join(''),
     );
     return JSON.parse(jsonPayload);
   } catch (error) {
@@ -74,4 +74,52 @@ export const userService = {
       throw error;
     }
   },
+
+  // Agregar esto a userService.js
+  actualizarPerfil: async (datosUsuario) => {
+    try {
+      const token = await AsyncStorage.getItem('@auth_token');
+
+      if (!token) {
+        throw new Error('No hay token disponible');
+      }
+
+      const decodedToken = decodeJWT(token);
+      const userId = decodedToken?.userId;
+
+      if (!userId) {
+        throw new Error('No se pudo obtener el userId del token');
+      }
+
+      // Estructura los datos según el procedimiento almacenado
+      const datosActualizacion = {
+        firstName: datosUsuario.firstName,
+        lastName: datosUsuario.lastName,
+        address: datosUsuario.address,
+        telephone: datosUsuario.phoneNumber,
+        city: datosUsuario.city,
+        birthdate: datosUsuario.birthDate,
+        username: datosUsuario.username,
+      };
+
+      // Si hay contraseña nueva, incluirla
+      if (datosUsuario.password && datosUsuario.password !== '********') {
+        datosActualizacion.password = datosUsuario.password;
+      }
+
+      const response = await axiosClient.put(`/user/${userId}`, datosActualizacion);
+
+      console.log('Perfil actualizado:', response.data);
+      return response;
+    } catch (error) {
+      console.error('Error al actualizar perfil:', {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      });
+      throw error;
+    }
+  },
 };
+
+
