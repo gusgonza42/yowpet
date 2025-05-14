@@ -20,6 +20,9 @@ public class AgendaService {
     }
 
 
+    public List<Agenda> getAll() {
+        return repo.getAllAgenda(null);
+    }
     public void create(Agenda agenda) {
 
         repo.createAgenda(agenda.getDate(), agenda.getTitle());

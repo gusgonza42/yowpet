@@ -1,4 +1,4 @@
-import { Calender } from '@/components/auth/styles';
+import { Calender } from '@/components/Planner/styles';
 import { useRequest } from '@/services/api/fetchingdata';
 import { YowPetTheme } from '@/theme/Colors';
 import { ScreenContainer } from '@components/global/ScreenContainer';
@@ -20,13 +20,14 @@ const today = formatLocalDate(new Date());
 
 const fetchRemindersForDate = async (date: string) => {
   try {
-     await requestData('GET', `/agenda?date=${date}`);
-    setReminders(responseData || []);
+    const data = await requestData('GET', `/agenda?date=${date}`);
+    setReminders(data.data || []);
   } catch (error) {
     console.log('Error fetching reminders:', error);
     setReminders([]);
   }
 };
+
 
 
 const handleChooseDate = async (dateString: string) => {
@@ -42,7 +43,6 @@ const handleChooseDate = async (dateString: string) => {
   }, []);
 
   return (
-    <ScreenContainer>
       <View style={Calender.container}>
         <Calendar
           onDayPress={day => handleChooseDate(day.dateString)}
@@ -68,6 +68,5 @@ const handleChooseDate = async (dateString: string) => {
           )}
         </View>
       </View>
-    </ScreenContainer>
   );
 }

@@ -28,9 +28,10 @@ export const useRequest = () => {
 
       // Make the Axios request
       const response = await axiosClient(axiosOptions);
-      console.log('Response data:', response);
+      console.log('FetchingData line 31 --> Response data:', response);
 
       setResponseData(response);
+      return response; // Return the response for further processing if needed
     } catch (err) {
       setLoading(false);
       setError(err.response ? err.response.data : err.message); // Handle error properly

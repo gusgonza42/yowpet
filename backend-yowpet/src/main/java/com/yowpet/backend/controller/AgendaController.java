@@ -25,6 +25,7 @@ public class AgendaController {
         Date parsedDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
 
         List<Agenda> agendas = service.getbyID(date);
+        System.out.println(agendas);
         return ResponseEntity.ok(agendas);
     }
 
@@ -42,4 +43,21 @@ public class AgendaController {
     public void delete(@PathVariable int id, @RequestBody Date date) {
         service.delete(id, date);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Agenda>> getAllAgendas() {
+        try {
+            System.out.println("Fetching agendas...");
+
+            List<Agenda> agendas = service.getAll();
+            System.out.println("Fetched agendas: " + agendas);
+
+            return ResponseEntity.ok(agendas);
+        } catch (Exception e) {
+            System.err.println("Error occurred: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
 }

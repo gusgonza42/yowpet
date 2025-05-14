@@ -39,4 +39,13 @@ public class AgendaRepo {
             return null;
         }
     }
+    public List<Agenda> getAllAgenda(String call) {
+        String sql = "CALL GETALLNOTIFICATION()";
+        try {
+            return template.query(sql, new BeanPropertyRowMapper<>(Agenda.class));
+        } catch (EmptyResultDataAccessException e) {
+            throw new RuntimeException(e);
+
+        }
+    }
 }
