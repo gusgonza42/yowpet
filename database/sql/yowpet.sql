@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS `yowpet`;
 CREATE DATABASE IF NOT EXISTS `yowpet` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci */;
 USE `yowpet`;
 -- MySQL dump 10.13  Distrib 8.0.41, for Win64 (x86_64)
