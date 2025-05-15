@@ -42,7 +42,7 @@ public class LessonController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Lesson> deleteLesson(@PathVariable int id) {
+    public ResponseEntity<Void> deleteLesson(@PathVariable int id) {
         return lessonService.deleteLesson(id);
     }
 }
