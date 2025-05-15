@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, SafeAreaView, ScrollView } from 'react-native';
 import { useAuth } from '@/context/AuthContext';
 import { ScreenContainer } from '@components/global/ScreenContainer';
@@ -18,7 +18,15 @@ import { styles } from '@components/profile/styles';
 export default function ProfileScreen() {
   const { user, logout } = useAuth();
   const router = useRouter();
-  const screenHeight = Dimensions.get('window').height;
+  const [dimensions, setDimensions] = useState(Dimensions.get('window'));
+
+  // Actualizar dimensiones cuando cambia la orientación
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({ window }) => {
+      setDimensions(window);
+    });
+    return () => subscription?.remove();
+  }, []);
 
   const menuItems = [
     {
@@ -86,16 +94,26 @@ export default function ProfileScreen() {
     },
   ];
 
+  const dynamicStyles = {
+    container: {
+      ...styles.ProfileScreen.container,
+      paddingBottom: dimensions.height < 700 ? 80 : 100,
+    },
+  };
+
   return (
     <ScreenContainer backgroundColor={YowPetTheme.background.mainWhite}>
-      <SafeAreaView style={styles.ProfileScreen.container}>
+      <SafeAreaView style={dynamicStyles.container}>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.ProfileScreen.scrollView}
+          contentContainerStyle={{
+            ...styles.ProfileScreen.scrollView,
+            paddingBottom: dimensions.height < 600 ? 50 : 100,
+          }}
         >
-          <ProfileHeader user={user} />
+          <ProfileHeader user={user} screenWidth={dimensions.width} />
           <MenuSection items={menuItems} />
-          <LogoutButton onPress={logout} />
+          <LogoutButton onPress={logout} screenWidth={dimensions.width} />
           <AppFooter version="1.0.0" />
         </ScrollView>
       </SafeAreaView>

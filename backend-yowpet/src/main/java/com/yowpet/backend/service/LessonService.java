@@ -32,7 +32,7 @@ public class LessonService {
     //GET lesson by ID
     public ResponseEntity<Lesson> getLessonById(int id) {
         try {
-           Lesson lesson = lessonRepository.getLesson(id);
+            Lesson lesson = lessonRepository.getLesson(id);
             return ResponseEntity.ok(lesson);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -54,7 +54,8 @@ public class LessonService {
 
     //POST create lesson
     public ResponseEntity<Lesson> createLesson(Lesson lesson) {
-        try { lessonRepository.createLesson(lesson);
+        try {
+            lessonRepository.createLesson(lesson);
             return ResponseEntity.status(HttpStatus.CREATED).body(lesson);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -64,11 +65,12 @@ public class LessonService {
     //PUT update lesson
     public ResponseEntity<Lesson> updateLesson(int id, Lesson updatedLesson) {
         try {
-           Lesson existingLesson = lessonRepository.getLesson(id);
+            Lesson existingLesson = lessonRepository.getLesson(id);
             if (existingLesson == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            lessonRepository.createLesson(updatedLesson);
+            updatedLesson.setId(id);
+            lessonRepository.updateLesson(updatedLesson);
             return ResponseEntity.ok(updatedLesson);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -76,13 +78,13 @@ public class LessonService {
     }
 
     //DELETE lesson
-    public ResponseEntity<Lesson> deleteLesson(int id) {
+    public ResponseEntity<Void> deleteLesson(int id) {
         try {
             Lesson existingLesson = lessonRepository.getLesson(id);
             if (existingLesson == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            existingLesson.setEstado(0);
+            existingLesson.setStatus(0);
             lessonRepository.updateLesson(existingLesson);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
