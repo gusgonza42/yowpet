@@ -5,10 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -23,9 +21,14 @@ public class UserRepo {
         template.update(sql, firstName, lastName, email, password, city, address, phoneNumber, zipCode, gender, profilePicture, role, languages, paymentMethod, new java.sql.Date(birthDate.getTime()));
     }
 
-    public void updateUser(int userId, String firstName, String lastName, String email, String city, String address, String phoneNumber, int zipCode, String gender, String profilePicture, int role, String languages, String paymentMethod, java.util.Date birthDate) {
-        String sql = "CALL updateUser(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        template.update(sql, userId, firstName, lastName, email, city, address, phoneNumber, zipCode, gender, profilePicture, role, languages, paymentMethod, new java.sql.Date(birthDate.getTime()));
+    public void updateUser(int userId, String firstName, String lastName,
+                           String email, String address, String phoneNumber,
+                           java.util.Date birthDate, String city) {
+        String sql = "CALL updateUser(?, ?, ?, ?, ?, ?, ?, ?)";
+        template.update(sql, userId, firstName, lastName, email,
+                   address, phoneNumber,
+                   birthDate != null ? new java.sql.Date(birthDate.getTime()) : null,
+                   city);
     }
 
     public void deleteUser(int userId) {
@@ -52,12 +55,12 @@ public class UserRepo {
     }
 
     public List<User> getUsers() {
-        String sql = "CALL getUsers()";
+        String sql = "CALL getAllUsers()";
         return template.query(sql, new BeanPropertyRowMapper<>(User.class));
     }
 
     public List<User> searchUsers(String searchTerm) {
-        String sql = "CALL searchUser(?)";
+        String sql = "CALL searchUsers(?)";
         return template.query(sql, new BeanPropertyRowMapper<>(User.class), "%" + searchTerm + "%");
     }
 

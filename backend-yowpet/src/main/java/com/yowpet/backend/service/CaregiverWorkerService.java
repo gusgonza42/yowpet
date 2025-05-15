@@ -50,12 +50,10 @@ public class CaregiverWorkerService {
             }
             User user = userOpt.get();
             user.setRole(User.ROLE_CAREGIVER);
-            userRepository.updateUser(
-                    user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getCity(),
-                    user.getAddress(), user.getPhoneNumber(), user.getZipCode(), user.getGender(),
-                    user.getProfilePicture(), user.getRole(), user.getLanguages(),
-                    user.getPaymentMethod(), user.getBirthDate()
-            );
+//            userRepository.updateUser(
+//                    user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getCity(),
+//                    user.getAddress(), user.getPhoneNumber()
+//            );
             return ResponseEntity.ok(user);
         } catch (Exception e) {
             logger.error("Error activating caregiver with ID {}: ", id, e);
@@ -159,12 +157,12 @@ public class CaregiverWorkerService {
             }
             User user = userOpt.get();
             user.setRole(User.ROLE_USER);
-            userRepository.updateUser(
-                    user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getCity(),
-                    user.getAddress(), user.getPhoneNumber(), user.getZipCode(), user.getGender(),
-                    user.getProfilePicture(), user.getRole(), user.getLanguages(),
-                    user.getPaymentMethod(), user.getBirthDate()
-            );
+//            userRepository.updateUser(
+//                    user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getCity(),
+//                    user.getAddress(), user.getPhoneNumber(), user.getZipCode(), user.getGender(),
+//                    user.getProfilePicture(), user.getRole(), user.getLanguages(),
+//                    user.getPaymentMethod(), user.getBirthDate()
+//            );
 
             CaregiverWorker caregiverWorker = caregiverWorkerRepository.getCaregiverWorkersByUser(id);
             if (caregiverWorker != null) {

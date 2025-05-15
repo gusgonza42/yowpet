@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { YowPetTheme } from '@theme/Colors';
@@ -11,14 +19,12 @@ import { userService } from '@service/profile/userService';
 export default function AccountScreen() {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState({});
+  const [fieldErrors, setFieldErrors] = useState({}); // Corregido aquí
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    username: '',
     email: '',
-    password: '********',
-    confirmPassword: '********',
     city: '',
     address: '',
     phoneNumber: '',
@@ -43,14 +49,12 @@ export default function AccountScreen() {
       [field]: value,
     }));
   };
-
   const handleSave = async () => {
     try {
       // Validar campos requeridos
       const camposRequeridos = {
         firstName: 'Nombre',
         lastName: 'Apellidos',
-        username: 'Usuario',
         email: 'Email',
         city: 'Ciudad',
         address: 'Dirección',
@@ -69,16 +73,6 @@ export default function AccountScreen() {
           tieneErrores = true;
         }
       });
-
-      // Validar contraseñas
-      if (formData.password && formData.confirmPassword &&
-        formData.password !== '********' && formData.password !== formData.confirmPassword) {
-        nuevosErrores.password = true;
-        nuevosErrores.confirmPassword = true;
-        tieneErrores = true;
-        alert('Las contraseñas no coinciden');
-      }
-
       // Actualizar estado de errores
       setFieldErrors(nuevosErrores);
 
@@ -87,21 +81,18 @@ export default function AccountScreen() {
         return;
       }
 
+      setIsLoading(true);
+
       // Continuar con la actualización del perfil
       const dataToUpdate = {
         firstName: formData.firstName,
         lastName: formData.lastName,
-        username: formData.username,
         email: formData.email,
         city: formData.city,
         address: formData.address,
         phoneNumber: formData.phoneNumber,
         birthDate: formData.birthDate,
       };
-
-      if (formData.password && formData.password !== '********') {
-        dataToUpdate.password = formData.password;
-      }
 
       const response = await userService.actualizarPerfil(dataToUpdate);
 
@@ -113,45 +104,53 @@ export default function AccountScreen() {
       setFormData({
         ...formData,
         ...updatedData,
-        password: '********',
-        confirmPassword: '********',
       });
 
       setIsEditing(false);
       setFieldErrors({});
-      alert('Perfil actualizado correctamente');
+
+      // Mostrar mensaje bonito de éxito
+      Alert.alert(
+        '¡Perfil actualizado!',
+        'Tus datos han sido actualizados correctamente.',
+        [{ text: 'Aceptar' }]
+      );
     } catch (error) {
+      // Mostrar mensaje bonito de error
+      Alert.alert(
+        'Error al actualizar',
+        error.response?.data?.message ||
+          'No pudimos actualizar tu perfil. Por favor, intenta nuevamente.',
+        [{ text: 'Entendido' }]
+      );
+
       console.error('Error detallado al actualizar:', {
         message: error.message,
         response: error.response?.data,
         status: error.response?.status,
       });
-      alert(
-        error.response?.data?.message ||
-        error.message ||
-        'Error al actualizar el perfil',
-      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const loadProfile = async () => {
     try {
+      setIsLoading(true);
       console.log('Iniciando carga de perfil...');
 
       // Agregar un timeout a la petición
       const timeoutPromise = new Promise((_, reject) =>
         setTimeout(
           () => reject(new Error('Timeout al cargar el perfil')),
-          10000,
-        ),
+          10000
+        )
       );
 
       const response = await Promise.race([
         userService.obtenerPerfil(),
         timeoutPromise,
       ]);
-
-      console.log('Respuesta raw del servidor:', response);
 
       // Si la respuesta es undefined o null
       if (!response) {
@@ -170,10 +169,7 @@ export default function AccountScreen() {
       setFormData({
         firstName: profileData.firstName || '',
         lastName: profileData.lastName || '',
-        username: profileData.username || '',
         email: profileData.email || '',
-        password: '********',
-        confirmPassword: '********',
         city:
           profileData.city && profileData.city !== 'No especificado'
             ? profileData.city
@@ -193,27 +189,27 @@ export default function AccountScreen() {
         message: error.message,
         status: error.response?.status,
         data: error.response?.data,
-        stack: error.stack,
       });
 
       // Mostrar un mensaje más amigable al usuario
-      alert(
+      Alert.alert(
+        'Error',
         'No se pudo cargar tu perfil. Por favor, intenta de nuevo más tarde.',
+        [{ text: 'Entendido' }]
       );
 
       // Establecer valores vacíos pero mantener el formato
       setFormData({
         firstName: '',
         lastName: '',
-        username: '',
         email: '',
-        password: '********',
-        confirmPassword: '********',
         city: '',
         address: '',
         phoneNumber: '',
         birthDate: null,
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -221,6 +217,21 @@ export default function AccountScreen() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.mainContainer}>
         <AccountHeader onBack={() => router.back()} />
+
+        {isLoading && (
+          <View style={styles.loadingOverlay}>
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator
+                size="large"
+                color={YowPetTheme.brand.primary}
+              />
+              <Text style={styles.loadingText}>
+                {isEditing ? 'Actualizando perfil...' : 'Cargando datos...'}
+              </Text>
+            </View>
+          </View>
+        )}
+
         <ScrollView
           style={styles.scrollContainer}
           showsVerticalScrollIndicator={false}
@@ -260,22 +271,6 @@ export default function AccountScreen() {
             />
 
             <FormField
-              label="Usuario"
-              value={formData.username}
-              icon={
-                <MaterialIcons
-                  name="alternate-email"
-                  size={24}
-                  color={YowPetTheme.brand.primary}
-                />
-              }
-              isEditing={isEditing}
-              onChange={value => handleChange('username', value)}
-              isRequired={true}
-              hasError={!!fieldErrors.username}
-            />
-
-            <FormField
               label="Email"
               value={formData.email}
               icon={
@@ -291,40 +286,6 @@ export default function AccountScreen() {
               isRequired={true}
               hasError={!!fieldErrors.email}
             />
-
-            <FormField
-              label="Contraseña"
-              value={formData.password}
-              icon={
-                <MaterialIcons
-                  name="lock"
-                  size={24}
-                  color={YowPetTheme.brand.primary}
-                />
-              }
-              isEditing={isEditing}
-              onChange={value => handleChange('password', value)}
-              options={{ secureTextEntry: true }}
-              hasError={!!fieldErrors.password}
-            />
-
-            {isEditing && (
-              <FormField
-                label="Confirmar contraseña"
-                value={formData.confirmPassword}
-                icon={
-                  <MaterialIcons
-                    name="lock"
-                    size={24}
-                    color={YowPetTheme.brand.primary}
-                  />
-                }
-                isEditing={isEditing}
-                onChange={value => handleChange('confirmPassword', value)}
-                options={{ secureTextEntry: true }}
-                hasError={!!fieldErrors.confirmPassword}
-              />
-            )}
 
             <FormField
               label="Ciudad"
@@ -420,7 +381,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
-    backgroundColor: YowPetTheme.brand.primary,
+    backgroundColor: YowPetTheme.background.softBackground,
   },
   scrollContent: {
     flexGrow: 1,
@@ -430,5 +391,33 @@ const styles = StyleSheet.create({
   formContainer: {
     padding: 16,
     gap: 12,
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    zIndex: 10,
+  },
+  loadingContainer: {
+    backgroundColor: YowPetTheme.background.mainWhite,
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: YowPetTheme.shadow.softShadow,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: YowPetTheme.text.mainText,
+    fontWeight: '500',
   },
 });
