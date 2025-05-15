@@ -11,15 +11,15 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { YowPetTheme } from '@theme/Colors';
 
 export const FormField = ({
-                            label,
-                            value,
-                            icon,
-                            isEditing,
-                            onChange,
-                            options = {},
-                            isRequired = false,
-                            hasError = false,
-                          }) => {
+  label,
+  value,
+  icon,
+  isEditing,
+  onChange,
+  options = {},
+  isRequired = false,
+  hasError = false,
+}) => {
   const { keyboardType, secureTextEntry, isDatePicker } = options;
   const [showPicker, setShowPicker] = useState(false);
 
@@ -139,7 +139,13 @@ export const FormField = ({
             />
           )
         ) : (
-          <Text style={[styles.value, !value && styles.placeholder, hasError && styles.valueError]}>
+          <Text
+            style={[
+              styles.value,
+              !value && styles.placeholder,
+              hasError && styles.valueError,
+            ]}
+          >
             {displayValue()}
           </Text>
         )}
@@ -156,21 +162,31 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     backgroundColor: YowPetTheme.background.mainWhite,
-    borderRadius: 12,
-    padding: 16,
-    elevation: 2,
-    shadowColor: YowPetTheme.shadow.softShadow,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    borderRadius: 16,
+    padding: 18,
+    elevation: 3,
+    shadowColor: YowPetTheme.shadow.mediumShadow,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    marginBottom: 2, // Espacio entre tarjetas
+    borderLeftWidth: 3,
+    borderLeftColor: YowPetTheme.brand.primary,
   },
   cardError: {
-    borderColor: '#E53935',
+    borderColor: YowPetTheme.status.errorState,
     borderWidth: 1,
+    borderLeftColor: YowPetTheme.status.errorState,
+    backgroundColor: YowPetTheme.background.softError,
   },
   iconContainer: {
-    marginRight: 16,
+    marginRight: 18,
     justifyContent: 'center',
+    backgroundColor: YowPetTheme.background.softBackground,
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    alignItems: 'center',
   },
   fieldContent: {
     flex: 1,
@@ -178,68 +194,34 @@ const styles = StyleSheet.create({
   labelContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 4,
+    marginBottom: 6,
   },
   label: {
-    fontSize: 14,
-    color: YowPetTheme.text.softText,
+    fontSize: 15,
+    fontWeight: '500',
+    color: YowPetTheme.brand.primary,
   },
   required: {
-    color: '#E53935',
-    fontSize: 14,
+    color: YowPetTheme.brand.orange,
+    fontSize: 15,
     marginLeft: 4,
   },
   input: {
     fontSize: 16,
     color: YowPetTheme.text.mainText,
-    padding: 0,
+    padding: 8,
+    backgroundColor: YowPetTheme.background.softBackground,
+    borderRadius: 8,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: YowPetTheme.border.softBorder,
   },
   datePickerButton: {
-    paddingVertical: 8,
+    paddingVertical: 10,
     backgroundColor: YowPetTheme.background.softBackground,
-    borderRadius: 6,
-    paddingHorizontal: 8,
-  },
-  inputError: {
-    color: '#E53935',
-  },
-  value: {
-    fontSize: 16,
-    color: YowPetTheme.text.mainText,
-  },
-  valueError: {
-    color: '#E53935',
-  },
-  placeholder: {
-    color: YowPetTheme.text.softText,
-    fontStyle: 'italic',
-  },
-  errorText: {
-    color: '#E53935',
-    fontSize: 12,
-    marginTop: 4,
-  },
-  iosDatePicker: {
-    width: '100%',
-    backgroundColor: '#fff',
-    marginTop: 8,
-    height: 200,
     borderRadius: 8,
-    zIndex: 999,
-  },
-  iosPicker: {
-    backgroundColor: '#ffffff',
-    padding: 10,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    marginVertical: 10,
-    zIndex: 1000,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: YowPetTheme.border.softBorder,
   },
 });

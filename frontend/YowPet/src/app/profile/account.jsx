@@ -217,7 +217,6 @@ export default function AccountScreen() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.mainContainer}>
         <AccountHeader onBack={() => router.back()} />
-
         {isLoading && (
           <View style={styles.loadingOverlay}>
             <View style={styles.loadingContainer}>
@@ -390,7 +389,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     padding: 16,
-    gap: 12,
+    gap: 16,
   },
   loadingOverlay: {
     position: 'absolute',
@@ -400,24 +399,26 @@ const styles = StyleSheet.create({
     bottom: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    backgroundColor: 'rgba(14, 51, 60, 0.4)',
     zIndex: 10,
   },
   loadingContainer: {
     backgroundColor: YowPetTheme.background.mainWhite,
-    borderRadius: 10,
-    padding: 20,
+    borderRadius: 16,
+    padding: 24,
     alignItems: 'center',
-    shadowColor: YowPetTheme.shadow.softShadow,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowColor: YowPetTheme.brand.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
+    borderLeftWidth: 4,
+    borderLeftColor: YowPetTheme.brand.secondary,
   },
   loadingText: {
     marginTop: 10,
     fontSize: 16,
     color: YowPetTheme.text.mainText,
-    fontWeight: '500',
+    fontWeight: '600',
   },
 });
