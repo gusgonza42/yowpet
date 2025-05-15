@@ -27,7 +27,7 @@ export default function AccountScreen() {
     email: '',
     city: '',
     address: '',
-    phoneNumber: '',
+    telephone: '',
     birthDate: null,
   });
 
@@ -58,7 +58,7 @@ export default function AccountScreen() {
         email: 'Email',
         city: 'Ciudad',
         address: 'Dirección',
-        phoneNumber: 'Teléfono',
+        telephone: 'Teléfono',
         birthDate: 'Fecha de nacimiento',
       };
 
@@ -90,7 +90,7 @@ export default function AccountScreen() {
         email: formData.email,
         city: formData.city,
         address: formData.address,
-        phoneNumber: formData.phoneNumber,
+        telephone: formData.telephone,
         birthDate: formData.birthDate,
       };
 
@@ -178,7 +178,7 @@ export default function AccountScreen() {
           profileData.address && profileData.address !== 'No especificado'
             ? profileData.address
             : '',
-        phoneNumber: profileData.phoneNumber || '',
+        telephone: profileData.telephone || '',
         birthDate: profileData.birthDate || null,
       });
 
@@ -205,7 +205,7 @@ export default function AccountScreen() {
         email: '',
         city: '',
         address: '',
-        phoneNumber: '',
+        telephone: '',
         birthDate: null,
       });
     } finally {
@@ -321,7 +321,7 @@ export default function AccountScreen() {
 
             <FormField
               label="Teléfono"
-              value={formData.phoneNumber}
+              value={formData.telephone}
               icon={
                 <Ionicons
                   name="call"
@@ -330,10 +330,10 @@ export default function AccountScreen() {
                 />
               }
               isEditing={isEditing}
-              onChange={value => handleChange('phoneNumber', value)}
+              onChange={value => handleChange('telephone', value)}
               options={{ keyboardType: 'phone-pad' }}
               isRequired={true}
-              hasError={!!fieldErrors.phoneNumber}
+              hasError={!!fieldErrors.telephone}
             />
 
             <FormField

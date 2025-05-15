@@ -51,7 +51,7 @@ public class UserService {
                     user.getPassword(),
                     user.getCity(),
                     user.getAddress(),
-                    user.getPhoneNumber(),
+                    user.getTelephone(),
                     user.getZipCode(),
                     user.getGender(),
                     user.getProfilePicture(),
@@ -118,7 +118,7 @@ public class UserService {
             // Eliminar la línea de username
             userToUpdate.setEmail(user.getEmail());
             userToUpdate.setAddress(user.getAddress());
-            userToUpdate.setPhoneNumber(user.getPhoneNumber());
+            userToUpdate.setTelephone(user.getTelephone());
             userToUpdate.setBirthDate(user.getBirthDate());
             userToUpdate.setCity(user.getCity());
             userToUpdate.setUpdatedAt(new Date());
@@ -129,7 +129,7 @@ public class UserService {
                     userToUpdate.getLastName(),
                     userToUpdate.getEmail(),
                     userToUpdate.getAddress(),
-                    userToUpdate.getPhoneNumber(),
+                    userToUpdate.getTelephone(),
                     userToUpdate.getBirthDate(),
                     userToUpdate.getCity()
             );
