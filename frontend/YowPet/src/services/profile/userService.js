@@ -74,4 +74,17 @@ export const userService = {
       throw error;
     }
   },
+  
+  getUserIdFromToken: async () => {
+  try {
+    const token = await AsyncStorage.getItem('@auth_token');
+    if (!token) return null;
+    const decoded = decodeJWT(token);
+    return decoded?.userId || decoded?.id || null;
+  } catch (e) {
+    console.error('Failed to extract userId from token:', e);
+    return null;
+  }
+}
+
 };

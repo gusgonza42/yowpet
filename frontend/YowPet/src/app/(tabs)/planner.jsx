@@ -1,32 +1,38 @@
-import { Calender } from '@/components/Planner/styles';
+import { Calender, getDynamicMapStyles } from '@/components/Planner/styles';
 import { useRequest } from '@/services/api/fetchingdata';
 import { YowPetTheme } from '@/theme/Colors';
 import React, { useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Button, TextInput, TouchableOpacity } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button, TextInput } from 'react-native';
+import { useAuth } from '@/context/AuthContext';
+import { userService } from '@/services/profile/userService';
+import Addnotifimodal from '@/components/Planner/addnotifimodal';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { AntDesign } from '@expo/vector-icons';
 
 export default function CalendarScreen() {
-  // Get local date in YYYY-MM-DD format (not UTC)
-  const formatLocalDate = (date: Date) => date.toLocaleDateString('sv-SE'); // "sv-SE" = ISO-like format (YYYY-MM-DD)
-  const [newTitle, setNewTitle] = useState('');
+  const { user } = useAuth();
+  const userId = user?.userId;
+  const insets = useSafeAreaInsets();
+  const dynamicStyles = getDynamicMapStyles(insets);
 
-  console.warn("Planner 15 --> User id is= " + AsyncStorage.getItem('userId'))
-
-  // Usage
+  const formatLocalDate = (date: Date) => date.toLocaleDateString('sv-SE');
   const today = formatLocalDate(new Date());
 
   const [selectedDate, setSelectedDate] = useState(today);
   const [reminders, setReminders] = useState([]);
-  const { requestData, responseData, loading } = useRequest();
   const [notifications, setNotifications] = useState([]);
+  const [newTitle, setNewTitle] = useState('');
+  const { requestData } = useRequest();
+  const [showModal, setShowModal] = useState(false);
 
   const fetchRemindersForDate = async (date: string) => {
     try {
-      const userId = await AsyncStorage.getItem('userId'); // adjust the key name if needed
-      const data = await requestData('GET', `/yowpet/agenda?date=${date}&user=${userId}`, {
-        body: parseInt(userId), // or JSON.stringify({ user: parseInt(userId) }) if needed
+      const userId = await userService.getUserIdFromToken();
+
+
+      const data = await requestData('GET', `/agenda?date=${date}&user=${userId}`, {
+        body: userId,
       });
       setReminders(data.data || []);
     } catch (error) {
@@ -35,35 +41,32 @@ export default function CalendarScreen() {
     }
   };
 
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const userId = await AsyncStorage.getItem('userId');
-        const notificationsData = await requestData('GET', `/yowpet/agenda/all/${userId}`);
-        setNotifications(notificationsData.data || []);
-      } catch (error) {
-        console.log('Error fetching notifications:', error);
-        setNotifications([]);
-      }
-    };
 
+  const fetchNotifications = async () => {
+    const userId = await userService.getUserIdFromToken();
+    if (!userId) return;
+    try {
 
-    fetchNotifications();
-  }, []);
+      const notificationsData = await requestData('GET', `/agenda/all/${userId}`);
+      setNotifications(notificationsData.data || []);
+    } catch (error) {
+      console.log('Error fetching notifications:', error);
+      setNotifications([]);
+    }
+  };
 
   const addReminder = async () => {
-    const userId = await AsyncStorage.getItem('userId');
-    const today = formatLocalDate(new Date());
-
-    const newAgenda = {
-      title: newTitle,
-      date: today,
-      user: parseInt(userId),
-      // Add other required fields depending on Agenda model
-    };
-
     try {
-      await requestData('POST', '/yowpet/agenda/create', { body: newAgenda });
+      const userId = await userService.getUserIdFromToken();
+
+      const agenda = {
+        title: newTitle,
+        date: selectedDate,
+        userid: userId,
+      };
+      console.warn('Agenda:', agenda);
+
+      await requestData('POST', '/agenda/create', agenda);
       setNewTitle('');
       fetchRemindersForDate(today);
       fetchNotifications();
@@ -75,44 +78,34 @@ export default function CalendarScreen() {
 
   const handleChooseDate = async (dateString: string) => {
     setSelectedDate(dateString);
-    await fetchRemindersForDate(dateString); // dateString is already in YYYY-MM-DD
+    await fetchRemindersForDate(dateString);
   };
 
-  // Automatically fetch reminders for today on mount
   useEffect(() => {
     fetchRemindersForDate(today);
-  }, []);
+    fetchNotifications();
+  }, [userId]); // ✅ Wait until userId is available
 
-  // Helper function to format the date string into "YYYY-MM-DD"
   const formatDate = (dateString: string) => {
     const localDate = new Date(dateString);
-    return localDate.toLocaleDateString('sv-SE'); // ensures YYYY-MM-DD in local time
+    return localDate.toLocaleDateString('sv-SE');
   };
-
 
   const generateMarkedDates = () => {
     const marked = {};
     notifications.forEach(notification => {
-      const date = notification.date; // Assuming notification has a 'date' field in ISO string format
-      const formattedDate = formatDate(date);
-
-      // Log the formatted date to check it
-      console.log('Formatted date:', formattedDate);
-
-      // Add a dot if there is a notification for that date
+      const formattedDate = formatDate(notification.date);
       marked[formattedDate] = {
         dots: [
           {
-            color: YowPetTheme.brand.primary, // The dot color
-            selectedDotColor: 'green', // The color when selected
+            color: YowPetTheme.brand.primary,
+            selectedDotColor: 'green',
           },
         ],
       };
     });
-    console.log('Marked Dates:', marked); // Log the marked dates object
     return marked;
   };
-
 
   return (
     <View style={Calender.container}>
@@ -130,7 +123,6 @@ export default function CalendarScreen() {
         style={Calender.calendar}
       />
 
-
       <View style={Calender.reminderContainer}>
         <Text style={Calender.title}>Reminders for {selectedDate}</Text>
         {reminders.length > 0 ? (
@@ -144,22 +136,26 @@ export default function CalendarScreen() {
         )}
       </View>
 
-      <View style={{ padding: 10 }}>
-        <TextInput
-          placeholder="Enter reminder title"
-          value={newTitle}
-          onChangeText={setNewTitle}
-          style={{
-            borderColor: '#ccc',
-            borderWidth: 1,
-            borderRadius: 5,
-            padding: 8,
-            marginBottom: 10,
-          }}
-        />
-        <Button title="Add Reminder" onPress={addReminder} />
-      </View>
+      <TouchableOpacity
+        onPress={() => { setShowModal(true) }}
+        title="Add Reminder"
+        color={YowPetTheme.brand.primary}
+        style={dynamicStyles.addbutton}
+        accessibilityLabel="Add Reminder"
 
+      >
+        <AntDesign name="plus" size={24} color="white" />
+      </TouchableOpacity>
+
+      <Addnotifimodal
+        visible={showModal}
+        onDismiss={() => setShowModal(false)}
+        onRequestClose={() => setShowModal(false)}
+        newTitle={newTitle}
+        setNewTitle={setNewTitle}
+        addReminder={addReminder}
+        closeModal={() => setShowModal(false)}
+      />
     </View>
   );
 }

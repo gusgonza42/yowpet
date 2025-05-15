@@ -62,6 +62,8 @@ export const AuthProvider = ({ children }) => {
 
   const saveUserData = async userData => {
     const processedData = processUserData(userData);
+    console.log('Processed User Data:', processedData);
+
     try {
       await AsyncStorage.multiSet([
         ['@auth_token', processedData.token],

@@ -5,12 +5,39 @@ import { YowPetTheme } from '@theme/Colors';
 import { useRouter } from 'expo-router';
 import { styles } from './styles';
 
-export const ProfileHeader = ({ user }) => {
+export const ProfileHeader = ({ user, screenWidth }) => {
   const router = useRouter();
+  const isSmallScreen = screenWidth < 360;
+  const isVerySmallScreen = screenWidth < 320;
+
+  const dynamicStyles = {
+    profileSection: {
+      ...styles.ProfileHeader.profileSection,
+      flexDirection: isVerySmallScreen ? 'column' : 'row',
+      alignItems: isVerySmallScreen ? 'center' : 'center',
+    },
+    profileInfo: {
+      ...styles.ProfileHeader.profileInfo,
+      marginLeft: isVerySmallScreen ? 0 : 16,
+      marginTop: isVerySmallScreen ? 10 : 0,
+      alignItems: isVerySmallScreen ? 'center' : 'flex-start',
+    },
+    quickLinksContainer: {
+      ...styles.ProfileHeader.quickLinksContainer,
+      flexDirection: isSmallScreen ? 'column' : 'row',
+      marginTop: isSmallScreen ? 10 : 15,
+    },
+    quickLink: {
+      ...styles.ProfileHeader.quickLink,
+      marginTop: isSmallScreen ? 8 : 0,
+      width: isSmallScreen ? '100%' : undefined,
+      flex: isSmallScreen ? 0 : 1,
+    },
+  };
 
   return (
     <View style={styles.ProfileHeader.header}>
-      <View style={styles.ProfileHeader.profileSection}>
+      <View style={dynamicStyles.profileSection}>
         <View style={styles.ProfileHeader.avatarContainer}>
           <Image
             source={require('@assets/logos/icon.png')}
@@ -22,7 +49,7 @@ export const ProfileHeader = ({ user }) => {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.ProfileHeader.profileInfo}>
+        <View style={dynamicStyles.profileInfo}>
           <Text style={styles.ProfileHeader.profileName}>
             {user?.fullName || 'Tester YowPet'}
           </Text>
@@ -32,9 +59,9 @@ export const ProfileHeader = ({ user }) => {
         </View>
       </View>
 
-      <View style={styles.ProfileHeader.quickLinksContainer}>
+      <View style={dynamicStyles.quickLinksContainer}>
         <TouchableOpacity
-          style={styles.ProfileHeader.quickLink}
+          style={dynamicStyles.quickLink}
           onPress={() => router.push('/profile/pets')}
         >
           <View
@@ -53,7 +80,7 @@ export const ProfileHeader = ({ user }) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.ProfileHeader.quickLink}
+          style={dynamicStyles.quickLink}
           onPress={() => router.push('/profile/club')}
         >
           <View

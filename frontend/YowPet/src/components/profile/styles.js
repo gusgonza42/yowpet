@@ -5,21 +5,54 @@ const { width, height } = Dimensions.get('window');
 const isSmallDevice = height < 700;
 const isWeb = Platform.OS === 'web';
 
+// Función para obtener valores adaptados según la plataforma
 const getResponsiveValue = (mobileValue, webValue) => {
   return isWeb ? webValue : mobileValue;
 };
 
-// Función mejorada para obtener valores adaptativos en pantallas grandes
+// Función para escalar tamaños de fuente según el ancho de la pantalla
+const getResponsiveFontSize = size => {
+  const baseWidth = 375;
+  const screenWidth = Dimensions.get('window').width;
+  const ratio = screenWidth / baseWidth;
+  
+  // Limita el ratio para que no sea ni muy pequeño ni muy grande
+  const limitedRatio = Math.max(0.8, Math.min(ratio, 1.2));
+
+  return Math.round(size * limitedRatio);
+};
+
+// Función para adaptar el padding según el tamaño de pantalla
+const getResponsivePadding = size => {
+  const baseWidth = 375;
+  const screenWidth = Dimensions.get('window').width;
+
+  if (screenWidth < 320) return Math.max(5, size * 0.7);
+  if (screenWidth < 360) return Math.max(8, size * 0.8);
+  return size;
+};
+
+// Función para valores responsivos en pantallas web de diferentes tamaños
 const getWebResponsiveValue = (defaultValue, wideValue, ultraWideValue) => {
   if (!isWeb) return defaultValue;
   if (width > 1600) return ultraWideValue || wideValue;
   return width > 1200 ? wideValue : defaultValue;
 };
 
+// Función para calcular márgenes adaptativos según el tamaño de pantalla
+const getResponsiveMargin = (size, minValue = 10) => {
+  const baseWidth = 375;
+  const screenWidth = Dimensions.get('window').width;
+
+  if (screenWidth < 320) return Math.max(minValue, size * 0.5);
+  if (screenWidth < 360) return Math.max(minValue, size * 0.7);
+  return size;
+};
+
 export const styles = {
   ProfileHeader: StyleSheet.create({
     header: {
-      paddingHorizontal: getResponsiveValue(20, 30),
+      paddingHorizontal: getResponsivePadding(20),
       paddingTop: getResponsiveValue(10, 15),
       paddingBottom: 0,
       backgroundColor: YowPetTheme.background.mainWhite,
@@ -71,12 +104,12 @@ export const styles = {
       }),
     },
     profileName: {
-      fontSize: getResponsiveValue(isSmallDevice ? 18 : 20, 22),
+      fontSize: getResponsiveFontSize(isSmallDevice ? 18 : 20),
       fontWeight: 'bold',
       color: YowPetTheme.text.mainText,
     },
     profileEmail: {
-      fontSize: getResponsiveValue(isSmallDevice ? 13 : 14, 15),
+      fontSize: getResponsiveFontSize(isSmallDevice ? 13 : 14),
       color: YowPetTheme.text.subtleText,
       marginTop: 4,
     },
@@ -85,6 +118,7 @@ export const styles = {
       justifyContent: 'space-between',
       marginTop: getResponsiveValue(15, 20),
       marginBottom: getResponsiveValue(15, 20),
+      marginHorizontal: getResponsivePadding(5),
       ...(isWeb && {
         flexWrap: 'wrap',
         rowGap: 10,
@@ -98,10 +132,10 @@ export const styles = {
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: YowPetTheme.background.subtle,
-      paddingVertical: getResponsiveValue(16, 20),
-      paddingHorizontal: getResponsiveValue(10, 15),
+      paddingVertical: getResponsivePadding(16),
+      paddingHorizontal: getResponsivePadding(10),
       borderRadius: 12,
-      marginHorizontal: 5,
+      marginHorizontal: getResponsiveMargin(5, 2),
       height: getResponsiveValue(isSmallDevice ? 90 : 100, 110),
       cursor: isWeb ? 'pointer' : 'default',
       ...(isWeb && {
@@ -132,7 +166,7 @@ export const styles = {
       marginBottom: 8,
     },
     quickLinkText: {
-      fontSize: getResponsiveValue(isSmallDevice ? 14 : 16, 17),
+      fontSize: getResponsiveFontSize(isSmallDevice ? 14 : 16),
       fontWeight: '600',
       color: YowPetTheme.text.mainText,
       textAlign: 'center',
@@ -144,8 +178,8 @@ export const styles = {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      paddingVertical: getResponsiveValue(isSmallDevice ? 14 : 16, 18),
-      paddingHorizontal: getResponsiveValue(isSmallDevice ? 14 : 16, 18),
+      paddingVertical: getResponsivePadding(isSmallDevice ? 14 : 16),
+      paddingHorizontal: getResponsivePadding(isSmallDevice ? 14 : 16),
       borderBottomWidth: 1,
       borderBottomColor: YowPetTheme.background.subtle,
       cursor: isWeb ? 'pointer' : 'default',
@@ -156,19 +190,24 @@ export const styles = {
     menuItemLeft: {
       flexDirection: 'row',
       alignItems: 'center',
+      flexShrink: 1,
+      maxWidth: '85%',
     },
     menuItemTextContainer: {
-      marginLeft: 16,
+      marginLeft: getResponsivePadding(16),
       flex: 1,
+      flexShrink: 1,
     },
     menuItemTitle: {
-      fontSize: getResponsiveValue(isSmallDevice ? 15 : 16, 17),
+      fontSize: getResponsiveFontSize(isSmallDevice ? 15 : 16),
       color: YowPetTheme.text.mainText,
+      flexShrink: 1,
     },
     menuItemSubtitle: {
-      fontSize: getResponsiveValue(isSmallDevice ? 11 : 12, 13),
+      fontSize: getResponsiveFontSize(isSmallDevice ? 11 : 12),
       color: YowPetTheme.text.subtleText,
       marginTop: 2,
+      flexShrink: 1,
     },
   }),
 
@@ -176,7 +215,7 @@ export const styles = {
     menuContainer: {
       backgroundColor: YowPetTheme.background.mainWhite,
       borderRadius: 12,
-      marginHorizontal: getResponsiveValue(20, 30),
+      marginHorizontal: getResponsiveMargin(20),
       marginTop: 0,
       marginBottom: 10,
       paddingVertical: 5,
@@ -194,9 +233,9 @@ export const styles = {
   LogoutButton: StyleSheet.create({
     logoutButton: {
       backgroundColor: '#fff0f0',
-      marginHorizontal: getResponsiveValue(isSmallDevice ? 80 : 90, 120),
+      marginHorizontal: getResponsiveMargin(isSmallDevice ? 80 : 90, 20),
       marginVertical: getResponsiveValue(isSmallDevice ? 15 : 20, 25),
-      paddingVertical: getResponsiveValue(isSmallDevice ? 8 : 10, 12),
+      paddingVertical: getResponsivePadding(isSmallDevice ? 8 : 10),
       borderRadius: 12,
       alignItems: 'center',
       borderWidth: 1,
@@ -215,7 +254,7 @@ export const styles = {
     },
     logoutText: {
       color: '#de3b3b',
-      fontSize: getResponsiveValue(isSmallDevice ? 15 : 16, 17),
+      fontSize: getResponsiveFontSize(isSmallDevice ? 15 : 16),
       fontWeight: '600',
       marginLeft: 8,
     },
@@ -227,8 +266,9 @@ export const styles = {
       alignItems: 'center',
       justifyContent: 'center',
       paddingVertical: getResponsiveValue(isSmallDevice ? 0 : 5, 10),
-      rowGap: 8,
+      columnGap: 8,
       marginVertical: getResponsiveValue(5, 10),
+      flexWrap: 'wrap',
       ...(isWeb && {
         maxWidth: getWebResponsiveValue('800px', '1200px', '90%'),
         marginTop: 5,
@@ -240,15 +280,15 @@ export const styles = {
     brandPrimary: {
       color: YowPetTheme.brand.primary,
       fontWeight: '500',
-      fontSize: getResponsiveValue(isSmallDevice ? 15 : 16, 18),
+      fontSize: getResponsiveFontSize(isSmallDevice ? 15 : 16),
     },
     brandSecondary: {
       color: '#ff6b00',
       fontWeight: '500',
-      fontSize: getResponsiveValue(isSmallDevice ? 15 : 16, 18),
+      fontSize: getResponsiveFontSize(isSmallDevice ? 15 : 16),
     },
     versionNumber: {
-      fontSize: getResponsiveValue(isSmallDevice ? 12 : 14, 15),
+      fontSize: getResponsiveFontSize(isSmallDevice ? 12 : 14),
       color: YowPetTheme.text.subtleText,
     },
   }),
@@ -257,6 +297,7 @@ export const styles = {
     container: {
       flex: 1,
       backgroundColor: YowPetTheme.background.mainWhite,
+      paddingBottom: isSmallDevice ? 60 : 100,
       ...(isWeb && {
         maxWidth: getWebResponsiveValue('1200px', '90%', '95%'),
         marginTop: 0,
@@ -271,6 +312,7 @@ export const styles = {
     },
     scrollView: {
       paddingBottom: 100,
+      flexGrow: 1,
     },
   }),
 
@@ -346,7 +388,7 @@ export const styles = {
   }),
 };
 
-// Mejorar el sistema de redimensionamiento para web
+// Sistema de redimensionamiento para web
 if (Platform.OS === 'web') {
   let resizeTimeout;
 
@@ -362,3 +404,14 @@ if (Platform.OS === 'web') {
     }, 200);
   });
 }
+
+// Función para detectar cambios de orientación en dispositivos móviles
+const handleOrientationChange = () => {
+  const screenWidth = Dimensions.get('window').width;
+  const screenHeight = Dimensions.get('window').height;
+  const isLandscape = screenWidth > screenHeight;
+
+  // Esta variable podría ser utilizada para ajustes específicos
+  // según la orientación del dispositivo
+  return isLandscape;
+};
