@@ -20,11 +20,11 @@ public class AgendaController {
     private AgendaService service;
 
     @GetMapping
-    public ResponseEntity<List<Agenda>> getAgendaByDate(@RequestParam String date) throws ParseException {
+    public ResponseEntity<List<Agenda>> getAgendaByDate(@RequestParam String date, @RequestParam int user) throws ParseException {
         // Optional: Parse the string to a Date
         Date parsedDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
 
-        List<Agenda> agendas = service.getbyID(date);
+        List<Agenda> agendas = service.getbyID(date,user);
         System.out.println(agendas);
         return ResponseEntity.ok(agendas);
     }
@@ -44,12 +44,12 @@ public class AgendaController {
         service.delete(id, date);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Agenda>> getAllAgendas() {
+    @GetMapping("/all/{id}")
+    public ResponseEntity<List<Agenda>> getAllAgendas(@PathVariable int id) {
         try {
             System.out.println("Fetching agendas...");
 
-            List<Agenda> agendas = service.getAll();
+            List<Agenda> agendas = service.getAll(id);
             System.out.println("Fetched agendas: " + agendas);
 
             return ResponseEntity.ok(agendas);

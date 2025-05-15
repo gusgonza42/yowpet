@@ -15,17 +15,17 @@ public class AgendaService {
     @Autowired
     private AgendaRepo repo;
 
-    public List<Agenda> getbyID(String date) {
-        return repo.getAgenda( date);
+    public List<Agenda> getbyID(String date,int user) {
+        return repo.getAgenda( date,user);
     }
 
 
-    public List<Agenda> getAll() {
-        return repo.getAllAgenda(null);
+    public List<Agenda> getAll(int user) {
+        return repo.getAllAgenda(user);
     }
     public void create(Agenda agenda) {
 
-        repo.createAgenda(agenda.getDate(), agenda.getTitle());
+        repo.createAgenda(agenda.getDate(), agenda.getTitle(), agenda.getId());
     }
 
     public void update(int id, Agenda agenda) {
@@ -33,7 +33,7 @@ public class AgendaService {
 
         System.out.println("Agenda ID: " + agenda.getId());
 
-        repo.updateAgenda(agenda.getId(), agenda.getTitle());
+        repo.updateAgenda(agenda.getId(), agenda.getTitle(),agenda.getUserid());
     }
 
     public void delete(int id, Date date) {

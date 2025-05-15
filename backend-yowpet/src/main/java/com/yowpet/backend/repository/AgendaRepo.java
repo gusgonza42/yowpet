@@ -16,14 +16,14 @@ public class AgendaRepo {
     @Autowired
     private JdbcTemplate template;
 
-    public void createAgenda(Date date, String title) {
-        String sql = "CALL createallergy(?, ?)";
-        template.update(sql, date, title);
+    public void createAgenda(Date date, String title, int user) {
+        String sql = "CALL createallergy(?, ?, ?)";
+        template.update(sql, date, title, user);
     }
 
-    public void updateAgenda(int agendaId, String title) {
-        String sql = "CALL updateallergy(?, ?)";
-        template.update(sql, agendaId, title);
+    public void updateAgenda(int agendaId, String title, int user) {
+        String sql = "CALL updateallergy(?, ?,?)";
+        template.update(sql, agendaId, title,user);
     }
 
     public void deleteAgenda(int agenda, Date date) {
@@ -31,18 +31,18 @@ public class AgendaRepo {
         template.update(sql, agenda, date);
     }
 
-    public List<Agenda> getAgenda(String date) {
-        String sql = "CALL getnotification( ?)";
+    public List<Agenda> getAgenda(String date, int user) {
+        String sql = "CALL getnotification( ?,?)";
         try {
-            return template.query(sql, new BeanPropertyRowMapper<>(Agenda.class), date);
+            return template.query(sql, new BeanPropertyRowMapper<>(Agenda.class), date,user);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
-    public List<Agenda> getAllAgenda(String call) {
-        String sql = "CALL GETALLNOTIFICATION()";
+    public List<Agenda> getAllAgenda(int user) {
+        String sql = "CALL GETALLNOTIFICATION(?)";
         try {
-            return template.query(sql, new BeanPropertyRowMapper<>(Agenda.class));
+            return template.query(sql, new BeanPropertyRowMapper<>(Agenda.class),user);
         } catch (EmptyResultDataAccessException e) {
             throw new RuntimeException(e);
 
