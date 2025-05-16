@@ -5,9 +5,12 @@ import { YowPetTheme } from '@theme/Colors';
 
 export const SecurityItem = ({ item, onPress }) => (
     <TouchableOpacity style={styles.securityItem} onPress={onPress}>
-        <View style={styles.securityItemContent}>
-            <Text style={styles.securityItemTitle}>{item.title}</Text>
-            <Text style={styles.securityItemDescription}>{item.description}</Text>
+        <View style={styles.iconContainer}>
+            <Ionicons name={item.icon} size={24} color={YowPetTheme.brand.primary} />
+        </View>
+        <View style={styles.textContainer}>
+            <Text style={styles.itemTitle}>{item.title}</Text>
+            <Text style={styles.itemDescription}>{item.description}</Text>
         </View>
         <Ionicons name="chevron-forward" size={20} color={YowPetTheme.text.subtleText} />
     </TouchableOpacity>
@@ -18,18 +21,34 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         padding: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: YowPetTheme.border.softBorder,
+        backgroundColor: YowPetTheme.background.mainWhite,
+        borderRadius: 12,
+        marginBottom: 16,
+        borderWidth: 1,
+        borderColor: YowPetTheme.border.softBorder,
+        shadowColor: YowPetTheme.shadow.softShadow,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
     },
-    securityItemContent: {
+    iconContainer: {
+        width: 48,
+        height: 48,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: YowPetTheme.background.softWarning,
+        borderRadius: 24,
+        marginRight: 16,
+    },
+    textContainer: {
         flex: 1,
     },
-    securityItemTitle: {
+    itemTitle: {
         fontSize: 16,
-        fontWeight: 'bold',
+        fontWeight: '600',
         color: YowPetTheme.text.mainText,
     },
-    securityItemDescription: {
+    itemDescription: {
         fontSize: 14,
         color: YowPetTheme.text.subtleText,
         marginTop: 4,

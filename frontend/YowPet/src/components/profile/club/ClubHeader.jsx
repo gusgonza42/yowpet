@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { YowPetTheme } from '@theme/Colors';
 
-export const SecurityHeader = ({ onBack }) => (
+export const ClubHeader = ({ onBack }) => (
     <View style={styles.header}>
         <Ionicons
             name="arrow-back"
@@ -13,8 +13,8 @@ export const SecurityHeader = ({ onBack }) => (
             style={styles.backButton}
         />
         <View>
-            <Text style={styles.title}>Centro de Seguridad</Text>
-            <Text style={styles.subtitle}>Gestiona la protección de tu cuenta YowPet</Text>
+            <Text style={styles.title}>YowPet Club</Text>
+            <Text style={styles.subtitle}>Beneficios exclusivos para nuestros miembros</Text>
         </View>
     </View>
 );
