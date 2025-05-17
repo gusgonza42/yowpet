@@ -11,8 +11,8 @@ import {
 } from 'react-native';
 import { ScreenContainer } from '@components/global/ScreenContainer';
 import { YowPetTheme } from '@theme/Colors';
-import { useState, useEffect } from 'react';
-import { MaterialIcons } from '@expo/vector-icons';
+import React, { useState, useEffect } from 'react';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { educateService } from '../../services/educate/educateService';
 import { BackButton } from '@components/global/BackButton';
 
@@ -57,6 +57,7 @@ export default function EducateScreen() {
       <ScreenContainer backgroundColor={YowPetTheme.brand.primary}>
         <BackButton />
         <View style={styles.headerContainer}>
+          <Ionicons name="paw" size={40} color={YowPetTheme.brand.accent} style={{ marginBottom: 10 }} />
           <Text style={styles.title}>Educa a tu mascota</Text>
           <Text style={styles.subtitle}>Selecciona el nivel de dificultad</Text>
         </View>
@@ -148,6 +149,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     paddingBottom: 30,
     paddingHorizontal: 24,
+    alignItems: 'center',
     backgroundColor: YowPetTheme.brand.primary,
     borderRadius: 24,
   },
@@ -226,6 +228,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: YowPetTheme.background.cardBg,
     marginBottom: 16,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
     borderWidth: 1,
     borderColor: YowPetTheme.border.softBorder,
   },

@@ -1,21 +1,29 @@
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { ScreenContainer } from '@components/global/ScreenContainer';
+import { YowPetTheme } from '@theme/Colors';
+import { HomeGreeting } from '@components/home/HomeGreeting';
+import { HomeMenu } from '@components/home/HomeMenu';
+import { AppFooter } from '@components/home/AppFooter';
 
 export default function HomeScreen() {
   return (
-    <ScreenContainer backgroundColor={'#fff'}>
-      <View style={styles.container}>
-        <Text>Página Principal de Tabs osea el home</Text>
-      </View>
-    </ScreenContainer>
+      <ScreenContainer backgroundColor={YowPetTheme.background.mainWhite}>
+        <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+          <HomeGreeting />
+          <HomeMenu />
+          <AppFooter />
+        </ScrollView>
+      </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
+    flexGrow: 1,
+    paddingTop: 36,
+    paddingHorizontal: 18,
     alignItems: 'center',
-    marginBottom: 120,
+    backgroundColor: YowPetTheme.background.mainWhite,
   },
 });

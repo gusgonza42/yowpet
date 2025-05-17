@@ -4,18 +4,15 @@ import { useRouter } from 'expo-router';
 import { YowPetTheme } from '@theme/Colors';
 import { SecurityHeader } from '@components/profile/security/SecurityHeader';
 import { SecurityItem } from '@components/profile/security/SecurityItem';
+import { AppFooter } from '@components/profile/AppFooter';
 
 export default function SecurityScreen() {
     const router = useRouter();
-
     const securityItems = [
         { id: 1, title: 'Cambiar contraseña', description: 'Actualiza tu contraseña para mayor seguridad.', icon: 'key-outline', route: 'profile/security/change-password' },
         { id: 2, title: 'Autenticación en dos pasos', description: 'Configura la autenticación en dos pasos.', icon: 'shield-checkmark-outline', route: 'profile/security/2fa' },
         { id: 3, title: 'Dispositivos conectados', description: 'Administra los dispositivos conectados a tu cuenta.', icon: 'phone-portrait-outline', route: 'profile/security/devices' },
     ];
-    const handleItemPress = (item) => {
-        router.push(item.route);
-    };
 
     return (
         <SafeAreaView style={styles.safeArea}>
@@ -24,13 +21,13 @@ export default function SecurityScreen() {
             </View>
             <View style={styles.contentContainer}>
                 <ScrollView
-                    style={styles.scrollView}
                     contentContainerStyle={styles.scrollContent}
                     showsVerticalScrollIndicator={false}
                 >
                     {securityItems.map((item) => (
-                        <SecurityItem key={item.id} item={item} onPress={() => handleItemPress(item)} />
+                        <SecurityItem key={item.id} item={item} onPress={() => router.push(item.route)} />
                     ))}
+                    <AppFooter version="1.0.0" />
                 </ScrollView>
             </View>
         </SafeAreaView>
@@ -54,11 +51,8 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 24,
         paddingTop: 24,
     },
-    scrollView: {
-        flex: 1,
-    },
     scrollContent: {
         paddingHorizontal: 16,
-        paddingBottom: 20,
+        paddingBottom: 32,
     },
 });
