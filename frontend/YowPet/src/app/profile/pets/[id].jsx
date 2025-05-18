@@ -426,8 +426,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 15,
     borderRadius: 25,
-    backgroundColor: YowPetTheme.brand.white,
-    borderBottomColor: YowPetTheme.brand.secondary,
+    backgroundColor: YowPetTheme.brand.accent,
     elevation: 4,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -447,7 +446,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 16,
     padding: 4,
-    borderBottomWidth: 1,
   },
   container: {
     flex: 1,

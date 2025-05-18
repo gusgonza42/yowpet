@@ -102,7 +102,7 @@ export default function ProfileScreen() {
   };
 
   return (
-    <ScreenContainer backgroundColor={YowPetTheme.background.mainWhite}>
+    <ScreenContainer backgroundColor={YowPetTheme.brand.white}>
       <SafeAreaView style={dynamicStyles.container}>
         <ScrollView
           showsVerticalScrollIndicator={false}

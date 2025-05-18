@@ -275,7 +275,7 @@ export default function NewPetScreen() {
             <Text style={styles.selectorText}>
               {petData.animalCategory
                 ? ANIMAL_CATEGORIES.find(c => c.id === petData.animalCategory)
-                ?.name || 'Seleccionar tipo de mascota *'
+                    ?.name || 'Seleccionar tipo de mascota *'
                 : 'Seleccionar tipo de mascota *'}
             </Text>
             <Ionicons
@@ -308,7 +308,7 @@ export default function NewPetScreen() {
               <Text style={styles.selectorText}>
                 {petData.breed
                   ? getBreedOptions().find(b => b.id === petData.breed)?.name ||
-                  'Seleccionar raza'
+                    'Seleccionar raza'
                   : 'Seleccionar raza'}
               </Text>
               <Ionicons
@@ -524,15 +524,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
-    borderBottomWidth: 1,
     borderBottomColor: YowPetTheme.border.softBorder,
-    backgroundColor: YowPetTheme.background.mainWhite,
+    backgroundColor: YowPetTheme.brand.accent,
+    justifyContent: 'center',
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     marginLeft: 16,
     color: YowPetTheme.text.mainText,
+    flex: 1,
+    textAlign: 'center',
+    marginRight: 40,
   },
   scrollView: {
     flex: 1,
