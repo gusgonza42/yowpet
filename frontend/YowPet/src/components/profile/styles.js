@@ -15,7 +15,7 @@ const getResponsiveFontSize = size => {
   const baseWidth = 375;
   const screenWidth = Dimensions.get('window').width;
   const ratio = screenWidth / baseWidth;
-  
+
   // Limita el ratio para que no sea ni muy pequeño ni muy grande
   const limitedRatio = Math.max(0.8, Math.min(ratio, 1.2));
 

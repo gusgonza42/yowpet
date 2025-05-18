@@ -1,7 +1,7 @@
 import { axiosClient } from '@service/api/clienteAxios';
 
 // Verificar si el usuario es cuidador
-export const checkCaregiverStatus = async (userId) => {
+export const checkCaregiverStatus = async userId => {
   try {
     const response = await axiosClient.get(`/caregiver/check/${userId}`);
     return response.data;
@@ -12,7 +12,7 @@ export const checkCaregiverStatus = async (userId) => {
 };
 
 // Activar perfil de cuidador
-export const activateCaregiver = async (userId) => {
+export const activateCaregiver = async userId => {
   try {
     const response = await axiosClient.post(`/caregiver/activate/${userId}`);
     return response.status === 200;
@@ -23,7 +23,7 @@ export const activateCaregiver = async (userId) => {
 };
 
 // Obtener datos del cuidador
-export const getCaregiverData = async (userId) => {
+export const getCaregiverData = async userId => {
   try {
     const response = await axiosClient.get(`/caregiver/${userId}`);
     return response.data;
@@ -36,7 +36,10 @@ export const getCaregiverData = async (userId) => {
 // Crear o actualizar perfil de cuidador
 export const createCaregiverProfile = async (userId, caregiverData) => {
   try {
-    const response = await axiosClient.post(`/caregiver/create/${userId}`, caregiverData);
+    const response = await axiosClient.post(
+      `/caregiver/create/${userId}`,
+      caregiverData
+    );
     return response.status === 200;
   } catch (error) {
     console.error('Error en createCaregiverProfile:', error);
@@ -45,7 +48,7 @@ export const createCaregiverProfile = async (userId, caregiverData) => {
 };
 
 // Desactivar perfil de cuidador
-export const disableCaregiverProfile = async (userId) => {
+export const disableCaregiverProfile = async userId => {
   try {
     // Cambiado de PUT a DELETE para coincidir con el backend
     const response = await axiosClient.delete(`/caregiver/disabled/${userId}`);

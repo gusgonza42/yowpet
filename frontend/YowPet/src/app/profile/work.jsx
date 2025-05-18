@@ -37,29 +37,45 @@ const ActivationScreen = ({ onActivate }) => (
         <Text style={styles.benefitsTitle}>Beneficios:</Text>
 
         <View style={styles.benefitItem}>
-          <Ionicons name="cash-outline" size={22} color={YowPetTheme.brand.primary} />
-          <Text style={styles.benefitText}>Obtén ingresos haciendo lo que amas</Text>
+          <Ionicons
+            name="cash-outline"
+            size={22}
+            color={YowPetTheme.brand.primary}
+          />
+          <Text style={styles.benefitText}>
+            Obtén ingresos haciendo lo que amas
+          </Text>
         </View>
 
         <View style={styles.benefitItem}>
-          <Ionicons name="time-outline" size={22} color={YowPetTheme.brand.primary} />
-          <Text style={styles.benefitText}>Horario flexible según tu disponibilidad</Text>
+          <Ionicons
+            name="time-outline"
+            size={22}
+            color={YowPetTheme.brand.primary}
+          />
+          <Text style={styles.benefitText}>
+            Horario flexible según tu disponibilidad
+          </Text>
         </View>
 
         <View style={styles.benefitItem}>
-          <Ionicons name="star-outline" size={22} color={YowPetTheme.brand.primary} />
-          <Text style={styles.benefitText}>Conviértete en un cuidador destacado</Text>
+          <Ionicons
+            name="star-outline"
+            size={22}
+            color={YowPetTheme.brand.primary}
+          />
+          <Text style={styles.benefitText}>
+            Conviértete en un cuidador destacado
+          </Text>
         </View>
       </View>
 
       <Text style={styles.activationText}>
-        Para comenzar a ofrecer tus servicios como cuidador de mascotas, activa tu perfil
+        Para comenzar a ofrecer tus servicios como cuidador de mascotas, activa
+        tu perfil
       </Text>
 
-      <TouchableOpacity
-        style={styles.activateButton}
-        onPress={onActivate}
-      >
+      <TouchableOpacity style={styles.activateButton} onPress={onActivate}>
         <Text style={styles.activateButtonText}>ACTIVAR PERFIL</Text>
         <Ionicons name="arrow-forward" size={20} color="white" />
       </TouchableOpacity>
@@ -70,7 +86,16 @@ const ActivationScreen = ({ onActivate }) => (
 // Componente para el formulario de perfil con opciones mejoradas
 const ProfileForm = ({ formData, setFormData, onSubmit, toggleService }) => {
   // Opciones predefinidas para cada campo
-  const especialidades = ['Perros', 'Gatos', 'Aves', 'Roedores', 'Reptiles', 'Anfibios', 'Peces', 'Exóticos'];
+  const especialidades = [
+    'Perros',
+    'Gatos',
+    'Aves',
+    'Roedores',
+    'Reptiles',
+    'Anfibios',
+    'Peces',
+    'Exóticos',
+  ];
 
   // Opciones de experiencia con rangos más realistas
   const experiencias = [
@@ -95,18 +120,22 @@ const ProfileForm = ({ formData, setFormData, onSubmit, toggleService }) => {
   // Estado para el precio personalizado
   const [precioPersonalizado, setPrecioPersonalizado] = React.useState('');
   // Estado para mostrar el campo de precio personalizado
-  const [mostrarPrecioPersonalizado, setMostrarPrecioPersonalizado] = React.useState(false);
+  const [mostrarPrecioPersonalizado, setMostrarPrecioPersonalizado] =
+    React.useState(false);
 
   // Efecto para verificar si ya tiene un precio personalizado
   React.useEffect(() => {
-    if (formData.hourlyRate && !rangoPrecio.some(p => p.value === formData.hourlyRate)) {
+    if (
+      formData.hourlyRate &&
+      !rangoPrecio.some(p => p.value === formData.hourlyRate)
+    ) {
       setPrecioPersonalizado(formData.hourlyRate);
       setMostrarPrecioPersonalizado(true);
     }
   }, []);
 
   // Función para manejar la selección de tarifa
-  const seleccionarTarifa = (tarifa) => {
+  const seleccionarTarifa = tarifa => {
     if (tarifa === 'custom') {
       setMostrarPrecioPersonalizado(true);
       setFormData({ ...formData, hourlyRate: precioPersonalizado || '' });
@@ -117,7 +146,7 @@ const ProfileForm = ({ formData, setFormData, onSubmit, toggleService }) => {
   };
 
   // Función para actualizar el precio personalizado
-  const actualizarPrecioPersonalizado = (precio) => {
+  const actualizarPrecioPersonalizado = precio => {
     setPrecioPersonalizado(precio);
     setFormData({ ...formData, hourlyRate: precio });
   };
@@ -127,27 +156,36 @@ const ProfileForm = ({ formData, setFormData, onSubmit, toggleService }) => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>¿Qué servicios ofreces?</Text>
         <View style={styles.servicesGrid}>
-          {['Paseo', 'Alojamiento', 'Guardería', 'Entrenamiento'].map(service => (
-            <TouchableOpacity
-              key={service}
-              style={[
-                styles.serviceItem,
-                formData.services.includes(service) && styles.serviceSelected,
-              ]}
-              onPress={() => toggleService(service)}
-            >
-              <Text style={[
-                styles.serviceText,
-                formData.services.includes(service) && styles.serviceTextSelected,
-              ]}>{service}</Text>
-            </TouchableOpacity>
-          ))}
+          {['Paseo', 'Alojamiento', 'Guardería', 'Entrenamiento'].map(
+            service => (
+              <TouchableOpacity
+                key={service}
+                style={[
+                  styles.serviceItem,
+                  formData.services.includes(service) && styles.serviceSelected,
+                ]}
+                onPress={() => toggleService(service)}
+              >
+                <Text
+                  style={[
+                    styles.serviceText,
+                    formData.services.includes(service) &&
+                      styles.serviceTextSelected,
+                  ]}
+                >
+                  {service}
+                </Text>
+              </TouchableOpacity>
+            )
+          )}
         </View>
       </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Especialidad</Text>
-        <Text style={styles.sectionSubtitle}>¿Con qué tipo de mascotas tienes más experiencia?</Text>
+        <Text style={styles.sectionSubtitle}>
+          ¿Con qué tipo de mascotas tienes más experiencia?
+        </Text>
         <View style={styles.optionsGrid}>
           {especialidades.map(especialidad => (
             <TouchableOpacity
@@ -156,12 +194,19 @@ const ProfileForm = ({ formData, setFormData, onSubmit, toggleService }) => {
                 styles.optionItem,
                 formData.speciality === especialidad && styles.optionSelected,
               ]}
-              onPress={() => setFormData({ ...formData, speciality: especialidad })}
+              onPress={() =>
+                setFormData({ ...formData, speciality: especialidad })
+              }
             >
-              <Text style={[
-                styles.optionText,
-                formData.speciality === especialidad && styles.optionTextSelected,
-              ]}>{especialidad}</Text>
+              <Text
+                style={[
+                  styles.optionText,
+                  formData.speciality === especialidad &&
+                    styles.optionTextSelected,
+                ]}
+              >
+                {especialidad}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -172,15 +217,23 @@ const ProfileForm = ({ formData, setFormData, onSubmit, toggleService }) => {
           <TextInput
             style={styles.input}
             placeholder="Escribe otra especialidad..."
-            value={!especialidades.includes(formData.speciality) ? formData.speciality : ''}
-            onChangeText={(text) => setFormData({ ...formData, speciality: text })}
+            value={
+              !especialidades.includes(formData.speciality)
+                ? formData.speciality
+                : ''
+            }
+            onChangeText={text =>
+              setFormData({ ...formData, speciality: text })
+            }
           />
         </View>
       </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Experiencia</Text>
-        <Text style={styles.sectionSubtitle}>¿Cuánta experiencia tienes cuidando mascotas?</Text>
+        <Text style={styles.sectionSubtitle}>
+          ¿Cuánta experiencia tienes cuidando mascotas?
+        </Text>
         <View style={styles.experienceContainer}>
           {experiencias.map(exp => (
             <TouchableOpacity
@@ -189,12 +242,19 @@ const ProfileForm = ({ formData, setFormData, onSubmit, toggleService }) => {
                 styles.experienceButton,
                 formData.experience === exp.value && styles.optionSelected,
               ]}
-              onPress={() => setFormData({ ...formData, experience: exp.value })}
+              onPress={() =>
+                setFormData({ ...formData, experience: exp.value })
+              }
             >
-              <Text style={[
-                styles.optionText,
-                formData.experience === exp.value && styles.optionTextSelected,
-              ]}>{exp.label}</Text>
+              <Text
+                style={[
+                  styles.optionText,
+                  formData.experience === exp.value &&
+                    styles.optionTextSelected,
+                ]}
+              >
+                {exp.label}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -202,7 +262,9 @@ const ProfileForm = ({ formData, setFormData, onSubmit, toggleService }) => {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Tarifa por hora</Text>
-        <Text style={styles.sectionSubtitle}>¿Cuánto cobras por hora de servicio?</Text>
+        <Text style={styles.sectionSubtitle}>
+          ¿Cuánto cobras por hora de servicio?
+        </Text>
         <View style={styles.priceContainer}>
           {rangoPrecio.map(precio => (
             <TouchableOpacity
@@ -211,16 +273,21 @@ const ProfileForm = ({ formData, setFormData, onSubmit, toggleService }) => {
                 styles.priceButton,
                 (formData.hourlyRate === precio.value ||
                   (precio.value === 'custom' && mostrarPrecioPersonalizado)) &&
-                styles.optionSelected,
+                  styles.optionSelected,
               ]}
               onPress={() => seleccionarTarifa(precio.value)}
             >
-              <Text style={[
-                styles.optionText,
-                (formData.hourlyRate === precio.value ||
-                  (precio.value === 'custom' && mostrarPrecioPersonalizado)) &&
-                styles.optionTextSelected,
-              ]}>{precio.label}</Text>
+              <Text
+                style={[
+                  styles.optionText,
+                  (formData.hourlyRate === precio.value ||
+                    (precio.value === 'custom' &&
+                      mostrarPrecioPersonalizado)) &&
+                    styles.optionTextSelected,
+                ]}
+              >
+                {precio.label}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -250,14 +317,11 @@ const ProfileForm = ({ formData, setFormData, onSubmit, toggleService }) => {
           multiline
           numberOfLines={4}
           value={formData.description}
-          onChangeText={(text) => setFormData({ ...formData, description: text })}
+          onChangeText={text => setFormData({ ...formData, description: text })}
         />
       </View>
 
-      <TouchableOpacity
-        style={styles.submitButton}
-        onPress={onSubmit}
-      >
+      <TouchableOpacity style={styles.submitButton} onPress={onSubmit}>
         <Text style={styles.submitButtonText}>Guardar Información</Text>
       </TouchableOpacity>
     </>
@@ -283,15 +347,25 @@ const CompletedProfile = ({ formData, onEdit, onDisable }) => {
   return (
     <View style={styles.profileContainer}>
       <View style={styles.profileHeaderCard}>
-        <Ionicons name="checkmark-circle" size={32} color={YowPetTheme.brand.primary} />
-        <Text style={styles.profileHeaderTitle}>¡Perfil activo como cuidador!</Text>
+        <Ionicons
+          name="checkmark-circle"
+          size={32}
+          color={YowPetTheme.brand.primary}
+        />
+        <Text style={styles.profileHeaderTitle}>
+          ¡Perfil activo como cuidador!
+        </Text>
       </View>
 
       <View style={styles.infoCard}>
         <Text style={styles.infoCardTitle}>Información profesional</Text>
 
         <View style={styles.infoRow}>
-          <Ionicons name="ribbon-outline" size={22} color={YowPetTheme.brand.primary} />
+          <Ionicons
+            name="ribbon-outline"
+            size={22}
+            color={YowPetTheme.brand.primary}
+          />
           <View style={styles.infoContent}>
             <Text style={styles.infoLabel}>Especialidad</Text>
             <Text style={styles.infoValue}>{formData.speciality}</Text>
@@ -299,7 +373,11 @@ const CompletedProfile = ({ formData, onEdit, onDisable }) => {
         </View>
 
         <View style={styles.infoRow}>
-          <Ionicons name="time-outline" size={22} color={YowPetTheme.brand.primary} />
+          <Ionicons
+            name="time-outline"
+            size={22}
+            color={YowPetTheme.brand.primary}
+          />
           <View style={styles.infoContent}>
             <Text style={styles.infoLabel}>Experiencia</Text>
             <Text style={styles.infoValue}>{textoExperiencia()}</Text>
@@ -307,7 +385,11 @@ const CompletedProfile = ({ formData, onEdit, onDisable }) => {
         </View>
 
         <View style={styles.infoRow}>
-          <Ionicons name="cash-outline" size={22} color={YowPetTheme.brand.primary} />
+          <Ionicons
+            name="cash-outline"
+            size={22}
+            color={YowPetTheme.brand.primary}
+          />
           <View style={styles.infoContent}>
             <Text style={styles.infoLabel}>Tarifa</Text>
             <Text style={styles.infoValue}>{formData.hourlyRate}€/hora</Text>
@@ -315,10 +397,16 @@ const CompletedProfile = ({ formData, onEdit, onDisable }) => {
         </View>
 
         <View style={styles.infoRow}>
-          <Ionicons name="document-text-outline" size={22} color={YowPetTheme.brand.primary} />
+          <Ionicons
+            name="document-text-outline"
+            size={22}
+            color={YowPetTheme.brand.primary}
+          />
           <View style={styles.infoContent}>
             <Text style={styles.infoLabel}>Descripción</Text>
-            <Text style={styles.infoValue}>{formData.description || 'Sin descripción'}</Text>
+            <Text style={styles.infoValue}>
+              {formData.description || 'Sin descripción'}
+            </Text>
           </View>
         </View>
       </View>
@@ -334,19 +422,17 @@ const CompletedProfile = ({ formData, onEdit, onDisable }) => {
         </View>
       </View>
 
-      <TouchableOpacity
-        style={styles.editButton}
-        onPress={onEdit}
-      >
+      <TouchableOpacity style={styles.editButton} onPress={onEdit}>
         <Ionicons name="create-outline" size={20} color="white" />
         <Text style={styles.editButtonText}>Editar información</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.disableButton}
-        onPress={onDisable}
-      >
-        <Ionicons name="close-circle-outline" size={20} color={YowPetTheme.text.errorText} />
+      <TouchableOpacity style={styles.disableButton} onPress={onDisable}>
+        <Ionicons
+          name="close-circle-outline"
+          size={20}
+          color={YowPetTheme.text.errorText}
+        />
         <Text style={styles.disableButtonText}>Dejar de ser cuidador</Text>
       </TouchableOpacity>
     </View>
@@ -355,17 +441,18 @@ const CompletedProfile = ({ formData, onEdit, onDisable }) => {
 
 // Componente para el modal de confirmación
 const ConfirmModal = ({ visible, onCancel, onConfirm }) => (
-  <Modal
-    visible={visible}
-    transparent={true}
-    animationType="fade"
-  >
+  <Modal visible={visible} transparent={true} animationType="fade">
     <View style={styles.modalOverlay}>
       <View style={styles.modalContainer}>
-        <Ionicons name="warning-outline" size={48} color={YowPetTheme.text.warningText} />
+        <Ionicons
+          name="warning-outline"
+          size={48}
+          color={YowPetTheme.text.warningText}
+        />
         <Text style={styles.modalTitle}>¿Estás seguro?</Text>
         <Text style={styles.modalText}>
-          Si desactivas tu perfil de cuidador, dejarás de recibir solicitudes de servicio.
+          Si desactivas tu perfil de cuidador, dejarás de recibir solicitudes de
+          servicio.
         </Text>
         <View style={styles.modalButtons}>
           <TouchableOpacity
@@ -425,9 +512,11 @@ export default function WorkScreen() {
           onPress={() => router.back()}
         />
         <Text style={styles.headerTitle}>
-          {isActivated ?
-            (profileComplete ? 'Mi Perfil de Cuidador' : 'Completar Perfil de Cuidador') :
-            'Activar Perfil de Cuidador'}
+          {isActivated
+            ? profileComplete
+              ? 'Mi Perfil de Cuidador'
+              : 'Completar Perfil de Cuidador'
+            : 'Activar Perfil de Cuidador'}
         </Text>
       </View>
 

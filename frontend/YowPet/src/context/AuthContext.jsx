@@ -30,7 +30,6 @@ const processUserData = rawUserData => {
     try {
       decodedData = jwtDecode(rawUserData.token);
       console.log('Token decodificado:', decodedData);
-
     } catch (error) {
       console.error('Error al decodificar token:', error);
     }
@@ -39,7 +38,12 @@ const processUserData = rawUserData => {
   return {
     ...rawUserData,
     // Verifica ambos formatos posibles: id o userId
-    userId: decodedData.id || decodedData.userId || decodedData.sub || rawUserData.userId || rawUserData.id,
+    userId:
+      decodedData.id ||
+      decodedData.userId ||
+      decodedData.sub ||
+      rawUserData.userId ||
+      rawUserData.id,
     email: decodedData.email || decodedData.mail || rawUserData.email,
     firstName: rawUserData.firstName || '',
     lastName: rawUserData.lastName || '',

@@ -16,7 +16,6 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { educateService } from '../../services/educate/educateService';
 import { BackButton } from '@components/global/BackButton';
 
-
 const { width } = Dimensions.get('window');
 
 export default function EducateScreen() {
@@ -42,15 +41,17 @@ export default function EducateScreen() {
     fetchLessons();
   }, []);
 
-  const filteredLessons = lessons.filter(lesson => lesson.level === selectedLevel);
+  const filteredLessons = lessons.filter(
+    lesson => lesson.level === selectedLevel
+  );
 
   if (loading) {
     return (
-        <ScreenContainer backgroundColor={YowPetTheme.brand.white}>
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={YowPetTheme.brand.primary} />
-          </View>
-        </ScreenContainer>
+      <ScreenContainer backgroundColor={YowPetTheme.brand.white}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={YowPetTheme.brand.primary} />
+        </View>
+      </ScreenContainer>
     );
   }
 
@@ -65,7 +66,7 @@ export default function EducateScreen() {
       <View style={styles.contentContainer}>
         <View style={styles.filterWrapper}>
           <View style={styles.filterContainer}>
-            {levels.map((level) => (
+            {levels.map(level => (
               <TouchableOpacity
                 key={level}
                 style={[

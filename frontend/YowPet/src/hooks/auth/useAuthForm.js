@@ -64,7 +64,7 @@ export function useAuthForm() {
           email: responseData.email || values.email,
           firstName: responseData.firstName || '',
           lastName: responseData.lastName || '',
-          username: responseData.username || values.email.split('@')[0]
+          username: responseData.username || values.email.split('@')[0],
         };
 
         // Validar datos críticos
@@ -94,7 +94,7 @@ export function useAuthForm() {
           email: responseData.email || values.email,
           firstName: responseData.firstName || values.firstName,
           lastName: responseData.lastName || values.lastName,
-          username: responseData.username || values.email.split('@')[0]
+          username: responseData.username || values.email.split('@')[0],
         };
 
         // Validar datos críticos

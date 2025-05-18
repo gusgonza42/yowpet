@@ -10,7 +10,11 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native';
-import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
 import { YowPetTheme } from '@theme/Colors';
@@ -46,16 +50,23 @@ export default function PaymentScreen() {
 
     const timer = setTimeout(() => {
       if (selectedPaymentType) {
-        setPaymentMethods([{
-          id: 1,
-          type: selectedPaymentType,
-          brand: selectedPaymentType === 'visa' ? 'visa' :
-            selectedPaymentType === 'paypal' ? 'paypal' :
-              selectedPaymentType === 'manual' ? 'manual' : 'credit',
-          lastDigits: '4321',
-          isDefault: true,
-          expDate: '05/27',
-        }]);
+        setPaymentMethods([
+          {
+            id: 1,
+            type: selectedPaymentType,
+            brand:
+              selectedPaymentType === 'visa'
+                ? 'visa'
+                : selectedPaymentType === 'paypal'
+                  ? 'paypal'
+                  : selectedPaymentType === 'manual'
+                    ? 'manual'
+                    : 'credit',
+            lastDigits: '4321',
+            isDefault: true,
+            expDate: '05/27',
+          },
+        ]);
       } else {
         setPaymentMethods([]);
       }
@@ -65,50 +76,82 @@ export default function PaymentScreen() {
     return () => clearTimeout(timer);
   }, [selectedPaymentType, user]);
 
-  const handleSelectPaymentType = (type) => {
+  const handleSelectPaymentType = type => {
     setIsLoading(true);
     setSelectedPaymentType(type);
   };
 
   const handleAddPaymentMethod = () => {
     if (!selectedPaymentType) {
-      Alert.alert('Selecciona un método', 'Primero selecciona un método de pago');
+      Alert.alert(
+        'Selecciona un método',
+        'Primero selecciona un método de pago'
+      );
       return;
     }
-    setModalMessage('Próximamente podrás añadir detalles para este método de pago');
+    setModalMessage(
+      'Próximamente podrás añadir detalles para este método de pago'
+    );
     setShowComingSoonModal(true);
   };
 
-  const handleEditPaymentMethod = (id) => {
+  const handleEditPaymentMethod = id => {
     setModalMessage('Próximamente podrás editar este método de pago');
     setShowComingSoonModal(true);
   };
 
-  const handleDeletePaymentMethod = (id) => {
+  const handleDeletePaymentMethod = id => {
     setModalMessage('Próximamente podrás eliminar este método de pago');
     setShowComingSoonModal(true);
   };
 
-  const handleSetDefaultPaymentMethod = (id) => {
-    setModalMessage('Próximamente podrás establecer un método de pago predeterminado');
+  const handleSetDefaultPaymentMethod = id => {
+    setModalMessage(
+      'Próximamente podrás establecer un método de pago predeterminado'
+    );
     setShowComingSoonModal(true);
   };
 
-  const getCardLogo = (brand) => {
+  const getCardLogo = brand => {
     switch (brand) {
       case 'visa':
-        return <MaterialCommunityIcons name="credit-card" size={32} color={YowPetTheme.brand.primary} />;
+        return (
+          <MaterialCommunityIcons
+            name="credit-card"
+            size={32}
+            color={YowPetTheme.brand.primary}
+          />
+        );
       case 'paypal':
-        return <MaterialCommunityIcons name="paypal" size={32} color="#003087" />;
+        return (
+          <MaterialCommunityIcons name="paypal" size={32} color="#003087" />
+        );
       case 'manual':
-        return <MaterialCommunityIcons name="hand-coin" size={32} color={YowPetTheme.brand.primary} />;
+        return (
+          <MaterialCommunityIcons
+            name="hand-coin"
+            size={32}
+            color={YowPetTheme.brand.primary}
+          />
+        );
       default:
-        return <MaterialCommunityIcons name="credit-card-outline" size={32} color={YowPetTheme.text.mainText} />;
+        return (
+          <MaterialCommunityIcons
+            name="credit-card-outline"
+            size={32}
+            color={YowPetTheme.text.mainText}
+          />
+        );
     }
   };
 
   const renderPaymentMethod = ({ item }) => (
-    <View style={[styles.paymentCard, { backgroundColor: item.isDefault ? '#EBE9FC' : '#f9f9f9' }]}>
+    <View
+      style={[
+        styles.paymentCard,
+        { backgroundColor: item.isDefault ? '#EBE9FC' : '#f9f9f9' },
+      ]}
+    >
       <View style={styles.paymentCardHeader}>
         {getCardLogo(item.brand)}
         <View style={styles.paymentCardInfo}>
@@ -117,7 +160,9 @@ export default function PaymentScreen() {
           </Text>
           {item.type !== 'manual' ? (
             <>
-              <Text style={styles.cardNumber}>•••• •••• •••• {item.lastDigits}</Text>
+              <Text style={styles.cardNumber}>
+                •••• •••• •••• {item.lastDigits}
+              </Text>
               <Text style={styles.expDate}>Exp: {item.expDate}</Text>
             </>
           ) : (
@@ -139,7 +184,11 @@ export default function PaymentScreen() {
             style={styles.actionButton}
             onPress={() => handleSetDefaultPaymentMethod(item.id)}
           >
-            <Ionicons name="checkmark-circle-outline" size={18} color={YowPetTheme.brand.primary} />
+            <Ionicons
+              name="checkmark-circle-outline"
+              size={18}
+              color={YowPetTheme.brand.primary}
+            />
             <Text style={styles.actionButtonText}>Predeterminado</Text>
           </TouchableOpacity>
         )}
@@ -147,7 +196,11 @@ export default function PaymentScreen() {
           style={styles.actionButton}
           onPress={() => handleEditPaymentMethod(item.id)}
         >
-          <MaterialIcons name="edit" size={18} color={YowPetTheme.brand.primary} />
+          <MaterialIcons
+            name="edit"
+            size={18}
+            color={YowPetTheme.brand.primary}
+          />
           <Text style={styles.actionButtonText}>Editar</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -161,7 +214,7 @@ export default function PaymentScreen() {
     </View>
   );
 
-  const renderPaymentOption = (option) => {
+  const renderPaymentOption = option => {
     const isSelected = selectedPaymentType === option.id;
     return (
       <TouchableOpacity
@@ -176,9 +229,18 @@ export default function PaymentScreen() {
         <MaterialCommunityIcons
           name={option.icon}
           size={28}
-          color={isSelected ? YowPetTheme.background.mainWhite : YowPetTheme.brand.primary}
+          color={
+            isSelected
+              ? YowPetTheme.background.mainWhite
+              : YowPetTheme.brand.primary
+          }
         />
-        <Text style={[styles.paymentOptionText, isSelected && styles.paymentOptionTextSelected]}>
+        <Text
+          style={[
+            styles.paymentOptionText,
+            isSelected && styles.paymentOptionTextSelected,
+          ]}
+        >
           {option.name}
         </Text>
       </TouchableOpacity>
@@ -188,8 +250,15 @@ export default function PaymentScreen() {
   return (
     <View style={styles.mainContainer}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color={YowPetTheme.text.mainText} />
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.backButton}
+        >
+          <Ionicons
+            name="arrow-back"
+            size={24}
+            color={YowPetTheme.text.mainText}
+          />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Métodos de pago</Text>
       </View>
@@ -199,21 +268,30 @@ export default function PaymentScreen() {
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
       >
-        <View style={[
-          styles.paymentOptionsContainer,
-          { justifyContent: dimensions.width > 600 ? 'center' : 'space-between' },
-        ]}>
+        <View
+          style={[
+            styles.paymentOptionsContainer,
+            {
+              justifyContent:
+                dimensions.width > 600 ? 'center' : 'space-between',
+            },
+          ]}
+        >
           {PAYMENT_OPTIONS.map(renderPaymentOption)}
         </View>
 
         {isLoading ? (
           <View style={styles.loadingContainer}>
-            <MaterialIcons name="hourglass-empty" size={40} color={YowPetTheme.brand.primary} />
+            <MaterialIcons
+              name="hourglass-empty"
+              size={40}
+              color={YowPetTheme.brand.primary}
+            />
             <Text style={styles.loadingText}>Cargando métodos de pago...</Text>
           </View>
         ) : selectedPaymentType && paymentMethods.length > 0 ? (
           <View style={styles.paymentMethodsContainer}>
-            {paymentMethods.map((method) => (
+            {paymentMethods.map(method => (
               <View key={method.id.toString()}>
                 {renderPaymentMethod({ item: method })}
               </View>
@@ -221,12 +299,20 @@ export default function PaymentScreen() {
           </View>
         ) : (
           <View style={styles.emptyState}>
-            <MaterialIcons name="payment" size={64} color={YowPetTheme.text.secondaryText} />
+            <MaterialIcons
+              name="payment"
+              size={64}
+              color={YowPetTheme.text.secondaryText}
+            />
             <Text style={styles.emptyStateTitle}>
-              {selectedPaymentType ? 'No hay métodos de pago configurados' : 'Selecciona un método de pago'}
+              {selectedPaymentType
+                ? 'No hay métodos de pago configurados'
+                : 'Selecciona un método de pago'}
             </Text>
             <Text style={styles.emptyStateText}>
-              {selectedPaymentType ? 'Añade una forma de pago para facilitar tus transacciones' : 'Elige uno de los métodos de pago disponibles arriba'}
+              {selectedPaymentType
+                ? 'Añade una forma de pago para facilitar tus transacciones'
+                : 'Elige uno de los métodos de pago disponibles arriba'}
             </Text>
           </View>
         )}
@@ -240,12 +326,15 @@ export default function PaymentScreen() {
         ]}
         onPress={handleAddPaymentMethod}
       >
-        <Ionicons name="add-circle" size={24} color={YowPetTheme.background.mainWhite} />
+        <Ionicons
+          name="add-circle"
+          size={24}
+          color={YowPetTheme.background.mainWhite}
+        />
         <Text style={styles.addButtonText}>
           {selectedPaymentType
             ? `Añadir datos de ${PAYMENT_OPTIONS.find(opt => opt.id === selectedPaymentType)?.name}`
-            : 'Selecciona un método primero'
-          }
+            : 'Selecciona un método primero'}
         </Text>
       </TouchableOpacity>
 
@@ -256,11 +345,17 @@ export default function PaymentScreen() {
         onRequestClose={() => setShowComingSoonModal(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={[
-            styles.modalContent,
-            { width: dimensions.width > 600 ? '60%' : '80%' },
-          ]}>
-            <MaterialIcons name="work" size={48} color={YowPetTheme.brand.primary} />
+          <View
+            style={[
+              styles.modalContent,
+              { width: dimensions.width > 600 ? '60%' : '80%' },
+            ]}
+          >
+            <MaterialIcons
+              name="work"
+              size={48}
+              color={YowPetTheme.brand.primary}
+            />
             <Text style={styles.modalTitle}>Próximamente</Text>
             <Text style={styles.modalMessage}>{modalMessage}</Text>
             <TouchableOpacity

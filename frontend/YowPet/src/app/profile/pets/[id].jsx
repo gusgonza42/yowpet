@@ -100,7 +100,7 @@ export default function PetDetailScreen() {
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>{title}</Text>
-          {options.map((option) => (
+          {options.map(option => (
             <TouchableOpacity
               key={option.id}
               style={styles.modalOption}
@@ -169,12 +169,16 @@ export default function PetDetailScreen() {
           <TextInput
             style={styles.headerInput}
             value={editedPet.name}
-            onChangeText={(text) => setEditedPet(prev => ({ ...prev, name: text }))}
+            onChangeText={text =>
+              setEditedPet(prev => ({ ...prev, name: text }))
+            }
           />
         ) : (
           <Text style={styles.headerTitle}>{pet.name}</Text>
         )}
-        <TouchableOpacity onPress={isEditing ? handleSave : () => setIsEditing(true)}>
+        <TouchableOpacity
+          onPress={isEditing ? handleSave : () => setIsEditing(true)}
+        >
           <Ionicons
             name={isEditing ? 'checkmark-outline' : 'create-outline'}
             size={24}
@@ -189,12 +193,18 @@ export default function PetDetailScreen() {
           onPress={isEditing ? pickImage : undefined}
         >
           <Image
-            source={{ uri: isEditing ? editedPet.profilePicture : pet.profilePicture }}
+            source={{
+              uri: isEditing ? editedPet.profilePicture : pet.profilePicture,
+            }}
             style={styles.petImage}
           />
           {isEditing && (
             <View style={styles.editImageOverlay}>
-              <Ionicons name="camera" size={24} color={YowPetTheme.text.invertedText} />
+              <Ionicons
+                name="camera"
+                size={24}
+                color={YowPetTheme.text.invertedText}
+              />
             </View>
           )}
         </TouchableOpacity>
@@ -208,9 +218,17 @@ export default function PetDetailScreen() {
                 onPress={() => setShowCategoryModal(true)}
               >
                 <Text style={styles.selectorText}>
-                  {ANIMAL_CATEGORIES.find(c => c.id === editedPet.animalCategory)?.name}
+                  {
+                    ANIMAL_CATEGORIES.find(
+                      c => c.id === editedPet.animalCategory
+                    )?.name
+                  }
                 </Text>
-                <Ionicons name="chevron-down" size={24} color={YowPetTheme.text.subtleText} />
+                <Ionicons
+                  name="chevron-down"
+                  size={24}
+                  color={YowPetTheme.text.subtleText}
+                />
               </TouchableOpacity>
             ) : (
               <Text style={styles.value}>
@@ -227,7 +245,11 @@ export default function PetDetailScreen() {
                 onPress={() => setShowBreedModal(true)}
               >
                 <Text style={styles.selectorText}>{editedPet.breed}</Text>
-                <Ionicons name="chevron-down" size={24} color={YowPetTheme.text.subtleText} />
+                <Ionicons
+                  name="chevron-down"
+                  size={24}
+                  color={YowPetTheme.text.subtleText}
+                />
               </TouchableOpacity>
             ) : (
               <Text style={styles.value}>{pet.breed}</Text>
@@ -244,7 +266,11 @@ export default function PetDetailScreen() {
                 <Text style={styles.selectorText}>
                   {GENDERS.find(g => g.id === editedPet.gender)?.name}
                 </Text>
-                <Ionicons name="chevron-down" size={24} color={YowPetTheme.text.subtleText} />
+                <Ionicons
+                  name="chevron-down"
+                  size={24}
+                  color={YowPetTheme.text.subtleText}
+                />
               </TouchableOpacity>
             ) : (
               <Text style={styles.value}>
@@ -253,14 +279,15 @@ export default function PetDetailScreen() {
             )}
           </View>
 
-
           <View style={styles.descriptionRow}>
             <Text style={styles.label}>Descripción:</Text>
             {isEditing ? (
               <TextInput
                 style={styles.input}
                 value={editedPet.description}
-                onChangeText={(text) => setEditedPet(prev => ({ ...prev, description: text }))}
+                onChangeText={text =>
+                  setEditedPet(prev => ({ ...prev, description: text }))
+                }
                 multiline
               />
             ) : (
@@ -274,7 +301,9 @@ export default function PetDetailScreen() {
               <TextInput
                 style={styles.inputBelow}
                 value={editedPet.emergencyContact}
-                onChangeText={(text) => setEditedPet(prev => ({ ...prev, emergencyContact: text }))}
+                onChangeText={text =>
+                  setEditedPet(prev => ({ ...prev, emergencyContact: text }))
+                }
                 keyboardType="phone-pad"
               />
             ) : (
@@ -290,7 +319,11 @@ export default function PetDetailScreen() {
                   onPress={() => setShowDatePicker(true)}
                 >
                   <Text style={styles.selectorText}>{editedPet.birthDate}</Text>
-                  <Ionicons name="calendar" size={24} color={YowPetTheme.text.subtleText} />
+                  <Ionicons
+                    name="calendar"
+                    size={24}
+                    color={YowPetTheme.text.subtleText}
+                  />
                 </TouchableOpacity>
                 <CustomDatePicker
                   visible={showDatePicker}
@@ -308,10 +341,23 @@ export default function PetDetailScreen() {
             <Text style={styles.label}>Esterilizado:</Text>
             {isEditing ? (
               <TouchableOpacity
-                style={[styles.checkbox, editedPet.sterilized && styles.checkboxChecked]}
-                onPress={() => setEditedPet(prev => ({ ...prev, sterilized: !prev.sterilized }))}
+                style={[
+                  styles.checkbox,
+                  editedPet.sterilized && styles.checkboxChecked,
+                ]}
+                onPress={() =>
+                  setEditedPet(prev => ({
+                    ...prev,
+                    sterilized: !prev.sterilized,
+                  }))
+                }
               >
-                <Text style={[styles.checkboxText, editedPet.sterilized && styles.checkboxTextChecked]}>
+                <Text
+                  style={[
+                    styles.checkboxText,
+                    editedPet.sterilized && styles.checkboxTextChecked,
+                  ]}
+                >
                   {editedPet.sterilized ? 'Sí' : 'No'}
                 </Text>
               </TouchableOpacity>
@@ -319,13 +365,15 @@ export default function PetDetailScreen() {
               <Ionicons
                 name={pet.sterilized ? 'checkmark-circle' : 'close-circle'}
                 size={24}
-                color={pet.sterilized ? YowPetTheme.status.successState : YowPetTheme.status.errorState}
+                color={
+                  pet.sterilized
+                    ? YowPetTheme.status.successState
+                    : YowPetTheme.status.errorState
+                }
               />
             )}
           </View>
-
         </View>
-
       </ScrollView>
 
       <SelectModal
@@ -333,7 +381,9 @@ export default function PetDetailScreen() {
         onClose={() => setShowCategoryModal(false)}
         title="Seleccionar tipo de mascota"
         options={ANIMAL_CATEGORIES}
-        onSelect={(category) => setEditedPet(prev => ({ ...prev, animalCategory: category.id }))}
+        onSelect={category =>
+          setEditedPet(prev => ({ ...prev, animalCategory: category.id }))
+        }
       />
 
       <SelectModal
@@ -341,7 +391,9 @@ export default function PetDetailScreen() {
         onClose={() => setShowBreedModal(false)}
         title="Seleccionar raza"
         options={getBreedOptions()}
-        onSelect={(breed) => setEditedPet(prev => ({ ...prev, breed: breed.name }))}
+        onSelect={breed =>
+          setEditedPet(prev => ({ ...prev, breed: breed.name }))
+        }
       />
 
       <SelectModal
@@ -349,7 +401,9 @@ export default function PetDetailScreen() {
         onClose={() => setShowGenderModal(false)}
         title="Seleccionar género"
         options={GENDERS}
-        onSelect={(gender) => setEditedPet(prev => ({ ...prev, gender: gender.id }))}
+        onSelect={gender =>
+          setEditedPet(prev => ({ ...prev, gender: gender.id }))
+        }
       />
 
       {showDatePicker && (
@@ -470,7 +524,8 @@ const styles = StyleSheet.create({
   input: {
     flex: 2,
     backgroundColor: YowPetTheme.brand.white,
-    borderColor: YowPetTheme.brand.surface, padding: 12,
+    borderColor: YowPetTheme.brand.surface,
+    padding: 12,
     borderRadius: 12,
     fontSize: 16,
     color: YowPetTheme.text.mainText,

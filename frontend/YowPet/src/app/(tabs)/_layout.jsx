@@ -45,7 +45,7 @@ const TabsLayout = () => {
             marginHorizontal: 20,
             borderRadius: 55,
             // En lugar de elevation, usa la misma configuración de sombra que iOS
-            elevation: 0,  // Desactiva la sombra predeterminada de Android
+            elevation: 0, // Desactiva la sombra predeterminada de Android
             shadowColor: YowPetTheme.shadow.mediumShadow,
             shadowOffset: { width: 0, height: 4 },
             shadowOpacity: 0.3,
@@ -112,7 +112,7 @@ const TabsLayout = () => {
           android: {
             fontSize: 12,
             fontWeight: '600',
-            paddingBottom: 0,  // Crucial para que se vea como en iOS
+            paddingBottom: 0, // Crucial para que se vea como en iOS
             color: YowPetTheme.brand.white,
           },
         }),

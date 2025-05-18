@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { Text, View, Image, TouchableOpacity, FlatList, StyleSheet, SafeAreaView } from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+  SafeAreaView,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { YowPetTheme } from '@theme/Colors';
@@ -28,10 +36,7 @@ export default function PetsScreen() {
       style={styles.petCard}
       onPress={() => router.push(`./pets/${item.id}`)}
     >
-      <Image
-        source={{ uri: item.image }}
-        style={styles.petImage}
-      />
+      <Image source={{ uri: item.image }} style={styles.petImage} />
       <View style={styles.petInfo}>
         <Text style={styles.petName}>{item.name}</Text>
         <Text style={styles.petType}>{item.type}</Text>
@@ -60,7 +65,7 @@ export default function PetsScreen() {
         <FlatList
           data={pets}
           renderItem={renderPetCard}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id}
           contentContainerStyle={styles.listContainer}
           showsVerticalScrollIndicator={false}
         />
@@ -69,7 +74,11 @@ export default function PetsScreen() {
           style={styles.addButton}
           onPress={() => router.push('./pets/new')}
         >
-          <Ionicons name="add" size={24} color={YowPetTheme.background.mainWhite} />
+          <Ionicons
+            name="add"
+            size={24}
+            color={YowPetTheme.background.mainWhite}
+          />
           <Text style={styles.addButtonText}>Añadir Mascota</Text>
         </TouchableOpacity>
       </View>

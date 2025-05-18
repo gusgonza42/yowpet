@@ -52,16 +52,21 @@ export const useCaregiver = () => {
           });
 
           // Si ya tiene datos completos del perfil
-          if (caregiverData.speciality &&
+          if (
+            caregiverData.speciality &&
             caregiverData.experienceYears &&
             caregiverData.hourlyRate &&
             caregiverData.description &&
-            caregiverData.serviceWorker) {
+            caregiverData.serviceWorker
+          ) {
             setProfileComplete(true);
           }
         } catch (error) {
           console.error('Error al obtener datos del cuidador:', error.message);
-          Alert.alert('Error', 'No se pudo obtener la información del cuidador');
+          Alert.alert(
+            'Error',
+            'No se pudo obtener la información del cuidador'
+          );
         }
       }
     } catch (error) {
@@ -79,7 +84,10 @@ export const useCaregiver = () => {
       const success = await activateCaregiver(user.userId);
       if (success) {
         setIsActivated(true);
-        Alert.alert('¡Perfil Activado!', 'Ahora completa tus datos como cuidador');
+        Alert.alert(
+          '¡Perfil Activado!',
+          'Ahora completa tus datos como cuidador'
+        );
       }
     } catch (error) {
       console.error('Error al activar perfil:', error);
@@ -90,8 +98,17 @@ export const useCaregiver = () => {
   };
 
   const handleCreateProfile = async () => {
-    if (!formData.speciality || !formData.experience || !formData.hourlyRate || !formData.description || formData.services.length === 0) {
-      Alert.alert('Error', 'Por favor completa todos los campos obligatorios y selecciona al menos un servicio');
+    if (
+      !formData.speciality ||
+      !formData.experience ||
+      !formData.hourlyRate ||
+      !formData.description ||
+      formData.services.length === 0
+    ) {
+      Alert.alert(
+        'Error',
+        'Por favor completa todos los campos obligatorios y selecciona al menos un servicio'
+      );
       return;
     }
 
@@ -116,12 +133,15 @@ export const useCaregiver = () => {
         Alert.alert(
           '¡Perfil Completado!',
           'Tus datos han sido guardados correctamente',
-          [{ text: 'OK' }],
+          [{ text: 'OK' }]
         );
       }
     } catch (error) {
       console.error('Error al crear perfil:', error);
-      Alert.alert('Error', 'No se pudieron guardar los datos. Inténtalo de nuevo.');
+      Alert.alert(
+        'Error',
+        'No se pudieron guardar los datos. Inténtalo de nuevo.'
+      );
     } finally {
       setLoading(false);
     }
@@ -139,7 +159,7 @@ export const useCaregiver = () => {
         Alert.alert(
           'Perfil Desactivado',
           'Has dejado de ser cuidador. Puedes volver a activar tu perfil cuando lo desees.',
-          [{ text: 'OK' }],
+          [{ text: 'OK' }]
         );
       }
     } catch (error) {
@@ -150,7 +170,7 @@ export const useCaregiver = () => {
     }
   };
 
-  const toggleService = (service) => {
+  const toggleService = service => {
     setFormData(prev => ({
       ...prev,
       services: prev.services.includes(service)
@@ -159,7 +179,7 @@ export const useCaregiver = () => {
     }));
   };
 
-  const toggleDay = (day) => {
+  const toggleDay = day => {
     setFormData(prev => ({
       ...prev,
       availability: prev.availability.includes(day)

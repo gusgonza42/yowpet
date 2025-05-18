@@ -1,16 +1,22 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { YowPetTheme } from '@theme/Colors';
 
 export const CustomDatePicker = ({
-                                   visible,
-                                   date,
-                                   onClose,
-                                   onDateChange,
-                                   maximumDate,
-                                   placeholder = 'Seleccionar fecha',
-                                 }) => {
+  visible,
+  date,
+  onClose,
+  onDateChange,
+  maximumDate,
+  placeholder = 'Seleccionar fecha',
+}) => {
   if (!visible) return null;
 
   if (Platform.OS === 'android') {
