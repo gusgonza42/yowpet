@@ -1,14 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { YowPetTheme } from '@theme/Colors';
 import { useRouter } from 'expo-router';
 import { styles } from './styles';
+import { userService } from '@service/profile/userService';
 
 export const ProfileHeader = ({ user, screenWidth }) => {
   const router = useRouter();
   const isSmallScreen = screenWidth < 360;
   const isVerySmallScreen = screenWidth < 320;
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const cargarDatosUsuario = async () => {
+      try {
+        if (user?.userId) {
+          const datos = await userService.obtenerPerfil();
+          setUserData(datos);
+        }
+      } catch (error) {
+        console.error('Error al cargar datos del usuario:', error);
+      }
+    };
+
+    cargarDatosUsuario();
+  }, [user]);
 
   const dynamicStyles = {
     profileSection: {
@@ -35,6 +52,10 @@ export const ProfileHeader = ({ user, screenWidth }) => {
     },
   };
 
+  const nombreCompleto = userData
+    ? `${userData.firstName || ''} ${userData.lastName || ''}`
+    : 'Cargando...';
+
   return (
     <View style={styles.ProfileHeader.header}>
       <View style={dynamicStyles.profileSection}>
@@ -51,7 +72,7 @@ export const ProfileHeader = ({ user, screenWidth }) => {
 
         <View style={dynamicStyles.profileInfo}>
           <Text style={styles.ProfileHeader.profileName}>
-            {user?.fullName || 'Tester YowPet'}
+            {nombreCompleto}
           </Text>
           <Text style={styles.ProfileHeader.profileEmail}>
             {user?.email || 'notemail@yowpet.cat'}

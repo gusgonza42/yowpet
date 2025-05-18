@@ -20,7 +20,6 @@ export default function ProfileScreen() {
   const router = useRouter();
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
 
-  // Actualizar dimensiones cuando cambia la orientación
   useEffect(() => {
     const subscription = Dimensions.addEventListener('change', ({ window }) => {
       setDimensions(window);
