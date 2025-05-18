@@ -514,11 +514,11 @@ export default function NewPetScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: YowPetTheme.background.mainWhite,
+    backgroundColor: YowPetTheme.brand.primary,
   },
   container: {
     flex: 1,
-    backgroundColor: YowPetTheme.background.mainWhite,
+    backgroundColor: YowPetTheme.brand.primary,
   },
   header: {
     flexDirection: 'row',
@@ -526,7 +526,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: YowPetTheme.border.softBorder,
-    backgroundColor: YowPetTheme.background.primary,
+    backgroundColor: YowPetTheme.background.mainWhite,
   },
   headerTitle: {
     fontSize: 20,
@@ -569,7 +569,7 @@ const styles = StyleSheet.create({
     borderColor: YowPetTheme.border.softBorder,
   },
   saveButton: {
-    backgroundColor: YowPetTheme.brand.primary,
+    backgroundColor: YowPetTheme.brand.orange,
     padding: 16,
     borderRadius: 12,
     marginHorizontal: 16,
@@ -577,7 +577,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   saveButtonText: {
-    color: YowPetTheme.text.invertedText,
+    color: YowPetTheme.brand.support,
     fontSize: 16,
     fontWeight: '600',
   },
@@ -635,7 +635,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   modalCloseText: {
-    color: YowPetTheme.brand.primary,
+    color: YowPetTheme.brand.orange,
     fontSize: 16,
     fontWeight: '600',
   },
