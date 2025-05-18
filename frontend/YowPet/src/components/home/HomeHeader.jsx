@@ -36,6 +36,12 @@ export function HomeHeader({ user }) {
   return (
     <View style={styles.header}>
       <View>
+        <View style={styles.welcomeContainer}>
+          <Text style={styles.welcomeYow}>¡Bienvenido/a a </Text>
+          <Text style={styles.yow}>Yow</Text>
+          <Text style={styles.pet}>Pet</Text>
+          <Text style={styles.welcomeYow}>!</Text>
+        </View>
         <Text style={styles.greeting}>Hola, {getDisplayName()} 👋</Text>
         <Text style={styles.subtitle}>¿Cómo están tus mascotas hoy?</Text>
       </View>
@@ -58,6 +64,26 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 20,
+  },
+  welcomeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  welcomeYow: {
+    fontSize: 14,
+    color: YowPetTheme.brand.support,
+    fontWeight: '600',
+  },
+  yow: {
+    fontSize: 14,
+    color: YowPetTheme.brand.primary,
+    fontWeight: '600',
+  },
+  pet: {
+    fontSize: 14,
+    color: YowPetTheme.brand.orange,
+    fontWeight: '600',
   },
   greeting: {
     fontSize: 24,
