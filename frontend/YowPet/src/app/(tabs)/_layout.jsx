@@ -34,6 +34,7 @@ const TabsLayout = () => {
             shadowOffset: { width: 0, height: 4 },
             shadowOpacity: 0.3,
             shadowRadius: 4.65,
+            borderTopWidth: 0,
           },
           android: {
             height: 78,
@@ -44,12 +45,12 @@ const TabsLayout = () => {
             bottom: 20,
             marginHorizontal: 20,
             borderRadius: 55,
-            // En lugar de elevation, usa la misma configuración de sombra que iOS
-            elevation: 0, // Desactiva la sombra predeterminada de Android
+            elevation: 0,
             shadowColor: YowPetTheme.shadow.mediumShadow,
             shadowOffset: { width: 0, height: 4 },
             shadowOpacity: 0.3,
             shadowRadius: 4.65,
+            borderTopWidth: 0,
           },
           web: {
             height: 70,
@@ -112,7 +113,7 @@ const TabsLayout = () => {
           android: {
             fontSize: 12,
             fontWeight: '600',
-            paddingBottom: 0, // Crucial para que se vea como en iOS
+            paddingBottom: 0,
             color: YowPetTheme.brand.white,
           },
         }),
@@ -160,7 +161,7 @@ const TabsLayout = () => {
       <Tabs.Screen
         name="planner"
         options={{
-          title: 'Calendario',
+          title: 'Planner',
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="calendar" size={size} color={color} />
