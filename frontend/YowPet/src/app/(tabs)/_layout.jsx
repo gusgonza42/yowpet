@@ -66,6 +66,7 @@ const TabsLayout = () => {
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             paddingHorizontal: 20,
             display: 'flex',
+            borderTopWidth: 0,
           },
         }),
         tabBarShowLabel: true,
