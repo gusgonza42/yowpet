@@ -275,7 +275,7 @@ export default function NewPetScreen() {
             <Text style={styles.selectorText}>
               {petData.animalCategory
                 ? ANIMAL_CATEGORIES.find(c => c.id === petData.animalCategory)
-                    ?.name || 'Seleccionar tipo de mascota *'
+                ?.name || 'Seleccionar tipo de mascota *'
                 : 'Seleccionar tipo de mascota *'}
             </Text>
             <Ionicons
@@ -308,7 +308,7 @@ export default function NewPetScreen() {
               <Text style={styles.selectorText}>
                 {petData.breed
                   ? getBreedOptions().find(b => b.id === petData.breed)?.name ||
-                    'Seleccionar raza'
+                  'Seleccionar raza'
                   : 'Seleccionar raza'}
               </Text>
               <Ionicons

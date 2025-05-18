@@ -89,11 +89,11 @@ export default function PetsScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: YowPetTheme.background.mainWhite,
+    backgroundColor: YowPetTheme.brand.primary,
   },
   container: {
     flex: 1,
-    backgroundColor: YowPetTheme.background.mainWhite,
+    backgroundColor: YowPetTheme.background.primary,
   },
   header: {
     flexDirection: 'row',
@@ -110,13 +110,13 @@ const styles = StyleSheet.create({
     color: YowPetTheme.text.mainText,
   },
   listContainer: {
-    padding: 16,
-    paddingTop: 0,
+    padding: 15,
+    paddingTop: 20,
   },
   petCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: YowPetTheme.background.mainWhite,
+    backgroundColor: YowPetTheme.brand.white,
     borderRadius: 12,
     padding: 12,
     marginBottom: 12,
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: YowPetTheme.brand.primary,
+    backgroundColor: YowPetTheme.brand.orange,
     padding: 16,
     borderRadius: 12,
     position: 'absolute',
