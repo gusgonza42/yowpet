@@ -8,7 +8,11 @@ export function DailyPlans() {
       <Text style={styles.sectionTitle}>Planes para hoy</Text>
       <View style={styles.planCard}>
         <View style={styles.planIcon}>
-          <MaterialCommunityIcons name="calendar-clock" size={24} color={YowPetTheme.status.info} />
+          <MaterialCommunityIcons
+            name="calendar-clock"
+            size={24}
+            color={YowPetTheme.status.info}
+          />
         </View>
         <View style={styles.planInfo}>
           <Text style={styles.planTitle}>Paseo con Luna</Text>
@@ -16,8 +20,17 @@ export function DailyPlans() {
         </View>
       </View>
       <View style={styles.planCard}>
-        <View style={[styles.planIcon, { backgroundColor: YowPetTheme.status.warning + '20' }]}>
-          <MaterialCommunityIcons name="food" size={24} color={YowPetTheme.status.warning} />
+        <View
+          style={[
+            styles.planIcon,
+            { backgroundColor: YowPetTheme.status.warning + '20' },
+          ]}
+        >
+          <MaterialCommunityIcons
+            name="food"
+            size={24}
+            color={YowPetTheme.status.warning}
+          />
         </View>
         <View style={styles.planInfo}>
           <Text style={styles.planTitle}>Alimentación</Text>

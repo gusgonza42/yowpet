@@ -71,9 +71,7 @@ export const ProfileHeader = ({ user, screenWidth }) => {
         </View>
 
         <View style={dynamicStyles.profileInfo}>
-          <Text style={styles.ProfileHeader.profileName}>
-            {nombreCompleto}
-          </Text>
+          <Text style={styles.ProfileHeader.profileName}>{nombreCompleto}</Text>
           <Text style={styles.ProfileHeader.profileEmail}>
             {user?.email || 'notemail@yowpet.cat'}
           </Text>

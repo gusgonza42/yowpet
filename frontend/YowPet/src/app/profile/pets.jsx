@@ -25,7 +25,7 @@ export default function PetsScreen() {
   useFocusEffect(
     useCallback(() => {
       cargarMascotas();
-    }, []),
+    }, [])
   );
 
   const cargarMascotas = async () => {
@@ -38,7 +38,7 @@ export default function PetsScreen() {
       Alert.alert(
         'Error',
         'No se pudieron cargar las mascotas. Por favor, intenta de nuevo.',
-        [{ text: 'Entendido' }],
+        [{ text: 'Entendido' }]
       );
     } finally {
       setIsLoading(false);
@@ -64,7 +64,9 @@ export default function PetsScreen() {
           {item.customCategory || item.animalCategory}
         </Text>
         <Text style={styles.petAge}>
-          {item.birthDate ? new Date(item.birthDate).toLocaleDateString() : 'Fecha no disponible'}
+          {item.birthDate
+            ? new Date(item.birthDate).toLocaleDateString()
+            : 'Fecha no disponible'}
         </Text>
       </View>
       <Ionicons
@@ -82,9 +84,7 @@ export default function PetsScreen() {
         size={64}
         color={YowPetTheme.text.subtleText}
       />
-      <Text style={styles.emptyText}>
-        No tienes mascotas registradas
-      </Text>
+      <Text style={styles.emptyText}>No tienes mascotas registradas</Text>
       <Text style={styles.emptySubtext}>
         Comienza agregando a tu primer compañero
       </Text>

@@ -1,4 +1,11 @@
-import { View, Text, Pressable, ScrollView, Image, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  Pressable,
+  ScrollView,
+  Image,
+  StyleSheet,
+} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { YowPetTheme } from '@theme/Colors';
 import { useRouter } from 'expo-router';
@@ -21,9 +28,15 @@ export function PetHighlight({ pets = [], onAddPet, isLoading }) {
     return (
       <View style={styles.highlightCard}>
         <View style={styles.highlightContent}>
-          <MaterialCommunityIcons name="paw" size={32} color={YowPetTheme.brand.primary} />
+          <MaterialCommunityIcons
+            name="paw"
+            size={32}
+            color={YowPetTheme.brand.primary}
+          />
           <Text style={styles.highlightTitle}>Registra tu mascota</Text>
-          <Text style={styles.highlightText}>Comienza agregando a tu compañero de vida</Text>
+          <Text style={styles.highlightText}>
+            Comienza agregando a tu compañero de vida
+          </Text>
         </View>
         <Pressable style={styles.highlightButton} onPress={onAddPet}>
           <Text style={styles.highlightButtonText}>Comenzar</Text>
@@ -37,18 +50,30 @@ export function PetHighlight({ pets = [], onAddPet, isLoading }) {
       <View style={styles.petsHeader}>
         <Text style={styles.petsTitle}>Mis mascotas</Text>
         <Pressable style={styles.addButton} onPress={onAddPet}>
-          <MaterialCommunityIcons name="plus" size={24} color={YowPetTheme.brand.primary} />
+          <MaterialCommunityIcons
+            name="plus"
+            size={24}
+            color={YowPetTheme.brand.primary}
+          />
         </Pressable>
       </View>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.petsList}>
-        {pets.map((pet) => (
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.petsList}
+      >
+        {pets.map(pet => (
           <Pressable
             key={pet.id}
             style={styles.petCard}
             onPress={() => router.push(`/profile/pets/${pet.id}`)}
           >
             <Image
-              source={pet.profilePicture ? { uri: pet.profilePicture } : require('@assets/logos/icon.png')}
+              source={
+                pet.profilePicture
+                  ? { uri: pet.profilePicture }
+                  : require('@assets/logos/icon.png')
+              }
               style={styles.petImage}
             />
             <Text style={styles.petName}>{pet.name}</Text>

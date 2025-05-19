@@ -72,7 +72,7 @@ export const petService = {
     }
   },
 
-  obtenerMascota: async (petId) => {
+  obtenerMascota: async petId => {
     try {
       const token = await AsyncStorage.getItem('@auth_token');
 
@@ -135,7 +135,10 @@ export const petService = {
 
       return response.data;
     } catch (error) {
-      console.error('Error detallado al actualizar mascota:', error.response?.data || error);
+      console.error(
+        'Error detallado al actualizar mascota:',
+        error.response?.data || error
+      );
       throw error;
     }
   },

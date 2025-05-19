@@ -92,7 +92,7 @@ export default function PetDetailScreen() {
       if (id) {
         cargarDatosMascota();
       }
-    }, [id]),
+    }, [id])
   );
   const cargarDatosMascota = async () => {
     try {
@@ -105,11 +105,9 @@ export default function PetDetailScreen() {
       }
     } catch (error) {
       console.error('Error al cargar mascota:', error);
-      Alert.alert(
-        'Error',
-        'No se pudo cargar la información de la mascota',
-        [{ text: 'OK', onPress: () => router.back() }],
-      );
+      Alert.alert('Error', 'No se pudo cargar la información de la mascota', [
+        { text: 'OK', onPress: () => router.back() },
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -184,7 +182,7 @@ export default function PetDetailScreen() {
         Alert.alert(
           '¡Éxito!',
           'Los datos de la mascota se han actualizado correctamente',
-          [{ text: 'OK' }],
+          [{ text: 'OK' }]
         );
       }
     } catch (error) {
@@ -192,7 +190,7 @@ export default function PetDetailScreen() {
       Alert.alert(
         'Error',
         'No se pudieron guardar los cambios. Por favor, intenta de nuevo.',
-        [{ text: 'OK' }],
+        [{ text: 'OK' }]
       );
     } finally {
       setIsLoading(false);
@@ -280,7 +278,7 @@ export default function PetDetailScreen() {
                 <Text style={styles.selectorText}>
                   {
                     ANIMAL_CATEGORIES.find(
-                      c => c.id === editedPet.animalCategory,
+                      c => c.id === editedPet.animalCategory
                     )?.name
                   }
                 </Text>

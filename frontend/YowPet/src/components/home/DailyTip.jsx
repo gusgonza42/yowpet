@@ -100,7 +100,9 @@ const DAILY_TIPS = [
 export function DailyTip() {
   const dailyTip = useMemo(() => {
     const today = new Date();
-    const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+    const dayOfYear = Math.floor(
+      (today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24)
+    );
     return DAILY_TIPS[dayOfYear % DAILY_TIPS.length];
   }, []);
 
@@ -108,11 +110,17 @@ export function DailyTip() {
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>Consejo del día</Text>
       <View style={styles.tipCard}>
-        <MaterialCommunityIcons name={dailyTip.icon} size={24} color={YowPetTheme.status.warning} />
+        <MaterialCommunityIcons
+          name={dailyTip.icon}
+          size={24}
+          color={YowPetTheme.status.warning}
+        />
         <View style={styles.tipContent}>
           <Text style={styles.tipText}>{dailyTip.tip}</Text>
           <Text style={styles.petType}>
-            {dailyTip.pet !== 'general' ? `Consejo para ${dailyTip.pet}s` : 'Consejo general'}
+            {dailyTip.pet !== 'general'
+              ? `Consejo para ${dailyTip.pet}s`
+              : 'Consejo general'}
           </Text>
         </View>
       </View>

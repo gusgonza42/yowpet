@@ -187,13 +187,16 @@ export default function NewPetScreen() {
         ownerId: user.userId,
         status: 1,
         // Enviamos el ID en lugar del nombre
-        animalCategory: petData.animalCategory === 0
-          ? 0 // ID para "Otro"
-          : petData.animalCategory, // ID numérico de la categoría
-        breed: petData.breed === 0
-          ? 0 // ID para "Otro"
-          : petData.breed, // ID numérico de la raza
-        customCategory: petData.animalCategory === 0 ? petData.customCategory : null,
+        animalCategory:
+          petData.animalCategory === 0
+            ? 0 // ID para "Otro"
+            : petData.animalCategory, // ID numérico de la categoría
+        breed:
+          petData.breed === 0
+            ? 0 // ID para "Otro"
+            : petData.breed, // ID numérico de la raza
+        customCategory:
+          petData.animalCategory === 0 ? petData.customCategory : null,
         customBreed: petData.breed === 0 ? petData.customBreed : null,
         birthDate: petData.birthDate,
         gender: petData.gender,
@@ -211,12 +214,14 @@ export default function NewPetScreen() {
         Alert.alert(
           '¡Mascota registrada!',
           'Tu mascota se ha registrado correctamente.',
-          [{
-            text: 'OK',
-            onPress: () => {
-              router.push('/profile/pets'); // Redirige directamente a la lista
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                router.push('/profile/pets'); // Redirige directamente a la lista
+              },
             },
-          }],
+          ]
         );
       }
     } catch (error) {
@@ -224,7 +229,7 @@ export default function NewPetScreen() {
       Alert.alert(
         'Error',
         'No se pudo registrar la mascota. Por favor, verifica tu conexión e inténtalo nuevamente.',
-        [{ text: 'Entendido' }],
+        [{ text: 'Entendido' }]
       );
     } finally {
       setIsLoading(false);
@@ -285,13 +290,17 @@ export default function NewPetScreen() {
           {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
 
           <TouchableOpacity
-            style={[styles.selector, errors.animalCategory && styles.inputError]}
+            style={[
+              styles.selector,
+              errors.animalCategory && styles.inputError,
+            ]}
             onPress={() => setShowCategoryModal(true)}
           >
             <Text style={styles.selectorText}>
               {petData.animalCategory
-                ? ANIMAL_CATEGORIES.find(cat => cat.id === petData.animalCategory)
-                  ?.name
+                ? ANIMAL_CATEGORIES.find(
+                    cat => cat.id === petData.animalCategory
+                  )?.name
                 : 'Seleccionar tipo de mascota'}
             </Text>
             <Ionicons
@@ -395,9 +404,7 @@ export default function NewPetScreen() {
           {Platform.OS === 'ios' && showDatePicker && (
             <View>
               <View>
-                <TouchableOpacity
-                  onPress={() => setShowDatePicker(false)}
-                >
+                <TouchableOpacity onPress={() => setShowDatePicker(false)}>
                   <Text>Cancelar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -419,7 +426,6 @@ export default function NewPetScreen() {
               />
             </View>
           )}
-
 
           <TouchableOpacity
             style={[
@@ -535,8 +541,7 @@ export default function NewPetScreen() {
         />
       </View>
     </SafeAreaView>
-  )
-    ;
+  );
 }
 
 const styles = StyleSheet.create({

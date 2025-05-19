@@ -40,7 +40,11 @@ export function QuickAccess() {
   const router = useRouter();
 
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.quickAccessScroll}>
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={styles.quickAccessScroll}
+    >
       <>
         {QUICK_ACCESS_ITEMS.map((item, index) => (
           <Pressable
@@ -48,8 +52,17 @@ export function QuickAccess() {
             style={styles.quickAccessCard}
             onPress={() => router.push(item.route)}
           >
-            <View style={[styles.quickAccessIcon, { backgroundColor: item.color + '20' }]}>
-              <MaterialCommunityIcons name={item.icon} size={24} color={item.color} />
+            <View
+              style={[
+                styles.quickAccessIcon,
+                { backgroundColor: item.color + '20' },
+              ]}
+            >
+              <MaterialCommunityIcons
+                name={item.icon}
+                size={24}
+                color={item.color}
+              />
             </View>
             <Text style={styles.quickAccessTitle}>{item.title}</Text>
           </Pressable>

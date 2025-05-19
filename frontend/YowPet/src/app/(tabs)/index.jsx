@@ -1,4 +1,10 @@
-import { StyleSheet, ScrollView, SafeAreaView, Platform, StatusBar } from 'react-native';
+import {
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  Platform,
+  StatusBar,
+} from 'react-native';
 import { YowPetTheme } from '@theme/Colors';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
@@ -67,7 +73,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingBottom: 80,
     backgroundColor: YowPetTheme.brand.white,
-
   },
   header: {
     flexDirection: 'row',
