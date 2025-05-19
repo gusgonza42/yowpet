@@ -11,8 +11,8 @@ import {
 } from 'react-native';
 import { ScreenContainer } from '@components/global/ScreenContainer';
 import { YowPetTheme } from '@theme/Colors';
-import { useState, useEffect } from 'react';
-import { MaterialIcons } from '@expo/vector-icons';
+import React, { useState, useEffect } from 'react';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { educateService } from '../../services/educate/educateService';
 import { BackButton } from '@components/global/BackButton';
 
@@ -41,117 +41,121 @@ export default function EducateScreen() {
     fetchLessons();
   }, []);
 
-  const filteredLessons = lessons.filter(
-    lesson => lesson.level === selectedLevel
-  );
+  const filteredLessons = lessons.filter(lesson => lesson.level === selectedLevel);
 
   if (loading) {
     return (
-      <ScreenContainer backgroundColor={YowPetTheme.brand.white}>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={YowPetTheme.brand.primary} />
-        </View>
-      </ScreenContainer>
+        <ScreenContainer backgroundColor={YowPetTheme.brand.primary}>
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={YowPetTheme.brand.accent} />
+          </View>
+        </ScreenContainer>
     );
   }
 
   return (
-    <ScreenContainer backgroundColor={YowPetTheme.brand.primary}>
-      <BackButton />
-      <View style={styles.headerContainer}>
-        <Text style={styles.title}>Educa a tu mascota</Text>
-        <Text style={styles.subtitle}>Selecciona el nivel de dificultad</Text>
-      </View>
-
-      <View style={styles.contentContainer}>
-        <View style={styles.filterWrapper}>
-          <View style={styles.filterContainer}>
-            {levels.map(level => (
-              <TouchableOpacity
-                key={level}
-                style={[
-                  styles.filterButton,
-                  selectedLevel === level && styles.filterButtonSelected,
-                ]}
-                onPress={() => setSelectedLevel(level)}
-              >
-                <Text
-                  style={[
-                    styles.filterText,
-                    selectedLevel === level && styles.filterTextSelected,
-                  ]}
-                >
-                  {level}
-                </Text>
-                {selectedLevel === level && (
-                  <MaterialIcons
-                    name="pets"
-                    size={16}
-                    color={YowPetTheme.brand.primary}
-                    style={styles.petIcon}
-                  />
-                )}
-              </TouchableOpacity>
-            ))}
-          </View>
+      <ScreenContainer backgroundColor={YowPetTheme.brand.primary}>
+        <BackButton />
+        <View style={styles.headerContainer}>
+          <Ionicons name="paw" size={40} color={YowPetTheme.brand.accent} style={{ marginBottom: 10 }} />
+          <Text style={styles.title}>Educa a tu mascota</Text>
+          <Text style={styles.subtitle}>Selecciona el nivel de dificultad</Text>
         </View>
 
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.videoGrid}>
-            {filteredLessons.map((lesson, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.videoCard}
-                activeOpacity={0.9}
-                onPress={() =>
-                  router.push({
-                    pathname: '/(services)/educate/video',
-                    params: {
-                      title: lesson.title,
-                      description: lesson.description,
-                      difficulty: lesson.level,
-                      instructionImages: lesson.instructionImages || [],
-                      steps: lesson.steps || [],
-                    },
-                  })
-                }
-              >
-                <View style={styles.imageWrapper}>
-                  <Image
-                    source={{ uri: lesson.thumbnail }}
-                    style={styles.thumbnail}
-                    resizeMode="contain"
-                  />
-                </View>
-
-                <View style={styles.videoInfo}>
-                  <Text style={styles.videoTitle}>{lesson.title}</Text>
-                </View>
-              </TouchableOpacity>
-            ))}
+        <View style={styles.contentContainer}>
+          <View style={styles.filterWrapper}>
+            <View style={styles.filterContainer}>
+              {levels.map((level) => (
+                  <TouchableOpacity
+                      key={level}
+                      style={[
+                        styles.filterButton,
+                        selectedLevel === level && styles.filterButtonSelected,
+                      ]}
+                      onPress={() => setSelectedLevel(level)}
+                  >
+                    <Text
+                        style={[
+                          styles.filterText,
+                          selectedLevel === level && styles.filterTextSelected,
+                        ]}
+                    >
+                      {level}
+                    </Text>
+                    {selectedLevel === level && (
+                        <View style={styles.iconContainer}>
+                          {Array.from({ length: levels.indexOf(level) + 1 }).map((_, index) => (
+                              <MaterialIcons
+                                  key={index}
+                                  name="pets"
+                                  size={16}
+                                  color={YowPetTheme.brand.primary}
+                                  style={styles.petIcon}
+                              />
+                          ))}
+                        </View>
+                    )}
+                  </TouchableOpacity>
+              ))}
+            </View>
           </View>
-          <View style={styles.bottomSpacer} />
-        </ScrollView>
-      </View>
-    </ScreenContainer>
+
+          <ScrollView
+              style={styles.scrollView}
+              contentContainerStyle={styles.scrollContent}
+              showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.videoGrid}>
+              {filteredLessons.map((lesson, index) => (
+                  <TouchableOpacity
+                      key={index}
+                      style={styles.videoCard}
+                      activeOpacity={0.9}
+                      onPress={() =>
+                          router.push({
+                            pathname: '/(services)/educate/video',
+                            params: {
+                              title: lesson.title,
+                              description: lesson.description,
+                              difficulty: lesson.level,
+                              instructionImages: lesson.instructionImages || [],
+                              steps: lesson.steps || [],
+                            },
+                          })
+                      }
+                  >
+                    <View style={styles.imageWrapper}>
+                      <Image
+                          source={{ uri: lesson.thumbnail }}
+                          style={styles.thumbnail}
+                          resizeMode="contain"
+                      />
+                    </View>
+
+                    <View style={styles.videoInfo}>
+                      <Text style={styles.videoTitle}>{lesson.title}</Text>
+                    </View>
+                  </TouchableOpacity>
+              ))}
+            </View>
+            <View style={styles.bottomSpacer} />
+          </ScrollView>
+        </View>
+      </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
   headerContainer: {
-    paddingTop: 0,
     paddingBottom: 30,
     paddingHorizontal: 24,
+    alignItems: 'center',
     backgroundColor: YowPetTheme.brand.primary,
     borderRadius: 24,
   },
   contentContainer: {
     flex: 1,
-    backgroundColor: YowPetTheme.background.mainWhite,
+    backgroundColor: YowPetTheme.background.softBackground,
     borderRadius: 24,
     paddingTop: 10,
   },
@@ -165,13 +169,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontFamily: 'Inter-Bold',
-    color: YowPetTheme.background.mainWhite,
+    color: YowPetTheme.text.invertedText,
     textAlign: 'center',
     marginBottom: 10,
   },
   subtitle: {
     fontSize: 16,
-    color: 'rgba(255,255,255,0.9)',
+    color: YowPetTheme.text.subtleText,
     textAlign: 'center',
     fontFamily: 'Inter-Medium',
   },
@@ -182,9 +186,10 @@ const styles = StyleSheet.create({
   filterContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    backgroundColor: YowPetTheme.background.lightGray,
+    backgroundColor: YowPetTheme.background.softBackground,
     borderRadius: 12,
     padding: 4,
+    marginBottom: 10,
   },
   filterButton: {
     paddingHorizontal: 20,
@@ -194,23 +199,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   filterButtonSelected: {
-    backgroundColor: YowPetTheme.background.mainWhite,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    backgroundColor: YowPetTheme.background.softSuccess,
   },
   filterText: {
-    color: YowPetTheme.text.secondaryText,
+    color: YowPetTheme.brand.accent,
     fontFamily: 'Inter-SemiBold',
     fontSize: 14,
   },
   filterTextSelected: {
-    color: YowPetTheme.brand.primary,
+    color: YowPetTheme.brand.support,
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    marginLeft: 6,
   },
   petIcon: {
-    marginLeft: 6,
+    marginLeft: 2,
   },
   videoGrid: {
     flexDirection: 'row',
@@ -222,10 +226,14 @@ const styles = StyleSheet.create({
     width: width > 500 ? '48%' : '100%',
     borderRadius: 12,
     overflow: 'hidden',
-    backgroundColor: '#fff',
+    backgroundColor: YowPetTheme.background.cardBg,
     marginBottom: 16,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
     borderWidth: 1,
-    borderColor: YowPetTheme.border.light,
+    borderColor: YowPetTheme.border.softBorder,
   },
   imageWrapper: {
     width: '100%',
@@ -246,30 +254,6 @@ const styles = StyleSheet.create({
     color: YowPetTheme.text.mainText,
     marginBottom: 8,
     textAlign: 'center',
-  },
-  videoMeta: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  videoLevel: {
-    fontSize: 12,
-    fontFamily: 'Inter-Medium',
-    color: YowPetTheme.brand.primary,
-    backgroundColor: YowPetTheme.brand.primary + '20',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 10,
-  },
-  videoDuration: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  videoDurationText: {
-    fontSize: 12,
-    fontFamily: 'Inter-Medium',
-    color: YowPetTheme.text.secondaryText,
-    marginLeft: 4,
   },
   bottomSpacer: {
     height: 20,
