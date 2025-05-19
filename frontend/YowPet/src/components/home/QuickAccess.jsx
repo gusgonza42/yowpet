@@ -25,7 +25,7 @@ const QUICK_ACCESS_ITEMS = [
   {
     icon: 'school',
     title: 'Educar',
-    route: '/(services)/educate',
+    route: '/(services)/select-animal',
     color: '#2EA44F',
   },
   {
