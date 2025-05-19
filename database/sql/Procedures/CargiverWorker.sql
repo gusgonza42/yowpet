@@ -79,7 +79,7 @@ CREATE PROCEDURE getCaregiverWorker(
     IN p_id INT
 )
 BEGIN
-SELECT * FROM caregiver_workers WHERE id = p_id;
+SELECT * FROM caregiver_workers WHERE user_id = p_id;
 END //
 DELIMITER ;
 

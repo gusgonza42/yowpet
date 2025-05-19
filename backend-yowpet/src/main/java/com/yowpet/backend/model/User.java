@@ -27,7 +27,7 @@ public class User {
     private String password;
     private String city;
     private String address;
-    private String phoneNumber;
+    private String telephone;
     private int zipCode;
     private String gender;
     private String profilePicture;

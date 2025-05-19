@@ -1,5 +1,12 @@
 import React from 'react';
-import { Modal, Platform, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Modal,
+  Platform,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { modalStyles } from '@/components/Map/styles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -42,7 +49,10 @@ const DetailModal = ({ selectedMarker, onClose }) => {
       onRequestClose={onClose}
     >
       <Pressable style={modalStyles.container} onPress={onClose}>
-        <View style={modalStyles.content} onStartShouldSetResponder={() => true}>
+        <View
+          style={modalStyles.content}
+          onStartShouldSetResponder={() => true}
+        >
           <View style={modalStyles.headerContainer}>
             <MaterialCommunityIcons
               name={iconName}
@@ -56,20 +66,36 @@ const DetailModal = ({ selectedMarker, onClose }) => {
           <View style={modalStyles.infoContainer}>
             {selectedMarker.address && (
               <View style={modalStyles.infoRow}>
-                <MaterialCommunityIcons name="map-marker" size={20} color={activeColor} />
-                <Text style={modalStyles.infoText}>{selectedMarker.address}</Text>
+                <MaterialCommunityIcons
+                  name="map-marker"
+                  size={20}
+                  color={activeColor}
+                />
+                <Text style={modalStyles.infoText}>
+                  {selectedMarker.address}
+                </Text>
               </View>
             )}
 
             {selectedMarker.addresscode && (
               <View style={modalStyles.infoRow}>
-                <MaterialCommunityIcons name="map-marker-radius" size={20} color={activeColor} />
-                <Text style={modalStyles.infoText}>CP: {selectedMarker.addresscode}</Text>
+                <MaterialCommunityIcons
+                  name="map-marker-radius"
+                  size={20}
+                  color={activeColor}
+                />
+                <Text style={modalStyles.infoText}>
+                  CP: {selectedMarker.addresscode}
+                </Text>
               </View>
             )}
 
             <View style={modalStyles.infoRow}>
-              <MaterialCommunityIcons name="tag" size={20} color={activeColor} />
+              <MaterialCommunityIcons
+                name="tag"
+                size={20}
+                color={activeColor}
+              />
               <Text style={modalStyles.infoText}>{selectedMarker.filter}</Text>
             </View>
           </View>

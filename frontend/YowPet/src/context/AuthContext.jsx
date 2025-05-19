@@ -4,6 +4,7 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { YowPetTheme } from '@theme/Colors';
 import { useRouter, useSegments } from 'expo-router';
 import { APP_ROUTES } from '@constants/Routes';
+import { jwtDecode } from 'jwt-decode';
 
 const AuthContext = createContext(null);
 
@@ -24,14 +25,31 @@ const useProtectedRoute = user => {
 };
 
 const processUserData = rawUserData => {
+  let decodedData = {};
+  if (rawUserData.token) {
+    try {
+      decodedData = jwtDecode(rawUserData.token);
+      console.log('Token decodificado:', decodedData);
+    } catch (error) {
+      console.error('Error al decodificar token:', error);
+    }
+  }
+
   return {
     ...rawUserData,
-    userId: rawUserData.userId || rawUserData.id,
-    token: rawUserData.token,
-    email: rawUserData.email,
+    // Verifica ambos formatos posibles: id o userId
+    userId:
+      decodedData.id ||
+      decodedData.userId ||
+      decodedData.sub ||
+      rawUserData.userId ||
+      rawUserData.id,
+    email: decodedData.email || decodedData.mail || rawUserData.email,
     firstName: rawUserData.firstName || '',
     lastName: rawUserData.lastName || '',
     username: rawUserData.username || rawUserData.email?.split('@')[0] || '',
+    token: rawUserData.token,
+    roles: rawUserData.roles || [],
   };
 };
 

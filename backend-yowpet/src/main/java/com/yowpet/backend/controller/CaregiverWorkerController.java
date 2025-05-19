@@ -63,7 +63,7 @@ public class CaregiverWorkerController {
         user.get().setUpdatedAt(new Date());
         caregiverWorker.setUser(user.get().getId());
 
-     Optional<CaregiverWorker> existingCaregiverOpt = Optional.ofNullable(caregiverWorkerRepository.getCaregiverWorkersByUser(id));
+        Optional<CaregiverWorker> existingCaregiverOpt = Optional.ofNullable(caregiverWorkerRepository.getCaregiverWorkersByUser(id));
         if (existingCaregiverOpt.isPresent()) {
             CaregiverWorker caregiver = existingCaregiverOpt.get();
             if (!caregiver.isStatusActiveWork()) {
@@ -159,4 +159,10 @@ public class CaregiverWorkerController {
     public ResponseEntity<CaregiverWorker> rateCaregiver(@PathVariable int id, @RequestBody CaregiverWorker caregiverWorker) {
         return caregiverWorkerService.rateCaregiver(id, caregiverWorker);
     }
+
+    @GetMapping("/check/{userId}")
+    public ResponseEntity<Boolean> checkIsCaregiver(@PathVariable int userId) {
+        return caregiverWorkerService.checkIsCaregiver(userId);
+    }
+
 }
