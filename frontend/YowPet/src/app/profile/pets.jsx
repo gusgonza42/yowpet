@@ -25,7 +25,7 @@ export default function PetsScreen() {
   useFocusEffect(
     useCallback(() => {
       cargarMascotas();
-    }, [])
+    }, []),
   );
 
   const cargarMascotas = async () => {
@@ -38,7 +38,7 @@ export default function PetsScreen() {
       Alert.alert(
         'Error',
         'No se pudieron cargar las mascotas. Por favor, intenta de nuevo.',
-        [{ text: 'Entendido' }]
+        [{ text: 'Entendido' }],
       );
     } finally {
       setIsLoading(false);
@@ -90,7 +90,18 @@ export default function PetsScreen() {
       </Text>
     </View>
   );
+  const LoadingOverlay = () => (
+    <View style={styles.overlayContainer}>
+      <View style={styles.overlay}>
+        <ActivityIndicator size="large" color={YowPetTheme.brand.accent} />
+        <Text style={styles.overlayText}>Actualizando lista...</Text>
+      </View>
+    </View>
+  );
 
+  {
+    isLoading && <LoadingOverlay />;
+  }
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -106,8 +117,9 @@ export default function PetsScreen() {
         </View>
 
         {isLoading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={YowPetTheme.brand.primary} />
+          <View style={styles.loadingScreen}>
+            <ActivityIndicator size="large" color={YowPetTheme.brand.accent} />
+            <Text style={styles.loadingText}>Cargando mascotas...</Text>
           </View>
         ) : (
           <FlatList
@@ -252,5 +264,23 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: YowPetTheme.text.subtleText,
     marginTop: 4,
+  },
+  loadingScreen: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: YowPetTheme.brand.primary,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 999,
+  },
+  loadingText: {
+    color: YowPetTheme.brand.accent,
+    fontSize: 16,
+    marginTop: 12,
+    fontWeight: '600',
   },
 });

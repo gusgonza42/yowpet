@@ -1,5 +1,5 @@
 import {
-  StyleSheet,
+  StyleSheet, View,
   ScrollView,
   SafeAreaView,
   Platform,
@@ -15,6 +15,7 @@ import { DailyPlans } from '@components/home/DailyPlans';
 import { DailyTip } from '@components/home/DailyTip';
 import { useState, useEffect } from 'react';
 import { petService } from '../../services/profile/pet/petService';
+import { ActivityIndicator, Text } from 'react-native';
 
 export default function HomeScreen() {
   const { user } = useAuth();
@@ -37,8 +38,16 @@ export default function HomeScreen() {
     }
   };
   const handleRegisterPet = () => {
-    router.push('/profile/pets');
+    router.push('/profile/pets/new');
   };
+  const LoadingOverlay = () => (
+    <View style={styles.overlayContainer}>
+      <View style={styles.overlay}>
+        <ActivityIndicator size="large" color={YowPetTheme.brand.accent} />
+        <Text style={styles.overlayText}>Cargando mascotas...</Text>
+      </View>
+    </View>
+  );
 
   return (
     <>
@@ -47,17 +56,25 @@ export default function HomeScreen() {
         barStyle="dark-content"
       />
       <SafeAreaView style={styles.safeArea}>
-        <ScrollView style={styles.scrollView}>
-          <HomeHeader user={user} />
-          <PetHighlight
-            pets={pets}
-            onAddPet={handleRegisterPet}
-            isLoading={isLoading}
-          />
-          <QuickAccess />
-          <DailyPlans />
-          <DailyTip />
-        </ScrollView>
+        {isLoading ? (
+          <View style={styles.loadingScreen}>
+            <ActivityIndicator size="large" color={YowPetTheme.brand.accent} />
+            <Text style={styles.loadingText}>Cargando inicio...</Text>
+          </View>
+        ) : (
+          <ScrollView style={styles.scrollView}>
+            <HomeHeader user={user} />
+            <PetHighlight
+              pets={pets}
+              onAddPet={handleRegisterPet}
+              isLoading={isLoading}
+            />
+            <QuickAccess />
+            <DailyPlans />
+            <DailyTip />
+          </ScrollView>
+        )}
+        {isLoading && <LoadingOverlay />}
       </SafeAreaView>
     </>
   );
@@ -113,5 +130,46 @@ const styles = StyleSheet.create({
     color: YowPetTheme.brand.white,
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  loadingScreen: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: YowPetTheme.brand.white,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 999,
+  },
+  loadingText: {
+    color: YowPetTheme.brand.accent,
+    fontSize: 16,
+    marginTop: 12,
+    fontWeight: '600',
+  },
+  overlayContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  overlay: {
+    backgroundColor: YowPetTheme.brand.primary,
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  overlayText: {
+    color: YowPetTheme.brand.accent,
+    marginTop: 10,
+    fontSize: 16,
+    fontWeight: '500',
   },
 });
