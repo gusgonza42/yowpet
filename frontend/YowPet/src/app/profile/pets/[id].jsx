@@ -9,13 +9,18 @@ import {
   TextInput,
   Modal,
   Platform,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { ScreenContainer } from '@components/global/ScreenContainer';
 import { YowPetTheme } from '@theme/Colors';
 import * as ImagePicker from 'expo-image-picker';
+import { ActivityIndicator } from 'react-native';
+import { petService } from '@service/profile/pet/petService';
 import { CustomDatePicker } from '@components/global/CustomDatePicker';
+import { useFocusEffect } from 'expo-router';
+import { useCallback } from 'react';
 
 const ANIMAL_CATEGORIES = [
   { id: 1, name: 'Perro' },
@@ -67,33 +72,48 @@ export default function PetDetailScreen() {
   const [pet, setPet] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedPet, setEditedPet] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [showBreedModal, setShowBreedModal] = useState(false);
   const [showGenderModal, setShowGenderModal] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [date, setDate] = useState(new Date());
 
-  useEffect(() => {
-    // Simular carga de datos de la API
-    const petData = {
-      id,
-      name: 'Luna',
-      animalCategory: 2,
-      breed: 'Siamés',
-      birthDate: '2022-03-15',
-      gender: 'female',
-      sterilized: true,
-      description: 'Una gata muy cariñosa y juguetona',
-      emergencyContact: '123456789',
-      profilePicture: 'https://placedog.net/100/300',
-      status: 1,
-    };
-    setPet(petData);
-    setEditedPet(petData);
-    if (petData.birthDate) {
-      setDate(new Date(petData.birthDate));
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={YowPetTheme.brand.primary} />
+      </View>
+    );
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      if (id) {
+        cargarDatosMascota();
+      }
+    }, [id]),
+  );
+  const cargarDatosMascota = async () => {
+    try {
+      setIsLoading(true);
+      const petData = await petService.obtenerMascota(id);
+      setPet(petData);
+      setEditedPet(petData);
+      if (petData.birthDate) {
+        setDate(new Date(petData.birthDate));
+      }
+    } catch (error) {
+      console.error('Error al cargar mascota:', error);
+      Alert.alert(
+        'Error',
+        'No se pudo cargar la información de la mascota',
+        [{ text: 'OK', onPress: () => router.back() }],
+      );
+    } finally {
+      setIsLoading(false);
     }
-  }, [id]);
+  };
 
   const SelectModal = ({ visible, onClose, title, options, onSelect }) => (
     <Modal visible={visible} transparent animationType="slide">
@@ -141,9 +161,42 @@ export default function PetDetailScreen() {
   };
 
   const handleSave = async () => {
-    // Aquí iría la lógica para guardar los cambios en la API
-    setPet(editedPet);
-    setIsEditing(false);
+    try {
+      setIsLoading(true);
+
+      // Asegúrate de que todos los campos necesarios estén presentes
+      const updatedPetData = {
+        ...editedPet,
+        id: parseInt(id),
+        sterilized: editedPet.sterilized ? 1 : 0,
+        status: 1,
+        birthDate: editedPet.birthDate,
+        breed: editedPet.breed || 1,
+      };
+
+      console.log('Datos a actualizar:', updatedPetData); // Para debugging
+
+      const response = await petService.actualizarMascota(id, updatedPetData);
+
+      if (response) {
+        await cargarDatosMascota(); // Recargar los datos
+        setIsEditing(false);
+        Alert.alert(
+          '¡Éxito!',
+          'Los datos de la mascota se han actualizado correctamente',
+          [{ text: 'OK' }],
+        );
+      }
+    } catch (error) {
+      console.error('Error al actualizar:', error);
+      Alert.alert(
+        'Error',
+        'No se pudieron guardar los cambios. Por favor, intenta de nuevo.',
+        [{ text: 'OK' }],
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const onDateChange = (event, selectedDate) => {
@@ -153,6 +206,13 @@ export default function PetDetailScreen() {
     const formattedDate = currentDate.toISOString().split('T')[0];
     setEditedPet(prev => ({ ...prev, birthDate: formattedDate }));
   };
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={YowPetTheme.brand.primary} />
+      </View>
+    );
+  }
 
   if (!pet) return null;
 
@@ -220,7 +280,7 @@ export default function PetDetailScreen() {
                 <Text style={styles.selectorText}>
                   {
                     ANIMAL_CATEGORIES.find(
-                      c => c.id === editedPet.animalCategory
+                      c => c.id === editedPet.animalCategory,
                     )?.name
                   }
                 </Text>
@@ -628,5 +688,11 @@ const styles = StyleSheet.create({
     marginTop: 8,
     backgroundColor: YowPetTheme.brand.white,
     borderColor: YowPetTheme.brand.surface,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: YowPetTheme.brand.primary,
   },
 });

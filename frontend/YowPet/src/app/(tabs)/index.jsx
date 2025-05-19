@@ -8,16 +8,28 @@ import { QuickAccess } from '@components/home/QuickAccess';
 import { DailyPlans } from '@components/home/DailyPlans';
 import { DailyTip } from '@components/home/DailyTip';
 import { useState, useEffect } from 'react';
+import { petService } from '../../services/profile/pet/petService';
 
 export default function HomeScreen() {
   const { user } = useAuth();
   const router = useRouter();
   const [pets, setPets] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // fetchPets();
+    cargarMascotas();
   }, []);
-
+  const cargarMascotas = async () => {
+    try {
+      setIsLoading(true);
+      const response = await petService.obtenerMascotas();
+      setPets(response || []);
+    } catch (error) {
+      console.error('Error al cargar mascotas:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const handleRegisterPet = () => {
     router.push('/profile/pets');
   };
@@ -31,9 +43,12 @@ export default function HomeScreen() {
       <SafeAreaView style={styles.safeArea}>
         <ScrollView style={styles.scrollView}>
           <HomeHeader user={user} />
-          <PetHighlight pets={pets} onAddPet={handleRegisterPet} />
-          <QuickAccess onItemPress={(item) => {/* Manejar navegación */
-          }} />
+          <PetHighlight
+            pets={pets}
+            onAddPet={handleRegisterPet}
+            isLoading={isLoading}
+          />
+          <QuickAccess />
           <DailyPlans />
           <DailyTip />
         </ScrollView>

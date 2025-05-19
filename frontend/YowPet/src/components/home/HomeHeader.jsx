@@ -3,6 +3,7 @@ import { YowPetTheme } from '@theme/Colors';
 import { useState, useEffect } from 'react';
 import { userService } from '@service/profile/userService';
 
+
 export function HomeHeader({ user }) {
   const [userData, setUserData] = useState(null);
 

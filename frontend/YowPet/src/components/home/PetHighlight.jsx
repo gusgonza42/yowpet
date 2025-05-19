@@ -1,9 +1,23 @@
 import { View, Text, Pressable, ScrollView, Image, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { YowPetTheme } from '@theme/Colors';
+import { useRouter } from 'expo-router';
+import { ActivityIndicator } from 'react-native-paper';
 
-export function PetHighlight({ pets = [], onAddPet }) {
-  if (pets.length === 0) {
+export function PetHighlight({ pets = [], onAddPet, isLoading }) {
+  const router = useRouter();
+
+  if (isLoading) {
+    return (
+      <View style={styles.highlightCard}>
+        <View style={styles.highlightContent}>
+          <ActivityIndicator size="large" color={YowPetTheme.brand.primary} />
+        </View>
+      </View>
+    );
+  }
+
+  if (!pets || pets.length === 0) {
     return (
       <View style={styles.highlightCard}>
         <View style={styles.highlightContent}>
@@ -28,11 +42,14 @@ export function PetHighlight({ pets = [], onAddPet }) {
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.petsList}>
         {pets.map((pet) => (
-          <Pressable key={pet.id} style={styles.petCard}>
+          <Pressable
+            key={pet.id}
+            style={styles.petCard}
+            onPress={() => router.push(`/profile/pets/${pet.id}`)}
+          >
             <Image
-              source={{ uri: pet.photoUrl }}
+              source={pet.profilePicture ? { uri: pet.profilePicture } : require('@assets/logos/icon.png')}
               style={styles.petImage}
-              defaultSource={require('@assets/logos/icon.png')}
             />
             <Text style={styles.petName}>{pet.name}</Text>
           </Pressable>
@@ -80,5 +97,44 @@ const styles = StyleSheet.create({
     color: YowPetTheme.brand.support,
     fontWeight: '600',
     fontSize: 16,
+  },
+  petsSection: {
+    padding: 20,
+  },
+  petsHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  petsTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: YowPetTheme.text.mainText,
+  },
+  addButton: {
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: YowPetTheme.brand.accent,
+  },
+  petsList: {
+    flexGrow: 0,
+  },
+  petCard: {
+    marginRight: 16,
+    alignItems: 'center',
+  },
+  petImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginBottom: 8,
+    backgroundColor: YowPetTheme.brand.surface,
+  },
+  petName: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: YowPetTheme.text.mainText,
+    textAlign: 'center',
   },
 });

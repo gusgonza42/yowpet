@@ -9,6 +9,8 @@ import {
   ScrollView,
   SafeAreaView,
   Modal,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -17,51 +19,38 @@ import * as ImagePicker from 'expo-image-picker';
 import { Keyboard } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Platform } from 'react-native';
+import { useAuth } from '@/context/AuthContext';
+import { petService } from '@service/profile/pet/petService';
+import { CustomDatePicker } from '@components/global/CustomDatePicker';
 
 const ANIMAL_CATEGORIES = [
   { id: 1, name: 'Perro' },
   { id: 2, name: 'Gato' },
   { id: 3, name: 'Ave' },
-  {
-    id: 8,
-    name: 'Tortuga',
-  },
+  { id: 8, name: 'Tortuga' },
   { id: 4, name: 'Reptil' },
   { id: 5, name: 'Roedor' },
   { id: 6, name: 'Pez' },
-  { id: 7, name: 'Anfibio' },
-  {
-    id: 0,
-    name: 'Otro',
-  },
+  { id: 0, name: 'Otro' },
 ];
 
 const DOG_BREEDS = [
   { id: 1, name: 'Labrador' },
   { id: 2, name: 'Pastor Alemán' },
-  {
-    id: 3,
-    name: 'Golden Retriever',
-  },
+  { id: 3, name: 'Golden Retriever' },
   { id: 4, name: 'Bulldog' },
   { id: 5, name: 'Chihuahua' },
   { id: 0, name: 'Otro' },
 ];
+
 const BIRD_BREEDS = [
   { id: 1, name: 'Periquito' },
   { id: 2, name: 'Canario' },
   { id: 3, name: 'Agapornis' },
-  {
-    id: 4,
-    name: 'Cotorra',
-  },
+  { id: 4, name: 'Cotorra' },
   { id: 5, name: 'Cacatúa' },
   { id: 6, name: 'Perico Australiano' },
   { id: 7, name: 'Loro Gris Africano' },
-  {
-    id: 8,
-    name: 'Ninfas',
-  },
   { id: 0, name: 'Otro' },
 ];
 
@@ -69,10 +58,7 @@ const CAT_BREEDS = [
   { id: 1, name: 'Siamés' },
   { id: 2, name: 'Persa' },
   { id: 3, name: 'Maine Coon' },
-  {
-    id: 4,
-    name: 'Angora',
-  },
+  { id: 4, name: 'Angora' },
   { id: 5, name: 'Bengal' },
   { id: 0, name: 'Otro' },
 ];
@@ -84,6 +70,8 @@ const GENDERS = [
 
 export default function NewPetScreen() {
   const router = useRouter();
+  const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
   const [petData, setPetData] = useState({
     name: '',
     animalCategory: '',
@@ -156,7 +144,6 @@ export default function NewPetScreen() {
   };
 
   const handleSubmit = async () => {
-    // Reiniciar errores
     setErrors({
       name: '',
       animalCategory: '',
@@ -167,7 +154,6 @@ export default function NewPetScreen() {
     let hasErrors = false;
     const newErrors = { ...errors };
 
-    // Validar campos obligatorios
     if (!petData.name.trim()) {
       newErrors.name = 'El nombre es obligatorio';
       hasErrors = true;
@@ -193,46 +179,79 @@ export default function NewPetScreen() {
       return;
     }
 
-    const formData = {
-      name: petData.name,
-      ownerId: 2,
-      status: 1,
-      animalCategory:
-        petData.animalCategory === 0
-          ? petData.customCategory
-          : petData.animalCategory,
-      breed: petData.breed === 0 ? petData.customBreed : petData.breed,
-      birthDate: petData.birthDate,
-      gender: petData.gender,
-      sterilized: petData.sterilized ? 1 : 0,
-      sterilizedAsInt: petData.sterilized ? 1 : 0,
-      description: petData.description,
-      emergencyContact: petData.emergencyContact,
-      profilePicture: petData.profilePicture,
-    };
+    setIsLoading(true);
 
-    console.log(formData);
-    router.back();
+    try {
+      const formData = {
+        name: petData.name.trim(),
+        ownerId: user.userId,
+        status: 1,
+        // Enviamos el ID en lugar del nombre
+        animalCategory: petData.animalCategory === 0
+          ? 0 // ID para "Otro"
+          : petData.animalCategory, // ID numérico de la categoría
+        breed: petData.breed === 0
+          ? 0 // ID para "Otro"
+          : petData.breed, // ID numérico de la raza
+        customCategory: petData.animalCategory === 0 ? petData.customCategory : null,
+        customBreed: petData.breed === 0 ? petData.customBreed : null,
+        birthDate: petData.birthDate,
+        gender: petData.gender,
+        sterilizedAsInt: petData.sterilized ? 1 : 0,
+        description: petData.description?.trim() || '',
+        emergencyContact: petData.emergencyContact?.trim() || '',
+        profilePicture: petData.profilePicture || null,
+      };
+
+      console.log('Enviando datos:', formData);
+
+      const response = await petService.registrarMascota(formData, user.userId);
+
+      if (response) {
+        Alert.alert(
+          '¡Mascota registrada!',
+          'Tu mascota se ha registrado correctamente.',
+          [{
+            text: 'OK',
+            onPress: () => {
+              router.push('/profile/pets'); // Redirige directamente a la lista
+            },
+          }],
+        );
+      }
+    } catch (error) {
+      console.error('Error detallado:', error.response || error);
+      Alert.alert(
+        'Error',
+        'No se pudo registrar la mascota. Por favor, verifica tu conexión e inténtalo nuevamente.',
+        [{ text: 'Entendido' }],
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
   const onDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(Platform.OS === 'ios');
     setDate(currentDate);
-
-    // Formatear la fecha como YYYY-MM-DD
     const formattedDate = currentDate.toISOString().split('T')[0];
     setPetData(prev => ({ ...prev, birthDate: formattedDate }));
   };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Ionicons
-            name="arrow-back"
-            size={24}
-            color={YowPetTheme.text.mainText}
+          <TouchableOpacity
+            style={styles.backButton}
             onPress={() => router.back()}
-          />
+          >
+            <Ionicons
+              name="arrow-back"
+              size={24}
+              color={YowPetTheme.brand.primary}
+            />
+          </TouchableOpacity>
           <Text style={styles.headerTitle}>Nueva Mascota</Text>
         </View>
 
@@ -250,15 +269,15 @@ export default function NewPetScreen() {
             ) : (
               <Ionicons
                 name="camera"
-                size={40}
-                color={YowPetTheme.text.softText}
+                size={32}
+                color={YowPetTheme.brand.primary}
               />
             )}
           </TouchableOpacity>
 
           <TextInput
             style={[styles.input, errors.name && styles.inputError]}
-            placeholder="Nombre de la mascota *"
+            placeholder="Nombre de la mascota"
             placeholderTextColor={YowPetTheme.text.subtleText}
             value={petData.name}
             onChangeText={text => setPetData(prev => ({ ...prev, name: text }))}
@@ -266,22 +285,19 @@ export default function NewPetScreen() {
           {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
 
           <TouchableOpacity
-            style={[
-              styles.selector,
-              errors.animalCategory && styles.inputError,
-            ]}
+            style={[styles.selector, errors.animalCategory && styles.inputError]}
             onPress={() => setShowCategoryModal(true)}
           >
             <Text style={styles.selectorText}>
               {petData.animalCategory
-                ? ANIMAL_CATEGORIES.find(c => c.id === petData.animalCategory)
-                    ?.name || 'Seleccionar tipo de mascota *'
-                : 'Seleccionar tipo de mascota *'}
+                ? ANIMAL_CATEGORIES.find(cat => cat.id === petData.animalCategory)
+                  ?.name
+                : 'Seleccionar tipo de mascota'}
             </Text>
             <Ionicons
               name="chevron-down"
               size={24}
-              color={YowPetTheme.text.subtleText}
+              color={YowPetTheme.brand.primary}
             />
           </TouchableOpacity>
           {errors.animalCategory && (
@@ -307,14 +323,13 @@ export default function NewPetScreen() {
             >
               <Text style={styles.selectorText}>
                 {petData.breed
-                  ? getBreedOptions().find(b => b.id === petData.breed)?.name ||
-                    'Seleccionar raza'
+                  ? getBreedOptions().find(b => b.id === petData.breed)?.name
                   : 'Seleccionar raza'}
               </Text>
               <Ionicons
                 name="chevron-down"
                 size={24}
-                color={YowPetTheme.text.subtleText}
+                color={YowPetTheme.brand.primary}
               />
             </TouchableOpacity>
           )}
@@ -338,43 +353,134 @@ export default function NewPetScreen() {
             <Text style={styles.selectorText}>
               {petData.gender
                 ? GENDERS.find(g => g.id === petData.gender)?.name
-                : 'Seleccionar género *'}
+                : 'Seleccionar género'}
             </Text>
             <Ionicons
               name="chevron-down"
               size={24}
-              color={YowPetTheme.text.subtleText}
+              color={YowPetTheme.brand.primary}
             />
           </TouchableOpacity>
           {errors.gender && (
             <Text style={styles.errorText}>{errors.gender}</Text>
           )}
 
+          <TouchableOpacity
+            style={[styles.selector, errors.birthDate && styles.inputError]}
+            onPress={() => setShowDatePicker(true)}
+          >
+            <Text style={styles.selectorText}>
+              {petData.birthDate || 'Fecha de nacimiento'}
+            </Text>
+            <Ionicons
+              name="calendar"
+              size={24}
+              color={YowPetTheme.brand.primary}
+            />
+          </TouchableOpacity>
+          {errors.birthDate && (
+            <Text style={styles.errorText}>{errors.birthDate}</Text>
+          )}
+
+          {Platform.OS === 'android' && showDatePicker && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={date}
+              mode="date"
+              display="default"
+              onChange={onDateChange}
+            />
+          )}
+
+          {Platform.OS === 'ios' && showDatePicker && (
+            <View>
+              <View>
+                <TouchableOpacity
+                  onPress={() => setShowDatePicker(false)}
+                >
+                  <Text>Cancelar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    onDateChange(null, date);
+                    setShowDatePicker(false);
+                  }}
+                >
+                  <Text>Aceptar</Text>
+                </TouchableOpacity>
+              </View>
+              <CustomDatePicker
+                visible={showDatePicker}
+                date={date}
+                onClose={() => setShowDatePicker(false)}
+                onDateChange={onDateChange}
+                placeholder="Fecha de nacimiento"
+                maximumDate={new Date()} // Para evitar fechas futuras
+              />
+            </View>
+          )}
+
+
+          <TouchableOpacity
+            style={[
+              styles.checkbox,
+              petData.sterilized && styles.checkboxChecked,
+            ]}
+            onPress={() =>
+              setPetData(prev => ({ ...prev, sterilized: !prev.sterilized }))
+            }
+          >
+            <View style={styles.checkboxContent}>
+              <View style={styles.checkboxIconContainer}>
+                {petData.sterilized ? (
+                  <Ionicons
+                    name="checkmark-circle"
+                    size={24}
+                    color={YowPetTheme.brand.support}
+                  />
+                ) : (
+                  <Ionicons
+                    name="ellipse-outline"
+                    size={24}
+                    color={YowPetTheme.brand.primary}
+                  />
+                )}
+              </View>
+              <Text
+                style={[
+                  styles.checkboxText,
+                  petData.sterilized && styles.checkboxTextChecked,
+                ]}
+              >
+                Esterilizado/a
+              </Text>
+            </View>
+          </TouchableOpacity>
+
           <View style={styles.inputContainer}>
             <TextInput
               style={[styles.input, styles.textArea]}
-              placeholder="Descripción"
+              placeholder="Descripción (opcional)"
               placeholderTextColor={YowPetTheme.text.subtleText}
               value={petData.description}
-              multiline
-              numberOfLines={4}
               onChangeText={text =>
                 setPetData(prev => ({ ...prev, description: text }))
               }
+              multiline
+              numberOfLines={4}
             />
-            {Keyboard.isVisible() && (
-              <TouchableOpacity
-                style={styles.keyboardDismiss}
-                onPress={() => Keyboard.dismiss()}
-              >
-                <Ionicons
-                  name="chevron-down"
-                  size={24}
-                  color={YowPetTheme.text.subtleText}
-                />
-              </TouchableOpacity>
-            )}
+            <TouchableOpacity
+              style={styles.keyboardDismiss}
+              onPress={() => Keyboard.dismiss()}
+            >
+              <Ionicons
+                name="chevron-down"
+                size={24}
+                color={YowPetTheme.brand.primary}
+              />
+            </TouchableOpacity>
           </View>
+
           <TextInput
             style={styles.input}
             placeholder="Teléfono de emergencia"
@@ -386,97 +492,18 @@ export default function NewPetScreen() {
             keyboardType="phone-pad"
             maxLength={15}
           />
-
-          {/* Selector de fecha */}
-          <TouchableOpacity
-            style={[styles.selector, errors.birthDate && styles.inputError]}
-            onPress={() => setShowDatePicker(true)}
-          >
-            <Text style={styles.selectorText}>
-              {petData.birthDate
-                ? petData.birthDate
-                : 'Seleccionar fecha de nacimiento *'}
-            </Text>
-            <Ionicons
-              name="calendar"
-              size={24}
-              color={YowPetTheme.text.subtleText}
-            />
-          </TouchableOpacity>
-          {errors.birthDate && (
-            <Text style={styles.errorText}>{errors.birthDate}</Text>
-          )}
-
-          {/* Date Picker para Android */}
-          {Platform.OS === 'android' && showDatePicker && (
-            <DateTimePicker
-              value={date}
-              mode="date"
-              display="default"
-              onChange={(event, selectedDate) => {
-                setShowDatePicker(false);
-                if (event.type === 'set' && selectedDate) {
-                  onDateChange(event, selectedDate);
-                }
-              }}
-              maximumDate={new Date()}
-            />
-          )}
-
-          {/* Date Picker para iOS */}
-          {Platform.OS === 'ios' && showDatePicker && (
-            <View style={styles.iosDatePickerContainer}>
-              <View style={styles.iosDatePickerHeader}>
-                <TouchableOpacity onPress={() => setShowDatePicker(false)}>
-                  <Text style={styles.iosDatePickerButton}>Cancelar</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    onDateChange(null, date);
-                    setShowDatePicker(false);
-                  }}
-                >
-                  <Text style={styles.iosDatePickerButton}>Aceptar</Text>
-                </TouchableOpacity>
-              </View>
-              <DateTimePicker
-                value={date}
-                mode="date"
-                display="spinner"
-                onChange={(event, selectedDate) => {
-                  if (selectedDate) {
-                    setDate(selectedDate);
-                  }
-                }}
-                maximumDate={new Date()}
-                textColor={YowPetTheme.text.mainText}
-                style={styles.iosDatePicker}
-              />
-            </View>
-          )}
-
-          <TouchableOpacity
-            style={[
-              styles.checkbox,
-              petData.sterilized && styles.checkboxChecked,
-            ]}
-            onPress={() =>
-              setPetData(prev => ({ ...prev, sterilized: !prev.sterilized }))
-            }
-          >
-            <Text
-              style={[
-                styles.checkboxText,
-                petData.sterilized && styles.checkboxTextChecked,
-              ]}
-            >
-              Esterilizado: {petData.sterilized ? 'Sí' : 'No'}
-            </Text>
-          </TouchableOpacity>
         </ScrollView>
 
-        <TouchableOpacity style={styles.saveButton} onPress={handleSubmit}>
-          <Text style={styles.saveButtonText}>Guardar Mascota</Text>
+        <TouchableOpacity
+          style={[styles.saveButton, isLoading && styles.saveButtonDisabled]}
+          onPress={handleSubmit}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <ActivityIndicator color={YowPetTheme.brand.white} />
+          ) : (
+            <Text style={styles.saveButtonText}>Guardar Mascota</Text>
+          )}
         </TouchableOpacity>
 
         <SelectModal
@@ -508,7 +535,8 @@ export default function NewPetScreen() {
         />
       </View>
     </SafeAreaView>
-  );
+  )
+    ;
 }
 
 const styles = StyleSheet.create({
@@ -584,6 +612,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+  checkboxContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkboxIconContainer: {
+    marginRight: 12,
+  },
   checkbox: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -595,11 +630,16 @@ const styles = StyleSheet.create({
     borderColor: YowPetTheme.border.softBorder,
   },
   checkboxChecked: {
-    backgroundColor: YowPetTheme.brand.primary,
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
   },
   checkboxText: {
     fontSize: 16,
-    color: YowPetTheme.text.mainText,
+    color: YowPetTheme.brand.support,
+  },
+  checkboxTextChecked: {
+    color: YowPetTheme.brand.primary,
   },
   textArea: {
     height: 100,
@@ -657,9 +697,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: YowPetTheme.text.mainText,
   },
-  checkboxTextChecked: {
-    color: YowPetTheme.text.invertedText,
-  },
   inputContainer: {
     position: 'relative',
     marginBottom: 16,
@@ -677,31 +714,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  iosDatePickerContainer: {
-    backgroundColor: YowPetTheme.background.mainWhite,
-    borderRadius: 12,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: YowPetTheme.border.softBorder,
-    overflow: 'hidden',
-  },
-  iosDatePickerHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 16,
-    backgroundColor: YowPetTheme.background.inputField,
-    borderBottomWidth: 1,
-    borderBottomColor: YowPetTheme.border.softBorder,
-  },
-  iosDatePickerButton: {
-    color: YowPetTheme.brand.primary,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  iosDatePicker: {
-    height: 200,
-    width: '100%',
-  },
   inputError: {
     borderColor: YowPetTheme.brand.error || '#ff0000',
   },
@@ -711,5 +723,8 @@ const styles = StyleSheet.create({
     marginTop: -12,
     marginBottom: 16,
     marginLeft: 4,
+  },
+  saveButtonDisabled: {
+    opacity: 0.7,
   },
 });

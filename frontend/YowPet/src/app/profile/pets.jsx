@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -7,39 +7,65 @@ import {
   FlatList,
   StyleSheet,
   SafeAreaView,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { YowPetTheme } from '@theme/Colors';
+import { petService } from '@service/profile/pet/petService';
+import { useFocusEffect } from 'expo-router';
+import { useCallback } from 'react';
 
 export default function PetsScreen() {
   const router = useRouter();
-  const [pets] = useState([
-    {
-      id: '1',
-      name: 'Luna',
-      image: 'https://placedog.net/100/300',
-      type: 'Gato',
-      age: '2 años',
-    },
-    {
-      id: '2',
-      name: 'Max',
-      image: 'https://placedog.net/200/200',
-      type: 'Perro',
-      age: '3 años',
-    },
-  ]);
+  const [pets, setPets] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      cargarMascotas();
+    }, []),
+  );
+
+  const cargarMascotas = async () => {
+    try {
+      setIsLoading(true);
+      const response = await petService.obtenerMascotas();
+      setPets(response || []);
+    } catch (error) {
+      console.error('Error al cargar mascotas:', error);
+      Alert.alert(
+        'Error',
+        'No se pudieron cargar las mascotas. Por favor, intenta de nuevo.',
+        [{ text: 'Entendido' }],
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const renderPetCard = ({ item }) => (
     <TouchableOpacity
       style={styles.petCard}
       onPress={() => router.push(`./pets/${item.id}`)}
     >
-      <Image source={{ uri: item.image }} style={styles.petImage} />
+      <Image
+        source={
+          item.profilePicture
+            ? { uri: item.profilePicture }
+            : require('@assets/logos/icon.png')
+        }
+        style={styles.petImage}
+      />
       <View style={styles.petInfo}>
         <Text style={styles.petName}>{item.name}</Text>
-        <Text style={styles.petType}>{item.type}</Text>
+        <Text style={styles.petType}>
+          {item.customCategory || item.animalCategory}
+        </Text>
+        <Text style={styles.petAge}>
+          {item.birthDate ? new Date(item.birthDate).toLocaleDateString() : 'Fecha no disponible'}
+        </Text>
       </View>
       <Ionicons
         name="chevron-forward"
@@ -49,26 +75,52 @@ export default function PetsScreen() {
     </TouchableOpacity>
   );
 
+  const renderEmptyList = () => (
+    <View style={styles.emptyContainer}>
+      <Ionicons
+        name="paw-outline"
+        size={64}
+        color={YowPetTheme.text.subtleText}
+      />
+      <Text style={styles.emptyText}>
+        No tienes mascotas registradas
+      </Text>
+      <Text style={styles.emptySubtext}>
+        Comienza agregando a tu primer compañero
+      </Text>
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Ionicons
-            name="arrow-back"
-            size={24}
-            color={YowPetTheme.text.mainText}
-            onPress={() => router.back()}
-          />
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons
+              name="arrow-back"
+              size={24}
+              color={YowPetTheme.text.mainText}
+            />
+          </TouchableOpacity>
           <Text style={styles.headerTitle}>Mis Mascotas</Text>
         </View>
 
-        <FlatList
-          data={pets}
-          renderItem={renderPetCard}
-          keyExtractor={item => item.id}
-          contentContainerStyle={styles.listContainer}
-          showsVerticalScrollIndicator={false}
-        />
+        {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={YowPetTheme.brand.primary} />
+          </View>
+        ) : (
+          <FlatList
+            data={pets}
+            renderItem={renderPetCard}
+            keyExtractor={item => item.id.toString()}
+            contentContainerStyle={styles.listContainer}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={renderEmptyList}
+            refreshing={isLoading}
+            onRefresh={cargarMascotas}
+          />
+        )}
 
         <TouchableOpacity
           style={styles.addButton}
@@ -170,5 +222,35 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 16,
     marginLeft: 8,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 32,
+    marginTop: 64,
+  },
+  emptyText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: YowPetTheme.text.mainText,
+    marginTop: 16,
+    textAlign: 'center',
+  },
+  emptySubtext: {
+    fontSize: 14,
+    color: YowPetTheme.text.softText,
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  petAge: {
+    fontSize: 12,
+    color: YowPetTheme.text.subtleText,
+    marginTop: 4,
   },
 });
