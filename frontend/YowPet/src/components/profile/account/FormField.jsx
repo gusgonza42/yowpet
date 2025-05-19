@@ -17,19 +17,33 @@ export const FormField = ({
   isEditing,
   onChange,
   options = {},
+  isRequired = false,
+  hasError = false,
 }) => {
   const { keyboardType, secureTextEntry, isDatePicker } = options;
   const [showPicker, setShowPicker] = useState(false);
 
   const handleDateChange = (event, selectedDate) => {
-    setShowPicker(Platform.OS === 'ios');
-    if (event.type === 'dismissed') {
-      return;
+    const currentDate = selectedDate || (value ? new Date(value) : new Date());
+
+    // Ocultar el selector inmediatamente en Android
+    if (Platform.OS === 'android') {
+      setShowPicker(false);
+
+      if (event.type === 'dismissed') {
+        return;
+      }
     }
-    if (selectedDate) {
-      // Formatear la fecha para que coincida con el formato esperado por el servidor
-      const formattedDate = selectedDate.toISOString().split('T')[0];
-      onChange(formattedDate);
+
+    // Actualizar el valor directamente tanto en iOS como en Android
+    const formattedDate = currentDate.toISOString().split('T')[0];
+    onChange(formattedDate);
+
+    // En iOS, cerrar el picker después de un breve retraso
+    if (Platform.OS === 'ios') {
+      setTimeout(() => {
+        setShowPicker(false);
+      }, 500);
     }
   };
 
@@ -67,6 +81,7 @@ export const FormField = ({
       return getPlaceholderText();
     }
   };
+
   const displayValue = () => {
     if (!value || value === '') return getPlaceholderText();
     if (secureTextEntry) return '********';
@@ -75,33 +90,46 @@ export const FormField = ({
   };
 
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, hasError && styles.cardError]}>
       <View style={styles.iconContainer}>{icon}</View>
       <View style={styles.fieldContent}>
-        <Text style={styles.label}>{label}</Text>
+        <View style={styles.labelContainer}>
+          <Text style={styles.label}>{label}</Text>
+          {isRequired && <Text style={styles.required}>*</Text>}
+        </View>
+
         {isEditing ? (
           isDatePicker ? (
             <>
-              <TouchableOpacity onPress={() => setShowPicker(true)}>
-                <View style={styles.input}>
-                  <Text style={[styles.value, !value && styles.placeholder]}>
-                    {displayValue()}
-                  </Text>
-                </View>
+              <TouchableOpacity
+                onPress={() => setShowPicker(true)}
+                activeOpacity={0.6}
+                style={[styles.datePickerButton, hasError && styles.inputError]}
+              >
+                <Text style={[styles.value, !value && styles.placeholder]}>
+                  {displayValue()}
+                </Text>
               </TouchableOpacity>
+
               {showPicker && (
-                <DateTimePicker
-                  value={value ? new Date(value) : new Date()}
-                  mode="date"
-                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                  onChange={handleDateChange}
-                  maximumDate={new Date()}
-                />
+                <View style={Platform.OS === 'ios' ? styles.iosPicker : null}>
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={value ? new Date(value) : new Date()}
+                    mode="date"
+                    is24Hour={true}
+                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                    onChange={handleDateChange}
+                    maximumDate={new Date()}
+                    style={Platform.OS === 'ios' ? styles.iosDatePicker : {}}
+                    themeVariant="light"
+                  />
+                </View>
               )}
             </>
           ) : (
             <TextInput
-              style={styles.input}
+              style={[styles.input, hasError && styles.inputError]}
               value={value}
               onChangeText={onChange}
               keyboardType={keyboardType}
@@ -111,49 +139,89 @@ export const FormField = ({
             />
           )
         ) : (
-          <Text style={[styles.value, !value && styles.placeholder]}>
+          <Text
+            style={[
+              styles.value,
+              !value && styles.placeholder,
+              hasError && styles.valueError,
+            ]}
+          >
             {displayValue()}
           </Text>
+        )}
+
+        {hasError && isEditing && (
+          <Text style={styles.errorText}>Este campo es obligatorio</Text>
         )}
       </View>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     backgroundColor: YowPetTheme.background.mainWhite,
-    borderRadius: 12,
-    padding: 16,
-    elevation: 2,
-    shadowColor: YowPetTheme.shadow.softShadow,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    borderRadius: 16,
+    padding: 18,
+    elevation: 3,
+    shadowColor: YowPetTheme.shadow.mediumShadow,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    marginBottom: 2, // Espacio entre tarjetas
+    borderLeftWidth: 3,
+    borderLeftColor: YowPetTheme.brand.primary,
+  },
+  cardError: {
+    borderColor: YowPetTheme.status.errorState,
+    borderWidth: 1,
+    borderLeftColor: YowPetTheme.status.errorState,
+    backgroundColor: YowPetTheme.background.softError,
   },
   iconContainer: {
-    marginRight: 16,
+    marginRight: 18,
     justifyContent: 'center',
+    backgroundColor: YowPetTheme.background.softBackground,
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    alignItems: 'center',
   },
   fieldContent: {
     flex: 1,
   },
+  labelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
   label: {
-    fontSize: 14,
-    color: YowPetTheme.text.softText,
-    marginBottom: 4,
+    fontSize: 15,
+    fontWeight: '500',
+    color: YowPetTheme.brand.primary,
+  },
+  required: {
+    color: YowPetTheme.brand.orange,
+    fontSize: 15,
+    marginLeft: 4,
   },
   input: {
     fontSize: 16,
     color: YowPetTheme.text.mainText,
-    padding: 0,
+    padding: 8,
+    backgroundColor: YowPetTheme.background.softBackground,
+    borderRadius: 8,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: YowPetTheme.border.softBorder,
   },
-  value: {
-    fontSize: 16,
-    color: YowPetTheme.text.mainText,
-  },
-  placeholder: {
-    color: YowPetTheme.text.softText,
-    fontStyle: 'italic',
+  datePickerButton: {
+    paddingVertical: 10,
+    backgroundColor: YowPetTheme.background.softBackground,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: YowPetTheme.border.softBorder,
   },
 });

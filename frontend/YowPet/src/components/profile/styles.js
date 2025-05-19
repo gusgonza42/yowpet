@@ -15,7 +15,7 @@ const getResponsiveFontSize = size => {
   const baseWidth = 375;
   const screenWidth = Dimensions.get('window').width;
   const ratio = screenWidth / baseWidth;
-  
+
   // Limita el ratio para que no sea ni muy pequeño ni muy grande
   const limitedRatio = Math.max(0.8, Math.min(ratio, 1.2));
 
@@ -296,7 +296,7 @@ export const styles = {
   ProfileScreen: StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: YowPetTheme.background.mainWhite,
+      backgroundColor: YowPetTheme.background.primary,
       paddingBottom: isSmallDevice ? 60 : 100,
       ...(isWeb && {
         maxWidth: getWebResponsiveValue('1200px', '90%', '95%'),
@@ -400,7 +400,6 @@ if (Platform.OS === 'web') {
       console.log('Dimensiones actualizadas:', { width, height });
 
       // Aquí podrías implementar una función para actualizar el estado global
-      // Por ejemplo: updateLayoutState({ width, height });
     }, 200);
   });
 }
@@ -411,7 +410,6 @@ const handleOrientationChange = () => {
   const screenHeight = Dimensions.get('window').height;
   const isLandscape = screenWidth > screenHeight;
 
-  // Esta variable podría ser utilizada para ajustes específicos
   // según la orientación del dispositivo
   return isLandscape;
 };

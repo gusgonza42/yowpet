@@ -10,7 +10,7 @@ import { ScreenContainer } from '@components/global/ScreenContainer';
 import { YowPetTheme } from '@theme/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import MapView, { Marker } from 'react-native-maps';
-import {BackButton} from "@components/global/BackButton";
+import { BackButton } from '@components/global/BackButton';
 
 const pets = [
   {

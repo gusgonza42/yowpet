@@ -7,13 +7,13 @@ import {
   Dimensions,
   TouchableOpacity,
   Animated,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { ScreenContainer } from '@components/global/ScreenContainer';
 import { YowPetTheme } from '@theme/Colors';
 import { ProgressBar } from 'react-native-paper';
-import {BackButton} from "@components/global/BackButton";
+import { BackButton } from '@components/global/BackButton';
 
 const { width } = Dimensions.get('window');
 
@@ -38,7 +38,7 @@ export default function VideoDetailScreen() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const fadeAnim = new Animated.Value(1);
 
-  const handleTransition = (newIndex) => {
+  const handleTransition = newIndex => {
     Animated.timing(fadeAnim, {
       toValue: 0,
       duration: 300,
@@ -68,75 +68,75 @@ export default function VideoDetailScreen() {
   const progress = (currentIndex + 1) / data.length;
 
   return (
-      <ScreenContainer backgroundColor={YowPetTheme.brand.primary}>
-        <BackButton />
-        {/* Header */}
-        <View style={styles.headerContainer}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.subtitle}>Nivel: {difficulty}</Text>
-        </View>
+    <ScreenContainer backgroundColor={YowPetTheme.brand.primary}>
+      <BackButton />
+      {/* Header */}
+      <View style={styles.headerContainer}>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.subtitle}>Nivel: {difficulty}</Text>
+      </View>
 
-        {/* Contenido principal */}
-        <View style={styles.contentContainer}>
-          <Text style={styles.description}>{description}</Text>
+      {/* Contenido principal */}
+      <View style={styles.contentContainer}>
+        <Text style={styles.description}>{description}</Text>
 
-          {/* Progreso */}
-          <Text style={styles.progressText}>
-            Paso {currentIndex + 1} de {data.length}
-          </Text>
-          <ProgressBar
-              progress={progress}
-              color={YowPetTheme.brand.accent}
-              style={styles.progressBar}
-          />
+        {/* Progreso */}
+        <Text style={styles.progressText}>
+          Paso {currentIndex + 1} de {data.length}
+        </Text>
+        <ProgressBar
+          progress={progress}
+          color={YowPetTheme.brand.accent}
+          style={styles.progressBar}
+        />
 
-          {/* Loading indicator for image */}
-          {imageLoading && (
-              <View style={styles.loadingContainer}>
-                <ActivityIndicator
-                    size="large"
-                    color={YowPetTheme.brand.support}
-                    style={{ marginVertical: 60 }}
-                />
-              </View>
-          )}
-
-          {/* Imagen con transición suave */}
-          <Animated.Image
-              source={{ uri: data[currentIndex].image }}
-              style={[styles.image, { opacity: fadeAnim }]}
-              onLoadStart={() => setImageLoading(true)}
-              onLoadEnd={() => setImageLoading(false)}
-          />
-
-          <Text style={styles.stepText}>{data[currentIndex].step}</Text>
-
-          {/* Navegación */}
-          <View style={styles.navigationContainer}>
-            <TouchableOpacity
-                onPress={handlePrevious}
-                style={[
-                  styles.navButton,
-                  currentIndex === 0 && styles.disabledButton,
-                ]}
-                disabled={currentIndex === 0}
-            >
-              <Text style={styles.navButtonText}>Atrás</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-                onPress={handleNext}
-                style={[
-                  styles.navButton,
-                  currentIndex === data.length - 1 && styles.disabledButton,
-                ]}
-                disabled={currentIndex === data.length - 1}
-            >
-              <Text style={styles.navButtonText}>Siguiente</Text>
-            </TouchableOpacity>
+        {/* Loading indicator for image */}
+        {imageLoading && (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator
+              size="large"
+              color={YowPetTheme.brand.support}
+              style={{ marginVertical: 60 }}
+            />
           </View>
+        )}
+
+        {/* Imagen con transición suave */}
+        <Animated.Image
+          source={{ uri: data[currentIndex].image }}
+          style={[styles.image, { opacity: fadeAnim }]}
+          onLoadStart={() => setImageLoading(true)}
+          onLoadEnd={() => setImageLoading(false)}
+        />
+
+        <Text style={styles.stepText}>{data[currentIndex].step}</Text>
+
+        {/* Navegación */}
+        <View style={styles.navigationContainer}>
+          <TouchableOpacity
+            onPress={handlePrevious}
+            style={[
+              styles.navButton,
+              currentIndex === 0 && styles.disabledButton,
+            ]}
+            disabled={currentIndex === 0}
+          >
+            <Text style={styles.navButtonText}>Atrás</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={handleNext}
+            style={[
+              styles.navButton,
+              currentIndex === data.length - 1 && styles.disabledButton,
+            ]}
+            disabled={currentIndex === data.length - 1}
+          >
+            <Text style={styles.navButtonText}>Siguiente</Text>
+          </TouchableOpacity>
         </View>
-      </ScreenContainer>
+      </View>
+    </ScreenContainer>
   );
 }
 

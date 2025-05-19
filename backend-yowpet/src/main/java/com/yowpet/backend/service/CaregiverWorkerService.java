@@ -50,12 +50,10 @@ public class CaregiverWorkerService {
             }
             User user = userOpt.get();
             user.setRole(User.ROLE_CAREGIVER);
-            userRepository.updateUser(
-                    user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getCity(),
-                    user.getAddress(), user.getPhoneNumber(), user.getZipCode(), user.getGender(),
-                    user.getProfilePicture(), user.getRole(), user.getLanguages(),
-                    user.getPaymentMethod(), user.getBirthDate()
-            );
+//            userRepository.updateUser(
+//                    user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getCity(),
+//                    user.getAddress(), user.getPhoneNumber()
+//            );
             return ResponseEntity.ok(user);
         } catch (Exception e) {
             logger.error("Error activating caregiver with ID {}: ", id, e);
@@ -123,8 +121,8 @@ public class CaregiverWorkerService {
      */
     public ResponseEntity<CaregiverWorker> updateCaregiver(int id, CaregiverWorker updatedCaregiver) {
         try {
-           Optional<CaregiverWorker> existingCaregiver = Optional.ofNullable(caregiverWorkerRepository.getCaregiverWorker(id));
-            if (existingCaregiver.isEmpty() ) {
+            Optional<CaregiverWorker> existingCaregiver = Optional.ofNullable(caregiverWorkerRepository.getCaregiverWorker(id));
+            if (existingCaregiver.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
 
@@ -159,12 +157,12 @@ public class CaregiverWorkerService {
             }
             User user = userOpt.get();
             user.setRole(User.ROLE_USER);
-            userRepository.updateUser(
-                    user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getCity(),
-                    user.getAddress(), user.getPhoneNumber(), user.getZipCode(), user.getGender(),
-                    user.getProfilePicture(), user.getRole(), user.getLanguages(),
-                    user.getPaymentMethod(), user.getBirthDate()
-            );
+//            userRepository.updateUser(
+//                    user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getCity(),
+//                    user.getAddress(), user.getPhoneNumber(), user.getZipCode(), user.getGender(),
+//                    user.getProfilePicture(), user.getRole(), user.getLanguages(),
+//                    user.getPaymentMethod(), user.getBirthDate()
+//            );
 
             CaregiverWorker caregiverWorker = caregiverWorkerRepository.getCaregiverWorkersByUser(id);
             if (caregiverWorker != null) {
@@ -200,7 +198,7 @@ public class CaregiverWorkerService {
      */
     public ResponseEntity<CaregiverWorker> rateCaregiver(int id, CaregiverWorker caregiverWorker) {
         try {
-           Optional<CaregiverWorker> caregiverToRate = Optional.ofNullable(caregiverWorkerRepository.getCaregiverWorker(id));
+            Optional<CaregiverWorker> caregiverToRate = Optional.ofNullable(caregiverWorkerRepository.getCaregiverWorker(id));
             if (caregiverToRate.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -222,6 +220,22 @@ public class CaregiverWorkerService {
             return ResponseEntity.ok(caregivers);
         } catch (Exception e) {
             logger.error("Error fetching available caregivers: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * Verifica si un usuario es cuidador.
+     *
+     * @param userId el ID del usuario a verificar
+     * @return ResponseEntity con true si es cuidador, false si no
+     */
+    public ResponseEntity<Boolean> checkIsCaregiver(int userId) {
+        try {
+            boolean isCaregiver = caregiverWorkerRepository.checkCaregiverExists(userId);
+            return ResponseEntity.ok(isCaregiver);
+        } catch (Exception e) {
+            logger.error("Error checking caregiver status for user ID {}: ", userId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
