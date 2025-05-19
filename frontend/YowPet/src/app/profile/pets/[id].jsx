@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Text,
   View,
@@ -10,17 +10,15 @@ import {
   Modal,
   Platform,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { ScreenContainer } from '@components/global/ScreenContainer';
 import { YowPetTheme } from '@theme/Colors';
 import * as ImagePicker from 'expo-image-picker';
-import { ActivityIndicator } from 'react-native';
 import { petService } from '@service/profile/pet/petService';
 import { CustomDatePicker } from '@components/global/CustomDatePicker';
-import { useFocusEffect } from 'expo-router';
-import { useCallback } from 'react';
 
 const ANIMAL_CATEGORIES = [
   { id: 1, name: 'Perro' },
@@ -79,25 +77,12 @@ export default function PetDetailScreen() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [date, setDate] = useState(new Date());
 
-  if (isLoading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={YowPetTheme.brand.primary} />
-      </View>
-    );
-  }
-
-  useFocusEffect(
-    useCallback(() => {
-      if (id) {
-        cargarDatosMascota();
-      }
-    }, [id])
-  );
   const cargarDatosMascota = async () => {
     try {
       setIsLoading(true);
+      console.log('Cargando mascota con ID:', id);
       const petData = await petService.obtenerMascota(id);
+      console.log('Datos recibidos:', petData);
       setPet(petData);
       setEditedPet(petData);
       if (petData.birthDate) {
@@ -112,6 +97,14 @@ export default function PetDetailScreen() {
       setIsLoading(false);
     }
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      if (id) {
+        cargarDatosMascota();
+      }
+    }, [id]),
+  );
 
   const SelectModal = ({ visible, onClose, title, options, onSelect }) => (
     <Modal visible={visible} transparent animationType="slide">
@@ -161,8 +154,6 @@ export default function PetDetailScreen() {
   const handleSave = async () => {
     try {
       setIsLoading(true);
-
-      // Asegúrate de que todos los campos necesarios estén presentes
       const updatedPetData = {
         ...editedPet,
         id: parseInt(id),
@@ -172,17 +163,17 @@ export default function PetDetailScreen() {
         breed: editedPet.breed || 1,
       };
 
-      console.log('Datos a actualizar:', updatedPetData); // Para debugging
+      console.log('Datos a actualizar:', updatedPetData);
 
       const response = await petService.actualizarMascota(id, updatedPetData);
 
       if (response) {
-        await cargarDatosMascota(); // Recargar los datos
+        await cargarDatosMascota();
         setIsEditing(false);
         Alert.alert(
           '¡Éxito!',
           'Los datos de la mascota se han actualizado correctamente',
-          [{ text: 'OK' }]
+          [{ text: 'OK' }],
         );
       }
     } catch (error) {
@@ -190,7 +181,7 @@ export default function PetDetailScreen() {
       Alert.alert(
         'Error',
         'No se pudieron guardar los cambios. Por favor, intenta de nuevo.',
-        [{ text: 'OK' }]
+        [{ text: 'OK' }],
       );
     } finally {
       setIsLoading(false);
@@ -204,14 +195,17 @@ export default function PetDetailScreen() {
     const formattedDate = currentDate.toISOString().split('T')[0];
     setEditedPet(prev => ({ ...prev, birthDate: formattedDate }));
   };
+
   if (isLoading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={YowPetTheme.brand.primary} />
-      </View>
+      <ScreenContainer backgroundColor={YowPetTheme.brand.primary}>
+        <View style={styles.loadingScreen}>
+          <ActivityIndicator size="large" color={YowPetTheme.brand.accent} />
+          <Text style={styles.loadingText}>Cargando información...</Text>
+        </View>
+      </ScreenContainer>
     );
   }
-
   if (!pet) return null;
 
   return (
@@ -278,7 +272,7 @@ export default function PetDetailScreen() {
                 <Text style={styles.selectorText}>
                   {
                     ANIMAL_CATEGORIES.find(
-                      c => c.id === editedPet.animalCategory
+                      c => c.id === editedPet.animalCategory,
                     )?.name
                   }
                 </Text>
@@ -368,6 +362,7 @@ export default function PetDetailScreen() {
               <Text style={styles.descriptionText}>{pet.emergencyContact}</Text>
             )}
           </View>
+
           <View style={styles.descriptionRow}>
             <Text style={styles.label}>Fecha de nacimiento:</Text>
             {isEditing ? (
@@ -395,6 +390,7 @@ export default function PetDetailScreen() {
               <Text style={styles.descriptionText}>{pet.birthDate}</Text>
             )}
           </View>
+
           <View style={styles.infoRow}>
             <Text style={styles.label}>Esterilizado:</Text>
             {isEditing ? (
@@ -463,16 +459,6 @@ export default function PetDetailScreen() {
           setEditedPet(prev => ({ ...prev, gender: gender.id }))
         }
       />
-
-      {showDatePicker && (
-        <DateTimePicker
-          value={date}
-          mode="date"
-          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-          onChange={onDateChange}
-          maximumDate={new Date()}
-        />
-      )}
     </ScreenContainer>
   );
 }
@@ -534,7 +520,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.4)',
     justifyContent: 'center',
     alignItems: 'center',
-    backdropFilter: 'blur(2px)',
   },
   infoSection: {
     padding: 20,
@@ -692,5 +677,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: YowPetTheme.brand.primary,
+  },
+
+  loadingScreen: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: YowPetTheme.brand.primary,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 999,
+  },
+  loadingText: {
+    color: YowPetTheme.brand.accent,
+    fontSize: 16,
+    marginTop: 12,
+    fontWeight: '600',
   },
 });
