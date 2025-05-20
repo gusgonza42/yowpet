@@ -102,4 +102,9 @@ public class CareGiverRepo {
         return template.query(sql, CareGiverRowMapper);
     }
 
+    public boolean checkCaregiverExists(int userId) {
+        String sql = "SELECT COUNT(*) > 0 FROM caregiver_workers WHERE user_id = ?";
+        return template.queryForObject(sql, Boolean.class, userId);
+    }
+
 }

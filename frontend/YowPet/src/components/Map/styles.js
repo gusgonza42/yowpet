@@ -40,7 +40,6 @@ export const getDynamicMapStyles = (insets = { bottom: 0, top: 0 }) => {
       elevation: 6,
       zIndex: 999,
       marginTop: Platform.OS === 'android' ? -1 : 0, // Ajuste para eliminar la línea blanca
-
     },
 
     // Estilos dinámicos para filterBox
@@ -408,7 +407,6 @@ export const modalStyles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
-
 });
 
 export default { mapStyles, styleMarker, modalStyles };

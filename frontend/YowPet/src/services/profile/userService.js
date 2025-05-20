@@ -74,17 +74,45 @@ export const userService = {
       throw error;
     }
   },
-  
-  getUserIdFromToken: async () => {
-  try {
-    const token = await AsyncStorage.getItem('@auth_token');
-    if (!token) return null;
-    const decoded = decodeJWT(token);
-    return decoded?.userId || decoded?.id || null;
-  } catch (e) {
-    console.error('Failed to extract userId from token:', e);
-    return null;
-  }
-}
 
+  // Agregar esto a userService.js
+  actualizarPerfil: async data => {
+    try {
+      const token = await AsyncStorage.getItem('@auth_token');
+
+      if (!token) {
+        throw new Error('No hay token disponible');
+      }
+
+      // Extraer el ID del usuario del token JWT
+      const decodedToken = decodeJWT(token);
+      const userId = decodedToken?.userId;
+
+      if (!userId) {
+        throw new Error('No se pudo obtener el userId del token');
+      }
+
+      const url = `/user/update/${userId}`;
+      const headers = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      };
+
+      console.log('[AXIOS] Enviando actualización:', { url, data });
+
+      const response = await axiosClient({
+        method: 'PUT',
+        url: url,
+        headers: headers,
+        data: data,
+        timeout: 10000,
+      });
+
+      return response;
+    } catch (error) {
+      console.log('Error al actualizar perfil:', error);
+      throw error;
+    }
+  },
 };

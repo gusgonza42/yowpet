@@ -51,7 +51,7 @@ public class UserService {
                     user.getPassword(),
                     user.getCity(),
                     user.getAddress(),
-                    user.getPhoneNumber(),
+                    user.getTelephone(),
                     user.getZipCode(),
                     user.getGender(),
                     user.getProfilePicture(),
@@ -115,29 +115,23 @@ public class UserService {
             }
             userToUpdate.setFirstName(user.getFirstName());
             userToUpdate.setLastName(user.getLastName());
+            // Eliminar la línea de username
             userToUpdate.setEmail(user.getEmail());
-            userToUpdate.setPassword(user.getPassword());
-            userToUpdate.setCity(user.getCity());
-            userToUpdate.setGender(user.getGender());
             userToUpdate.setAddress(user.getAddress());
-            userToUpdate.setPhoneNumber(user.getPhoneNumber());
+            userToUpdate.setTelephone(user.getTelephone());
             userToUpdate.setBirthDate(user.getBirthDate());
+            userToUpdate.setCity(user.getCity());
             userToUpdate.setUpdatedAt(new Date());
+
             userRepository.updateUser(
                     userToUpdate.getId(),
                     userToUpdate.getFirstName(),
                     userToUpdate.getLastName(),
                     userToUpdate.getEmail(),
-                    userToUpdate.getCity(),
                     userToUpdate.getAddress(),
-                    userToUpdate.getPhoneNumber(),
-                    userToUpdate.getZipCode(),
-                    userToUpdate.getGender(),
-                    userToUpdate.getProfilePicture(),
-                    userToUpdate.getRole(),
-                    userToUpdate.getLanguages(),
-                    userToUpdate.getPaymentMethod(),
-                    userToUpdate.getBirthDate()
+                    userToUpdate.getTelephone(),
+                    userToUpdate.getBirthDate(),
+                    userToUpdate.getCity()
             );
             return ResponseEntity.status(HttpStatus.OK).body(userToUpdate);
         } catch (Exception e) {

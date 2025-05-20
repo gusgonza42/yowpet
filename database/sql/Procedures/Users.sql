@@ -79,38 +79,22 @@ CREATE PROCEDURE updateUser(
     IN p_id INT,
     IN p_firstname VARCHAR(100),
     IN p_lastname VARCHAR(100),
+    IN p_email VARCHAR(100),
     IN p_address VARCHAR(255),
-    IN p_rol INT,
     IN p_telephone VARCHAR(45),
-    IN p_gender ENUM ('female','male',''),
-    IN p_postalcode VARCHAR(20),
     IN p_birthdate DATE,
-    IN p_languages VARCHAR(100),
-    IN p_emergencynum VARCHAR(45),
-    IN p_paymentmethod ENUM ('buzime','tarjeta','paypal'),
-    IN p_city VARCHAR(100),
-    IN p_latitud DECIMAL(10, 7),
-    IN p_longitud DECIMAL(10, 7),
-    IN p_username VARCHAR(100)
+    IN p_city VARCHAR(100)
 )
 BEGIN
     UPDATE users
-    SET firstname     = p_firstname,
-        lastname      = p_lastname,
-        address       = p_address,
-        rol           = p_rol,
-        telephone     = p_telephone,
-        gender        = p_gender,
-        postalcode    = p_postalcode,
-        birthdate     = p_birthdate,
-        languages     = p_languages,
-        emergencynum  = p_emergencynum,
-        paymentmethod = p_paymentmethod,
-        city          = p_city,
-        latitud       = p_latitud,
-        longitud      = p_longitud,
-        username      = p_username,
-        updatedAt     = NOW()
+    SET firstname = p_firstname,
+        lastname  = p_lastname,
+        email     = p_email,
+        address   = p_address,
+        telephone = p_telephone,
+        birthdate = p_birthdate,
+        city      = p_city,
+        updatedAt = NOW()
     WHERE id = p_id
       AND state = 1;
 END //

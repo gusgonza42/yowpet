@@ -7,13 +7,13 @@ import {
   Dimensions,
   TouchableOpacity,
   Animated,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ScreenContainer } from '@components/global/ScreenContainer';
 import { YowPetTheme } from '@theme/Colors';
 import { ProgressBar } from 'react-native-paper';
-import {BackButton} from "@components/global/BackButton";
+import { BackButton } from '@components/global/BackButton';
 
 const { width } = Dimensions.get('window');
 
@@ -25,6 +25,7 @@ export default function VideoDetailScreen() {
     instructionImages = '',
     steps = '',
   } = useLocalSearchParams();
+  const router = useRouter();
   const [imageLoading, setImageLoading] = useState(true);
 
   const imageArray = instructionImages ? instructionImages.split(',') : [];
@@ -63,6 +64,10 @@ export default function VideoDetailScreen() {
     if (currentIndex > 0) {
       handleTransition(currentIndex - 1);
     }
+  };
+
+  const handleFinish = () => {
+    router.back();
   };
 
   const progress = (currentIndex + 1) / data.length;
@@ -113,27 +118,35 @@ export default function VideoDetailScreen() {
 
           {/* Navegación */}
           <View style={styles.navigationContainer}>
-            <TouchableOpacity
-                onPress={handlePrevious}
-                style={[
-                  styles.navButton,
-                  currentIndex === 0 && styles.disabledButton,
-                ]}
-                disabled={currentIndex === 0}
-            >
-              <Text style={styles.navButtonText}>Atrás</Text>
-            </TouchableOpacity>
+            {currentIndex > 0 ? (
+                <TouchableOpacity
+                    onPress={handlePrevious}
+                    style={[
+                      styles.navButton,
+                      { backgroundColor: YowPetTheme.brand.orange },
+                    ]}
+                >
+                  <Text style={styles.navButtonText}>Atrás</Text>
+                </TouchableOpacity>
+            ) : (
+                <View style={styles.placeholderButton} />
+            )}
 
-            <TouchableOpacity
-                onPress={handleNext}
-                style={[
-                  styles.navButton,
-                  currentIndex === data.length - 1 && styles.disabledButton,
-                ]}
-                disabled={currentIndex === data.length - 1}
-            >
-              <Text style={styles.navButtonText}>Siguiente</Text>
-            </TouchableOpacity>
+            {currentIndex < data.length - 1 ? (
+                <TouchableOpacity
+                    onPress={handleNext}
+                    style={styles.navButton}
+                >
+                  <Text style={styles.navButtonText}>Siguiente</Text>
+                </TouchableOpacity>
+            ) : (
+                <TouchableOpacity
+                    onPress={handleFinish}
+                    style={[styles.navButton, { backgroundColor: YowPetTheme.brand.accent }]}
+                >
+                  <Text style={styles.navButtonText}>Finalizar</Text>
+                </TouchableOpacity>
+            )}
           </View>
         </View>
       </ScreenContainer>
@@ -142,7 +155,7 @@ export default function VideoDetailScreen() {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    paddingBottom: 10,
+    paddingBottom: 30,
     paddingHorizontal: 24,
     backgroundColor: YowPetTheme.brand.primary,
     borderRadius: 24,
@@ -157,10 +170,9 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    color: 'rgba(255,255,255,0.9)',
+    color: YowPetTheme.text.subtleText,
     textAlign: 'center',
     fontFamily: 'Inter-Medium',
-    marginBottom: 20,
   },
   contentContainer: {
     flex: 1,
@@ -179,7 +191,7 @@ const styles = StyleSheet.create({
   progressText: {
     fontSize: 14,
     fontFamily: 'Inter-Medium',
-    color: YowPetTheme.text.secondaryText,
+    color: YowPetTheme.text.subtleText,
   },
   progressBar: {
     width: '100%',
@@ -208,22 +220,17 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   navButton: {
-    backgroundColor: YowPetTheme.button.mainButton,
     paddingVertical: 8,
     paddingHorizontal: 18,
     borderRadius: 8,
+    backgroundColor: YowPetTheme.status.successState,
   },
   navButtonText: {
     fontSize: 16,
     fontFamily: 'Inter-Medium',
     color: '#FFF',
   },
-  disabledButton: {
-    backgroundColor: YowPetTheme.background.lightGray,
-  },
-  loadingContainer: {
+  placeholderButton: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });

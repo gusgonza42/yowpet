@@ -18,7 +18,11 @@ import { useAxiosFetch } from '@/services/api/getfetch';
 import MapMarker from '@components/Map/MapMarker';
 import DetailModal from '@components/Map/ViewDetailModal';
 import { useRequest } from '@/services/api/fetchingdata';
-import { mapStyles, modalStyles, getDynamicMapStyles } from '@/components/Map/styles';
+import {
+  mapStyles,
+  modalStyles,
+  getDynamicMapStyles,
+} from '@/components/Map/styles';
 import { YowPetTheme } from '@theme/Colors';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -33,7 +37,7 @@ export default function MapScreen() {
   const { datos, loading, error, refetch } = useAxiosFetch(
     'place/all',
     refreshKey,
-    false,
+    false
   );
   const { requestData, loading: saving } = useRequest();
   const [locationAddress, setLocationAddress] = useState('');
@@ -78,70 +82,81 @@ export default function MapScreen() {
   }, []);
 
   // Función para ajustar el mapa a los marcadores filtrados
-  const fitMapToFilteredMarkers = useCallback((markers) => {
-    if (!markers || markers.length === 0 || !location) return;
+  const fitMapToFilteredMarkers = useCallback(
+    markers => {
+      if (!markers || markers.length === 0 || !location) return;
 
-    // Encontramos los marcadores cercanos a la ubicación actual
-    // (establezco un radio máximo de 50km para considerarlos "cercanos")
-    const nearbyMarkers = markers.filter(marker => {
-      const distance = calculateDistance(
-        location.latitude,
-        location.longitude,
-        marker.latitude,
-        marker.longitude,
-      );
-      return distance <= 50; // 50km como radio máximo
-    });
-
-    // Si no hay marcadores cercanos, usamos todos
-    const markersToShow = nearbyMarkers.length > 0 ? nearbyMarkers : markers;
-
-    // Si solo hay un marcador, centramos en él con zoom cercano
-    if (markersToShow.length === 1) {
-      mapRef.current?.animateToRegion({
-        latitude: markersToShow[0].latitude,
-        longitude: markersToShow[0].longitude,
-        latitudeDelta: 0.05,
-        longitudeDelta: 0.05,
+      // Encontramos los marcadores cercanos a la ubicación actual
+      // (establezco un radio máximo de 50km para considerarlos "cercanos")
+      const nearbyMarkers = markers.filter(marker => {
+        const distance = calculateDistance(
+          location.latitude,
+          location.longitude,
+          marker.latitude,
+          marker.longitude
+        );
+        return distance <= 50; // 50km como radio máximo
       });
-      return;
-    }
 
-    // Aseguramos de incluir la ubicación del usuario en los límites
-    const latitudes = [...markersToShow.map(m => m.latitude), location.latitude];
-    const longitudes = [...markersToShow.map(m => m.longitude), location.longitude];
+      // Si no hay marcadores cercanos, usamos todos
+      const markersToShow = nearbyMarkers.length > 0 ? nearbyMarkers : markers;
 
-    // Calculamos los límites para incluir todos los marcadores y la ubicación del usuario
-    let minLat = Math.min(...latitudes);
-    let maxLat = Math.max(...latitudes);
-    let minLng = Math.min(...longitudes);
-    let maxLng = Math.max(...longitudes);
+      // Si solo hay un marcador, centramos en él con zoom cercano
+      if (markersToShow.length === 1) {
+        mapRef.current?.animateToRegion({
+          latitude: markersToShow[0].latitude,
+          longitude: markersToShow[0].longitude,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+        });
+        return;
+      }
 
-    // Añadimos un margen
-    const latPadding = (maxLat - minLat) * 0.3;
-    const lngPadding = (maxLng - minLng) * 0.3;
+      // Aseguramos de incluir la ubicación del usuario en los límites
+      const latitudes = [
+        ...markersToShow.map(m => m.latitude),
+        location.latitude,
+      ];
+      const longitudes = [
+        ...markersToShow.map(m => m.longitude),
+        location.longitude,
+      ];
 
-    // Aseguramos que al menos haya un mínimo de delta para el zoom
-    const latDelta = Math.max(maxLat - minLat + latPadding * 2, 0.05);
-    const lngDelta = Math.max(maxLng - minLng + lngPadding * 2, 0.05);
+      // Calculamos los límites para incluir todos los marcadores y la ubicación del usuario
+      let minLat = Math.min(...latitudes);
+      let maxLat = Math.max(...latitudes);
+      let minLng = Math.min(...longitudes);
+      let maxLng = Math.max(...longitudes);
 
-    mapRef.current?.animateToRegion({
-      latitude: (minLat + maxLat) / 2,
-      longitude: (minLng + maxLng) / 2,
-      latitudeDelta: latDelta,
-      longitudeDelta: lngDelta,
-    });
-  }, [location]);
+      // Añadimos un margen
+      const latPadding = (maxLat - minLat) * 0.3;
+      const lngPadding = (maxLng - minLng) * 0.3;
 
-// Función auxiliar para calcular distancias entre coordenadas (en km)
+      // Aseguramos que al menos haya un mínimo de delta para el zoom
+      const latDelta = Math.max(maxLat - minLat + latPadding * 2, 0.05);
+      const lngDelta = Math.max(maxLng - minLng + lngPadding * 2, 0.05);
+
+      mapRef.current?.animateToRegion({
+        latitude: (minLat + maxLat) / 2,
+        longitude: (minLng + maxLng) / 2,
+        latitudeDelta: latDelta,
+        longitudeDelta: lngDelta,
+      });
+    },
+    [location]
+  );
+
+  // Función auxiliar para calcular distancias entre coordenadas (en km)
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371; // Radio de la Tierra en km
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
@@ -150,15 +165,14 @@ export default function MapScreen() {
     useCallback(() => {
       console.log('Pantalla de mapa enfocada - actualizando datos');
       refetch();
-      return () => {
-      };
-    }, []),
+      return () => {};
+    }, [])
   );
 
   useEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setTranslucent(true);
-      StatusBar.setBackgroundColor('transparent', true); // El segundo parámetro indica que sea completamente transparente
+      StatusBar.setBackgroundColor('transparent', true);
     } else if (Platform.OS === 'ios') {
       StatusBar.setBarStyle('dark-content');
     }
@@ -175,7 +189,7 @@ export default function MapScreen() {
     if (!searchQuery.trim()) return;
 
     const foundMarker = datos.find(marker =>
-      marker.name.toLowerCase().includes(searchQuery.toLowerCase()),
+      marker.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     if (foundMarker && mapRef.current) {
@@ -193,7 +207,7 @@ export default function MapScreen() {
     } else {
       Alert.alert(
         'No encontrado',
-        'No se encontró ningún marcador con ese nombre.',
+        'No se encontró ningún marcador con ese nombre.'
       );
     }
   };
@@ -278,7 +292,10 @@ export default function MapScreen() {
       ) : (
         <>
           <View
-            style={[dynamicStyles.topBar, Platform.OS === 'ios' && { zIndex: 10 }]}
+            style={[
+              dynamicStyles.topBar,
+              Platform.OS === 'ios' && { zIndex: 10 },
+            ]}
           >
             {selectedFilter !== 'All' ? (
               <>
@@ -321,16 +338,47 @@ export default function MapScreen() {
           </View>
 
           {isSelectingLocation && (
-            <Text
+            <View
               style={{
-                textAlign: 'center',
-                backgroundColor: 'white',
-                padding: 8,
-                zIndex: Platform.OS === 'ios' ? 5 : 1,
+                position: 'absolute',
+                top: '15%',
+                left: '5%',
+                right: '5%',
+                width: '90%',
+                backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                paddingVertical: 12,
+                paddingHorizontal: 15,
+                borderRadius: 12,
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 999,
+                flexDirection: 'row',
+                marginHorizontal: 'auto',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.3,
+                shadowRadius: 4,
+                elevation: 8,
               }}
             >
-              Toca en el mapa para elegir ubicación
-            </Text>
+              <MaterialCommunityIcons
+                name="map-marker-plus"
+                size={24}
+                color="white"
+                style={{ marginRight: 10 }}
+              />
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 16,
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                  flexShrink: 1,
+                }}
+              >
+                Toca en el mapa para elegir ubicación
+              </Text>
+            </View>
           )}
 
           {/* Mapa */}
@@ -512,7 +560,9 @@ export default function MapScreen() {
                     } else {
                       setSelectedFilter(filter);
                       // Filtramos los marcadores por el filtro seleccionado
-                      const markersOfThisFilter = datos.filter(m => m.filter === filter);
+                      const markersOfThisFilter = datos.filter(
+                        m => m.filter === filter
+                      );
 
                       // Ajustamos el mapa para mostrar estos marcadores alrededor de tu ubicación
                       if (markersOfThisFilter.length > 0) {
@@ -525,11 +575,13 @@ export default function MapScreen() {
                     {
                       borderTopLeftRadius: filter === filters[0] ? 45 : 15,
                       borderBottomLeftRadius: filter === filters[0] ? 45 : 15,
-                      borderTopRightRadius: filter === filters[filters.length - 1] ? 45 : 15,
-                      borderBottomRightRadius: filter === filters[filters.length - 1] ? 45 : 15,
+                      borderTopRightRadius:
+                        filter === filters[filters.length - 1] ? 45 : 15,
+                      borderBottomRightRadius:
+                        filter === filters[filters.length - 1] ? 45 : 15,
                     },
                     isSelected && {
-                      backgroundColor: `${activeColor}30`,  // Opacidad al 30%
+                      backgroundColor: `${activeColor}30`, // Opacidad al 30%
                     },
                   ]}
                 >
@@ -545,7 +597,9 @@ export default function MapScreen() {
                         fontSize: 13,
                         fontWeight: '600',
                         letterSpacing: -0.5, // Reduce el espacio entre letras
-                        color: isSelected ? activeColor : YowPetTheme.brand.support,
+                        color: isSelected
+                          ? activeColor
+                          : YowPetTheme.brand.support,
                       },
                       isSelected && {
                         fontWeight: 'bold',
@@ -585,9 +639,19 @@ export default function MapScreen() {
                   backgroundColor: 'rgba(255,255,255,0.8)',
                 }}
               >
-                <ActivityIndicator size="large" color={YowPetTheme.brand.accent} />
-                <Text style={{ fontSize: 18, marginTop: 15, color: YowPetTheme.brand.support }}>Guardando
-                  ubicación...</Text>
+                <ActivityIndicator
+                  size="large"
+                  color={YowPetTheme.brand.accent}
+                />
+                <Text
+                  style={{
+                    fontSize: 18,
+                    marginTop: 15,
+                    color: YowPetTheme.brand.support,
+                  }}
+                >
+                  Guardando ubicación...
+                </Text>
               </View>
             ) : (
               <Pressable
@@ -597,7 +661,10 @@ export default function MapScreen() {
                   setNewLocation({ latitude: null, longitude: null });
                 }}
               >
-                <View style={modalStyles.content} onStartShouldSetResponder={() => true}>
+                <View
+                  style={modalStyles.content}
+                  onStartShouldSetResponder={() => true}
+                >
                   <View style={modalStyles.modalHeader}>
                     <Text style={modalStyles.title}>Nueva Ubicación</Text>
                     <TouchableOpacity
@@ -607,7 +674,11 @@ export default function MapScreen() {
                         setNewLocation({ latitude: null, longitude: null });
                       }}
                     >
-                      <AntDesign name="closecircle" size={24} color={YowPetTheme.brand.support} />
+                      <AntDesign
+                        name="closecircle"
+                        size={24}
+                        color={YowPetTheme.brand.support}
+                      />
                     </TouchableOpacity>
                   </View>
 
@@ -615,12 +686,26 @@ export default function MapScreen() {
                   {newLocation.latitude && newLocation.longitude && (
                     <View style={modalStyles.locationInfoContainer}>
                       <Text style={modalStyles.locationInfoText}>
-                        <AntDesign name="enviromento" size={14}
-                                   color="#4A6585" /> {locationAddress || 'Ubicación seleccionada'}
+                        <AntDesign
+                          name="enviromento"
+                          size={14}
+                          color="#4A6585"
+                        />{' '}
+                        {locationAddress || 'Ubicación seleccionada'}
                       </Text>
                       {locationPostalCode ? (
-                        <Text style={[modalStyles.locationInfoText, { marginTop: 5 }]}>
-                          <AntDesign name="creditcard" size={14} color="#4A6585" /> Código postal: {locationPostalCode}
+                        <Text
+                          style={[
+                            modalStyles.locationInfoText,
+                            { marginTop: 5 },
+                          ]}
+                        >
+                          <AntDesign
+                            name="creditcard"
+                            size={14}
+                            color="#4A6585"
+                          />{' '}
+                          Código postal: {locationPostalCode}
                         </Text>
                       ) : null}
                     </View>
@@ -638,7 +723,12 @@ export default function MapScreen() {
                   {/* Selección de filtro */}
                   <View style={modalStyles.filterContainer}>
                     <Text style={modalStyles.filterLabel}>Categoría:</Text>
-                    <View style={[modalStyles.filterOptions, { overflow: 'scroll' }]}>
+                    <View
+                      style={[
+                        modalStyles.filterOptions,
+                        { overflow: 'scroll' },
+                      ]}
+                    >
                       {filters.map(filter => {
                         // Determinar qué icono usar según el filtro
                         let iconName, activeColor;
@@ -673,15 +763,22 @@ export default function MapScreen() {
                             onPress={() => setLocationFilter(filter)}
                             style={[
                               modalStyles.filterOption,
-                              isSelected ?
-                                { backgroundColor: `${activeColor}15`, borderColor: activeColor } :
-                                modalStyles.filterOptionInactive,
+                              isSelected
+                                ? {
+                                    backgroundColor: `${activeColor}15`,
+                                    borderColor: activeColor,
+                                  }
+                                : modalStyles.filterOptionInactive,
                             ]}
                           >
                             <MaterialCommunityIcons
                               name={iconName}
                               size={20}
-                              color={isSelected ? activeColor : YowPetTheme.brand.support}
+                              color={
+                                isSelected
+                                  ? activeColor
+                                  : YowPetTheme.brand.support
+                              }
                               style={{ marginBottom: 3 }}
                             />
                             <Text
@@ -691,7 +788,9 @@ export default function MapScreen() {
                                   fontSize: 13,
                                   fontWeight: '600',
                                   letterSpacing: -0.5, // Reduce el espacio entre letras
-                                  color: isSelected ? activeColor : YowPetTheme.brand.support,
+                                  color: isSelected
+                                    ? activeColor
+                                    : YowPetTheme.brand.support,
                                 },
                                 isSelected && { fontWeight: 'bold' },
                               ]}
@@ -718,8 +817,18 @@ export default function MapScreen() {
                       modalStyles.selectLocationButton,
                     ]}
                   >
-                    <AntDesign name="enviromento" size={20} color="#4A89F3" style={modalStyles.buttonIcon} />
-                    <Text style={[modalStyles.buttonText, modalStyles.selectLocationText]}>
+                    <AntDesign
+                      name="enviromento"
+                      size={20}
+                      color="#4A89F3"
+                      style={modalStyles.buttonIcon}
+                    />
+                    <Text
+                      style={[
+                        modalStyles.buttonText,
+                        modalStyles.selectLocationText,
+                      ]}
+                    >
                       Seleccionar en el mapa
                     </Text>
                   </TouchableOpacity>
@@ -728,10 +837,24 @@ export default function MapScreen() {
                   <TouchableOpacity
                     onPress={handleAddLocation}
                     style={[modalStyles.actionButton, modalStyles.saveButton]}
-                    disabled={!newLocation.latitude || !newLocation.longitude || !locationName}
+                    disabled={
+                      !newLocation.latitude ||
+                      !newLocation.longitude ||
+                      !locationName
+                    }
                   >
-                    <AntDesign name="save" size={20} color="white" style={modalStyles.buttonIcon} />
-                    <Text style={[modalStyles.buttonText, modalStyles.saveButtonText]}>
+                    <AntDesign
+                      name="save"
+                      size={20}
+                      color="white"
+                      style={modalStyles.buttonIcon}
+                    />
+                    <Text
+                      style={[
+                        modalStyles.buttonText,
+                        modalStyles.saveButtonText,
+                      ]}
+                    >
                       Guardar ubicación
                     </Text>
                   </TouchableOpacity>
