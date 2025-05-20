@@ -40,8 +40,8 @@ public class AgendaController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable int id, @RequestBody Date date) {
-        service.delete(id, date);
+    public void delete(@PathVariable int id) {
+        service.delete(id);
     }
 
     @GetMapping("/all/{id}")

@@ -25,7 +25,7 @@ public class AgendaService {
     }
     public void create(Agenda agenda) {
 
-        repo.createAgenda(agenda.getDate(), agenda.getTitle(), agenda.getId());
+        repo.createAgenda(agenda.getDate(), agenda.getTitle(), agenda.getUserid());
     }
 
     public void update(int id, Agenda agenda) {
@@ -36,8 +36,8 @@ public class AgendaService {
         repo.updateAgenda(agenda.getId(), agenda.getTitle(),agenda.getUserid());
     }
 
-    public void delete(int id, Date date) {
-        repo.deleteAgenda(id, date);
+    public void delete(int id) {
+        repo.deleteAgenda(id);
     }
 
 }

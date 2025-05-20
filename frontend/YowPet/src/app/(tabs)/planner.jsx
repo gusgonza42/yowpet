@@ -2,13 +2,13 @@ import { Calender, getDynamicMapStyles } from '@/components/Planner/styles';
 import { useRequest } from '@/services/api/fetchingdata';
 import { YowPetTheme } from '@/theme/Colors';
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text,  TouchableOpacity, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { useAuth } from '@/context/AuthContext';
 import { userService } from '@/services/profile/userService';
 import Addnotifimodal from '@/components/Planner/addnotifimodal';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function CalendarScreen() {
   const { user } = useAuth();
@@ -38,6 +38,16 @@ export default function CalendarScreen() {
     } catch (error) {
       console.log('Error fetching reminders:', error);
       setReminders([]);
+    }
+  };
+
+  const deleteReminder = async (reminderId) => {
+    try {
+      await requestData('DELETE', `/agenda/delete/${reminderId}`);
+      fetchRemindersForDate(selectedDate);
+      fetchNotifications();
+    } catch (error) {
+      console.log('Error deleting reminder:', error);
     }
   };
 
@@ -121,20 +131,43 @@ export default function CalendarScreen() {
           },
         }}
         style={Calender.calendar}
+        theme={{
+          backgroundColor: 'white',
+          calendarBackground: 'white',
+          textSectionTitleColor: "black",
+          dayTextColor: '#111',
+          todayTextColor: YowPetTheme.brand.primary, // Today
+          selectedDayTextColor: '#fff',  // Text color when a day is selected
+          selectedDayBackgroundColor: YowPetTheme.brand.primary,
+          monthTextColor: '#333',        // Month title color
+          arrowColor: YowPetTheme.brand.primary,
+          textDisabledColor: '#ccc',     // Color of disabled days
+        }}
       />
 
-      <View style={Calender.reminderContainer}>
+      <ScrollView style={Calender.reminderContainer}>
         <Text style={Calender.title}>Reminders for {selectedDate}</Text>
         {reminders.length > 0 ? (
           reminders.map((reminder, index) => (
             <View key={index} style={Calender.reminderCard}>
-              <Text style={Calender.reminderText}>🔔 {reminder.title}</Text>
+              <View style={Calender.reminderItem}>
+                <Text style={Calender.reminderText}>
+                  <MaterialCommunityIcons
+                    name="calendar-clock"
+                    size={24}
+                    color={YowPetTheme.status.info}
+                  /> {reminder.title}
+                </Text>
+                <TouchableOpacity onPress={() => deleteReminder(reminder.id)}>
+                  <AntDesign name="delete" size={20} color="red" />
+                </TouchableOpacity>
+              </View>
             </View>
           ))
         ) : (
           <Text style={{ color: '#555' }}>No reminders for this day.</Text>
         )}
-      </View>
+      </ScrollView>
 
       <TouchableOpacity
         onPress={() => { setShowModal(true) }}

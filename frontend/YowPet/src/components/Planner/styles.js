@@ -89,13 +89,22 @@ export const Calender = StyleSheet.create({
 
   container: {
     flex: 1,
-    backgroundColor: YowPetTheme.brand.secondary,
+    backgroundColor: YowPetTheme.brand.white,
     paddingVertical: 20,
     padding: 16
   },
   calendar: {
     marginBottom: 20,
     borderRadius: 20,
+    backgroundColor: YowPetTheme.brand.secondary,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    elevation: 6,
+    zIndex: 10,
+    marginTop: Platform.OS === 'android' ? -1 : 0,
+    height: isSmallDevice ? 250 : 350
   },
   reminderContainer: {
     flex: 1
@@ -106,13 +115,23 @@ export const Calender = StyleSheet.create({
     marginBottom: 8
   },
   reminderCard: {
-    backgroundColor: '#f2f2f2',
+    backgroundColor: YowPetTheme.brand.surface,
     padding: 12,
     borderRadius: 8,
     marginBottom: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2
   },
   reminderText: {
     fontSize: 16
+  },
+  reminderItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
 

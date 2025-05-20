@@ -17,18 +17,18 @@ public class AgendaRepo {
     private JdbcTemplate template;
 
     public void createAgenda(Date date, String title, int user) {
-        String sql = "CALL createallergy(?, ?, ?)";
+        String sql = "CALL createnotification(?, ?, ?)";
         template.update(sql, date, title, user);
     }
 
     public void updateAgenda(int agendaId, String title, int user) {
-        String sql = "CALL updateallergy(?, ?,?)";
+        String sql = "CALL updatenotification(?, ?,?)";
         template.update(sql, agendaId, title,user);
     }
 
-    public void deleteAgenda(int agenda, Date date) {
-        String sql = "CALL deleteallergy(?, ?)";
-        template.update(sql, agenda, date);
+    public void deleteAgenda(int agenda) {
+        String sql = "CALL deletenotification( ?)";
+        template.update(sql, agenda);
     }
 
     public List<Agenda> getAgenda(String date, int user) {
@@ -41,11 +41,7 @@ public class AgendaRepo {
     }
     public List<Agenda> getAllAgenda(int user) {
         String sql = "CALL GETALLNOTIFICATION(?)";
-        try {
-            return template.query(sql, new BeanPropertyRowMapper<>(Agenda.class),user);
-        } catch (EmptyResultDataAccessException e) {
-            throw new RuntimeException(e);
-
-        }
+        return template.query(sql, new BeanPropertyRowMapper<>(Agenda.class), user);
     }
+
 }

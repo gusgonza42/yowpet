@@ -33,14 +33,12 @@ BEGIN
 END $$
 
 CREATE PROCEDURE deletenotification(
-    IN _Date DATETIME,
-    IN _userid INT
+    IN _id INT
 )
 BEGIN
     DELETE
     FROM agenda
-    WHERE date = _Date
-      AND userid = _userid;
+    WHERE id = _id;
 END $$
 
 CREATE PROCEDURE updatenotification(
@@ -61,5 +59,6 @@ CREATE PROCEDURE GETALLNOTIFICATION(
 BEGIN
     SELECT date
     FROM agenda
-    where userid = _userid;
+    where userid = _userid
+      AND date != '0000-00-00';
 END $$
