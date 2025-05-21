@@ -6,6 +6,7 @@ DROP PROCEDURE IF EXISTS getPet;
 DROP PROCEDURE IF EXISTS getAllPets;
 DROP PROCEDURE IF EXISTS searchPets;
 DROP PROCEDURE IF EXISTS getPetsByStatus;
+DROP PROCEDURE IF EXISTS getPetsByOwner;
 
 DELIMITER //
 
@@ -169,5 +170,26 @@ BEGIN
     WHERE status = p_status;
 END;
 //
+
+CREATE PROCEDURE getPetsByOwner(IN p_ownerId INT)
+BEGIN
+    SELECT id,
+           users_id          AS ownerId,
+           animal_id         AS animalCategory,
+           name,
+           birthdate         AS birthDate,
+           gender,
+           strlization,
+           profile_picture   AS profilePicture,
+           breed,
+           status,
+           description,
+           emergency_contact AS emergencyContact,
+           created_at        AS createdAt,
+           updated_at        AS updatedAt,
+           deleted_at        AS deletedAt
+    FROM pets
+    WHERE users_id = p_ownerId;
+END;
 
 DELIMITER ;

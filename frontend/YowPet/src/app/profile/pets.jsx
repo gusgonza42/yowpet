@@ -16,6 +16,7 @@ import { YowPetTheme } from '@theme/Colors';
 import { petService } from '@service/profile/pet/petService';
 import { useFocusEffect } from 'expo-router';
 import { useCallback } from 'react';
+import { userService } from '@/services/profile/userService';
 
 export default function PetsScreen() {
   const router = useRouter();
@@ -31,7 +32,8 @@ export default function PetsScreen() {
   const cargarMascotas = async () => {
     try {
       setIsLoading(true);
-      const response = await petService.obtenerMascotas();
+      const userId = await userService.getUserIdFromToken();
+      const response = await petService.obtenerMascotas(userId);
       setPets(response || []);
     } catch (error) {
       console.error('Error al cargar mascotas:', error);

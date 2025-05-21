@@ -82,4 +82,9 @@ public class PetRepo {
         String sql = "CALL getPetsByStatus(?)";
         return template.query(sql, new Object[]{status}, new BeanPropertyRowMapper<>(Pet.class));
     }
+
+    public List<Pet> getPetsByUserId(int userid) {
+        String sql = "CALL getPetsByOwner(?)";
+        return template.query(sql, new Object[]{userid}, new BeanPropertyRowMapper<>(Pet.class));
+    }
 }

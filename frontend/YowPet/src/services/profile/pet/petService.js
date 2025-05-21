@@ -46,7 +46,7 @@ export const petService = {
     }
   },
 
-  obtenerMascotas: async () => {
+  obtenerMascotas: async (userId) => {
     try {
       const token = await AsyncStorage.getItem('@auth_token');
 
@@ -56,7 +56,7 @@ export const petService = {
 
       const response = await axiosClient({
         method: 'GET',
-        url: '/pet/all',
+        url: `/pet/user/${userId}`,
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',

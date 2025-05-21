@@ -10,9 +10,13 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { YowPetTheme } from '@theme/Colors';
 import { useRouter } from 'expo-router';
 import { ActivityIndicator } from 'react-native-paper';
+import { useEffect } from 'react';
+import { useRequest } from '@/services/api/fetchingdata';
+import { API_URL_LOCAL } from '@/constants/ApiRouteLocal';
 
 export function PetHighlight({ pets = [], onAddPet, isLoading }) {
   const router = useRouter();
+  const { requestData } = useRequest();
 
   if (isLoading) {
     return (
@@ -22,6 +26,12 @@ export function PetHighlight({ pets = [], onAddPet, isLoading }) {
         </View>
       </View>
     );
+  }
+  const handlephotofetching = () => {
+    const data = requestData(`/pets/${petId} / photo`)
+    const blob = res.blob();
+    const imageUrl = URL.createObjectURL(blob);
+    console.log(imageUrl)
   }
 
   if (!pets || pets.length === 0) {
@@ -67,15 +77,15 @@ export function PetHighlight({ pets = [], onAddPet, isLoading }) {
             key={pet.id}
             style={styles.petCard}
             onPress={() => router.push(`/profile/pets/${pet.id}`)}
+
           >
             <Image
-              source={
-                pet.profilePicture
-                  ? { uri: pet.profilePicture }
-                  : require('@assets/logos/icon.png')
-              }
+
+              source={{ uri: 'upload/luna.png' }}
+              defaultSource={require('@assets/logos/icon.png')} // fallback on loading
               style={styles.petImage}
             />
+
             <Text style={styles.petName}>{pet.name}</Text>
           </Pressable>
         ))}

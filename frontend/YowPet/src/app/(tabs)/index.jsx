@@ -16,6 +16,7 @@ import { DailyTip } from '@components/home/DailyTip';
 import { useState, useEffect } from 'react';
 import { petService } from '../../services/profile/pet/petService';
 import { ActivityIndicator, Text } from 'react-native';
+import { userService } from '@/services/profile/userService';
 
 export default function HomeScreen() {
   const { user } = useAuth();
@@ -29,7 +30,8 @@ export default function HomeScreen() {
   const cargarMascotas = async () => {
     try {
       setIsLoading(true);
-      const response = await petService.obtenerMascotas();
+      const userId = await userService.getUserIdFromToken();
+      const response = await petService.obtenerMascotas(userId);
       setPets(response || []);
     } catch (error) {
       console.error('Error al cargar mascotas:', error);
