@@ -21,28 +21,36 @@ public class BreedController {
     }
 
     @GetMapping("/{id}")
-    public Breed getBreedById(@PathVariable Long id) {
+    public Breed getBreedById(@PathVariable int id) {
         return breedService.getbreedbyID(id);
 
     }
 
     @PostMapping("/create")
-    public void createBreed(@RequestBody Breed breed) {
-        breedService.createBreed(breed);
+    public void createBreed(@RequestBody Breed req) {
+        breedService.createBreed(req);
     }
 
-    @PutMapping("/{id}")
-    public void updateBreed(@PathVariable Long id,@RequestBody Breed breed) {
+    @PutMapping("/update/{id}")
+    public void updateBreed(@PathVariable int id, @RequestBody Breed breed) {
         breedService.updateBreed(id, breed);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteBreed(@PathVariable Long id) {
+    @DeleteMapping("/delete/{id}")
+    public void deleteBreed(@PathVariable int id) {
         breedService.deleteBreed(id);
     }
 
     @GetMapping("/search")
     public List<Breed> searchBreeds(@RequestParam("text") String text) {
         return breedService.searchBreeds(text);
+    }
+
+    @GetMapping("/getcat/{id}")
+    public Breed getBreedByAnimalCat(@PathVariable int id) {
+        Breed breed = breedService.getbreedbyID(id);
+
+        System.out.println("Breed: " + breed);
+        return breed;
     }
 }

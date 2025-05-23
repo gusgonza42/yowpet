@@ -6,38 +6,27 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "lesson_reviews")
 public class Lesson_reviews {
-    public static int status_active = 1;
-    public static int status_deleted = 0;
+    public static int status_active = 2;
+    public static int status_deleted = 1;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
-    @Column(nullable = false)
     private double rating;
 
-    @Column(columnDefinition = "TEXT")
     private String comment;
 
-    @Column(length = 45, nullable = false)
     private int estado = status_active;
 
-    @ManyToOne
-    @JoinColumn(name = "lesson_id", nullable = false)
-    private Lesson lesson;
+    private int lesson;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private int user;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -65,19 +54,19 @@ public class Lesson_reviews {
         this.estado = estado;
     }
 
-    public Lesson getLesson() {
+    public int getLesson() {
         return lesson;
     }
 
-    public void setLesson(Lesson lesson) {
+    public void setLesson(int lesson) {
         this.lesson = lesson;
     }
 
-    public User getUser() {
+    public int getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(int user) {
         this.user = user;
     }
 

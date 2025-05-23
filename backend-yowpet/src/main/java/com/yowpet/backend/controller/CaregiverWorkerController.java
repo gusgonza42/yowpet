@@ -2,8 +2,8 @@ package com.yowpet.backend.controller;
 
 import com.yowpet.backend.model.CaregiverWorker;
 import com.yowpet.backend.model.User;
-import com.yowpet.backend.repository.CaregiverWorkerRepository;
-import com.yowpet.backend.repository.UserRepository;
+import com.yowpet.backend.repository.CareGiverRepo;
+import com.yowpet.backend.repository.UserRepo;
 import com.yowpet.backend.service.CaregiverWorkerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +17,11 @@ import java.util.Optional;
  * Controlador REST para gestionar los cuidadores.
  */
 @RestController
-@RequestMapping( "/yowpet/caregiver" )
+@RequestMapping("/yowpet/caregiver")
 public class CaregiverWorkerController {
     private final CaregiverWorkerService caregiverWorkerService;
-    private final UserRepository userRepository;
-    private final CaregiverWorkerRepository caregiverWorkerRepository;
+    private final UserRepo userRepository;
+    private final CareGiverRepo caregiverWorkerRepository;
 
     /**
      * Constructor del CaregiverWorkerController.
@@ -30,7 +30,7 @@ public class CaregiverWorkerController {
      * @param userRepository            el repositorio de usuarios
      * @param caregiverWorkerRepository el repositorio de cuidadores
      */
-    public CaregiverWorkerController( CaregiverWorkerService caregiverWorkerService , UserRepository userRepository , CaregiverWorkerRepository caregiverWorkerRepository ) {
+    public CaregiverWorkerController(CaregiverWorkerService caregiverWorkerService, UserRepo userRepository, CareGiverRepo caregiverWorkerRepository) {
         this.caregiverWorkerService = caregiverWorkerService;
         this.userRepository = userRepository;
         this.caregiverWorkerRepository = caregiverWorkerRepository;
@@ -42,9 +42,9 @@ public class CaregiverWorkerController {
      * @param id el ID del cuidador a activar
      * @return la entidad de respuesta con el usuario activado como cuidador
      */
-    @PostMapping( "/activate/{id}" )
-    public ResponseEntity< User > activateCaregiver( @PathVariable Long id ) {
-        return caregiverWorkerService.activateCaregiver( id );
+    @PostMapping("/activate/{id}")
+    public ResponseEntity<User> activateCaregiver(@PathVariable int id) {
+        return caregiverWorkerService.activateCaregiver(id);
     }
 
     /**
@@ -54,33 +54,33 @@ public class CaregiverWorkerController {
      * @param caregiverWorker los detalles del cuidador a crear
      * @return la entidad de respuesta con el cuidador creado
      */
-    @PostMapping( "/create/{id}" )
-    public ResponseEntity< CaregiverWorker > createCaregiver( @PathVariable Long id , @RequestBody CaregiverWorker caregiverWorker ) {
-        User user = userRepository.findById( id ).orElse( null );
-        if ( user == null ) {
-            return ResponseEntity.status( HttpStatus.NOT_FOUND ).build( );
+    @PostMapping("/create/{id}")
+    public ResponseEntity<CaregiverWorker> createCaregiver(@PathVariable int id, @RequestBody CaregiverWorker caregiverWorker) {
+        Optional<User> user = Optional.ofNullable(userRepository.getUser(id));
+        if (user.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        user.setUpdatedAt( new Date( ) );
-        caregiverWorker.setUser( user );
+        user.get().setUpdatedAt(new Date());
+        caregiverWorker.setUser(user.get().getId());
 
-        Optional< CaregiverWorker > existingCaregiverOpt = caregiverWorkerRepository.findByUser_Id( id );
-        if ( existingCaregiverOpt.isPresent( ) ) {
-            CaregiverWorker existingCaregiver = existingCaregiverOpt.get( );
-            if ( ! existingCaregiver.isStatusActiveWork( ) ) {
-                existingCaregiver.setStatusActiveWork( true );
-                existingCaregiver.setSpeciality( caregiverWorker.getSpeciality( ) );
-                existingCaregiver.setExperienceYears( caregiverWorker.getExperienceYears( ) );
-                existingCaregiver.setHourlyRate( caregiverWorker.getHourlyRate( ) );
-                existingCaregiver.setRating( caregiverWorker.getRating( ) );
-                existingCaregiver.setReview( caregiverWorker.getReview( ) );
-                existingCaregiver.setDescription( caregiverWorker.getDescription( ) );
-                existingCaregiver.setServiceWorker( caregiverWorker.getServiceWorker( ) );
-                existingCaregiver.setCreatedAt( new Date( ) );
-                return caregiverWorkerService.createCaregiver( existingCaregiver );
+        Optional<CaregiverWorker> existingCaregiverOpt = Optional.ofNullable(caregiverWorkerRepository.getCaregiverWorkersByUser(id));
+        if (existingCaregiverOpt.isPresent()) {
+            CaregiverWorker caregiver = existingCaregiverOpt.get();
+            if (!caregiver.isStatusActiveWork()) {
+                caregiver.setStatusActiveWork(true);
+                caregiver.setSpeciality(caregiverWorker.getSpeciality());
+                caregiver.setExperienceYears(caregiverWorker.getExperienceYears());
+                caregiver.setHourlyRate(caregiverWorker.getHourlyRate());
+                caregiver.setRating(caregiverWorker.getRating());
+                caregiver.setReview(caregiverWorker.getReview());
+                caregiver.setDescription(caregiverWorker.getDescription());
+                caregiver.setServiceWorker(caregiverWorker.getServiceWorker());
+                caregiver.setCreatedAt(new Date());
+                return caregiverWorkerService.createCaregiver(caregiver);
             }
         }
 
-        return caregiverWorkerService.createCaregiver( caregiverWorker );
+        return caregiverWorkerService.createCaregiver(caregiverWorker);
     }
 
     /**
@@ -88,9 +88,9 @@ public class CaregiverWorkerController {
      *
      * @return la entidad de respuesta con la lista de todos los cuidadores
      */
-    @GetMapping( "/all" )
-    public ResponseEntity< List< CaregiverWorker > > getAllCaregivers( ) {
-        return caregiverWorkerService.getAllCaregivers( );
+    @GetMapping("/all")
+    public ResponseEntity<List<CaregiverWorker>> getAllCaregivers() {
+        return caregiverWorkerService.getAllCaregivers();
     }
 
     /**
@@ -99,9 +99,9 @@ public class CaregiverWorkerController {
      * @param id el ID del cuidador a recuperar
      * @return la entidad de respuesta con los detalles del cuidador
      */
-    @GetMapping( "/{id}" )
-    public ResponseEntity< CaregiverWorker > getCaregiverById( @PathVariable Long id ) {
-        return caregiverWorkerService.getCaregiverById( id );
+    @GetMapping("/{id}")
+    public ResponseEntity<CaregiverWorker> getCaregiverById(@PathVariable int id) {
+        return caregiverWorkerService.getCaregiverById(id);
     }
 
     /**
@@ -111,9 +111,9 @@ public class CaregiverWorkerController {
      * @param caregiverWorker los detalles actualizados del cuidador
      * @return la entidad de respuesta con el cuidador actualizado
      */
-    @PutMapping( "/update/{id}" )
-    public ResponseEntity< CaregiverWorker > updateCaregiver( @PathVariable Long id , @RequestBody CaregiverWorker caregiverWorker ) {
-        return caregiverWorkerService.updateCaregiver( id , caregiverWorker );
+    @PutMapping("/update/{id}")
+    public ResponseEntity<CaregiverWorker> updateCaregiver(@PathVariable int id, @RequestBody CaregiverWorker caregiverWorker) {
+        return caregiverWorkerService.updateCaregiver(id, caregiverWorker);
     }
 
     /**
@@ -122,9 +122,9 @@ public class CaregiverWorkerController {
      * @param id el ID del cuidador a desactivar
      * @return la entidad de respuesta con el usuario desactivado
      */
-    @DeleteMapping( "/disabled/{id}" )
-    public ResponseEntity< User > disabledCaregiver( @PathVariable Long id ) {
-        return caregiverWorkerService.disabledCaregiver( id );
+    @DeleteMapping("/disabled/{id}")
+    public ResponseEntity<User> disabledCaregiver(@PathVariable int id) {
+        return caregiverWorkerService.disableCaregiver(id);
     }
 
     /**
@@ -133,9 +133,9 @@ public class CaregiverWorkerController {
      * @param speciality la especialidad para filtrar cuidadores disponibles
      * @return la entidad de respuesta con la lista de cuidadores disponibles en la especialidad especificada
      */
-    @GetMapping( "/available" )
-    public ResponseEntity< List< CaregiverWorker > > getAvailableCaregiversBySpecialty( @RequestParam( "speciality" ) String speciality ) {
-        return caregiverWorkerService.getAvailableCaregiversBySpeciality( speciality );
+    @GetMapping("/available")
+    public ResponseEntity<List<CaregiverWorker>> getAvailableCaregiversBySpecialty(@RequestParam("speciality") String speciality) {
+        return caregiverWorkerService.getAvailableCaregiversBySpeciality(speciality);
     }
 
     /**
@@ -143,9 +143,9 @@ public class CaregiverWorkerController {
      *
      * @return la entidad de respuesta con la lista de todos los cuidadores disponibles
      */
-    @GetMapping( "/availables" )
-    public ResponseEntity< List< CaregiverWorker > > getAvailableCaregivers( ) {
-        return caregiverWorkerService.getAvailableCaregivers( );
+    @GetMapping("/availables")
+    public ResponseEntity<List<CaregiverWorker>> getAvailableCaregivers() {
+        return caregiverWorkerService.getAvailableCaregivers();
     }
 
     /**
@@ -155,8 +155,19 @@ public class CaregiverWorkerController {
      * @param caregiverWorker los detalles de la calificación del cuidador
      * @return la entidad de respuesta con el cuidador calificado
      */
-    @PostMapping( "/rate/{id}" )
-    public ResponseEntity< CaregiverWorker > rateCaregiver( @PathVariable Long id , @RequestBody CaregiverWorker caregiverWorker ) {
-        return caregiverWorkerService.rateCaregiver( id , caregiverWorker );
+    @PostMapping("/rate/{id}")
+    public ResponseEntity<CaregiverWorker> rateCaregiver(@PathVariable int id, @RequestBody CaregiverWorker caregiverWorker) {
+        return caregiverWorkerService.rateCaregiver(id, caregiverWorker);
     }
+
+    @GetMapping("/check/{userId}")
+    public ResponseEntity<Boolean> checkIsCaregiver(@PathVariable int userId) {
+        return caregiverWorkerService.checkIsCaregiver(userId);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteCaregiver(@PathVariable int id) {
+        caregiverWorkerService.deleteCaregiver(id);
+    }
+
 }

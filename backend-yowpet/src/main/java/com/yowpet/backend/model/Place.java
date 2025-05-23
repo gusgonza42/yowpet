@@ -4,42 +4,44 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "places")
 public class Place {
     public static int status_active = 1;
     public static int status_deleted = 0;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
-    @Column(length = 100, nullable = false)
     private String name;
 
-    @Column(length = 255, nullable = false)
     private String address;
 
-    @Column(length = 45, nullable = false)
     private String addresscode;
 
-    @Column(length = 45, nullable = false)
+    private String filter;
+
+    private BigDecimal latitude;
+    private BigDecimal longitude;
+
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+
     private int estado = status_active;
 
-    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Place_reviews> reviews;
-
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -75,12 +77,20 @@ public class Place {
         this.estado = estado;
     }
 
-    public List<Place_reviews> getReviews() {
-        return reviews;
+    public BigDecimal getLongitude() {
+        return longitude;
     }
 
-    public void setReviews(List<Place_reviews> reviews) {
-        this.reviews = reviews;
+    public void setLongitude(BigDecimal longitude) {
+        this.longitude = longitude;
+    }
+
+    public BigDecimal getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(BigDecimal latitude) {
+        this.latitude = latitude;
     }
 
     @Override

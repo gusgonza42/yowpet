@@ -32,8 +32,8 @@ public class ReservationController {
      * @return una respuesta HTTP con el resultado de la operación
      */
     @PostMapping ( "/create" )
-    public ResponseEntity< String > createReservation( @RequestBody Reservation reservation ) {
-        return reservationService.createReservation( reservation );
+    public void createReservation( @RequestBody Reservation reservation ) {
+         reservationService.createReservation( reservation );
     }
 
     /**
@@ -43,7 +43,7 @@ public class ReservationController {
      * @return una respuesta HTTP con la lista de reservas
      */
     @GetMapping ( "/user/{userId}" )
-    public ResponseEntity< List< Reservation > > getReservationsByUser( @PathVariable Long userId ) {
+    public  List< Reservation >  getReservationsByUser( @PathVariable int userId ) {
         return reservationService.getReservationsByUser( userId );
     }
 
@@ -54,7 +54,7 @@ public class ReservationController {
      * @return una respuesta HTTP con la lista de reservas
      */
     @GetMapping ( "/caregiver/{careGiverId}" )
-    public ResponseEntity< List< Reservation > > getReservationsByCareGiver( @PathVariable Long careGiverId ) {
+    public  List< Reservation >  getReservationsByCareGiver( @PathVariable int careGiverId ) {
         return reservationService.getReservationsByCareGiver( careGiverId );
     }
 
@@ -66,7 +66,7 @@ public class ReservationController {
      * @return una respuesta HTTP con la reserva actualizada
      */
     @PutMapping ( "/update/{id}" )
-    public ResponseEntity< Reservation > updateReservation( @PathVariable Long id, @RequestBody Reservation reservation ) {
+    public ResponseEntity< Reservation > updateReservation( @PathVariable int id, @RequestBody Reservation reservation ) {
         return reservationService.updateReservation( id, reservation );
     }
 
@@ -77,8 +77,8 @@ public class ReservationController {
      * @return una respuesta HTTP con el resultado de la operación
      */
     @DeleteMapping ( "/delete/{id}" )
-    public ResponseEntity< String > cancelReservation( @PathVariable Long id ) {
-        return reservationService.cancelReservation( id );
+    public void cancelReservation( @PathVariable int id ) {
+        reservationService.CancelReservation( id );
     }
 
     /**
@@ -88,7 +88,7 @@ public class ReservationController {
      * @return una respuesta HTTP con el resultado de la operación
      */
     @PutMapping ( "/complete/{id}" )
-    public ResponseEntity< String > completeReservation( @PathVariable Long id ) {
+    public ResponseEntity< String > completeReservation( @PathVariable int id ) {
         return reservationService.completeReservation( id );
     }
 
@@ -99,7 +99,7 @@ public class ReservationController {
      * @return una respuesta HTTP con la lista de reservas
      */
     @GetMapping ( "/status/{status}" )
-    public ResponseEntity< List< Reservation > > getReservationsByStatus( @PathVariable int status ) {
+    public  List< Reservation >  getReservationsByStatus( @PathVariable int status ) {
         return reservationService.getReservationsByStatus( status );
     }
 }

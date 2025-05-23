@@ -22,7 +22,7 @@ public class PlaceController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Place> getPlaceById(@PathVariable Long id) {
+    public ResponseEntity<Place> getPlaceById(@PathVariable int id) {
         return placeService.getPlaceById(id);
     }
 
@@ -32,17 +32,17 @@ public class PlaceController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Place> createPlace(@RequestBody Place place) {
+    public ResponseEntity<Void> createPlace(@RequestBody Place place) {
         return placeService.createPlace(place);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Place> updatePlace(@PathVariable Long id, @RequestBody Place place) {
+    public ResponseEntity<Void> updatePlace(@PathVariable int id, @RequestBody Place place) {
         return placeService.updatePlace(id, place);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Place> deletePlace(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePlace(@PathVariable int id) {
         return placeService.deletePlace(id);
     }
 }

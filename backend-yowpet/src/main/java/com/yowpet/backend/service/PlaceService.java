@@ -1,29 +1,25 @@
 package com.yowpet.backend.service;
 
 import com.yowpet.backend.model.Place;
-import com.yowpet.backend.repository.PlaceRepository;
+import com.yowpet.backend.repository.PlaceRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PlaceService {
-    private final PlaceRepository placeRepository;
+    private final PlaceRepo placeRepo;
 
-    public PlaceService(PlaceRepository placeRepository) {
-        this.placeRepository = placeRepository;
+    public PlaceService(PlaceRepo placeRepo) {
+        this.placeRepo = placeRepo;
     }
 
-    //GET all places
+    // GET all active places
     public ResponseEntity<List<Place>> getAllPlaces() {
-        try{
-            List<Place> places = placeRepository.findAllByEstadoNot(0);
+        try {
+            List<Place> places = placeRepo.getAllPlaces();
             if (places.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -33,20 +29,20 @@ public class PlaceService {
         }
     }
 
-    //GET place by ID
-    public ResponseEntity<Place> getPlaceById(Long id) {
+    // GET place by ID
+    public ResponseEntity<Place> getPlaceById(int id) {
         try {
-            Optional<Place> place = placeRepository.findByIdAndEstadoNot(id, 0);
-            return place.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+            Place place = placeRepo.getPlace(id);
+            return ResponseEntity.ok(place);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
-    //GET place by name or address
+    // SEARCH place by name or address
     public ResponseEntity<List<Place>> searchPlace(String query) {
         try {
-            List<Place> places = placeRepository.findByNameContainingIgnoreCaseOrAddressContainingIgnoreCaseAndEstadoNot(query, query, 0);
+            List<Place> places = placeRepo.searchPlaces(query);
             if (places.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -56,51 +52,35 @@ public class PlaceService {
         }
     }
 
-    //POST (create place)
-    public ResponseEntity<Place> createPlace(Place place) {
+    // CREATE place
+    public ResponseEntity<Void> createPlace(Place place) {
         try {
-            place.setId(null);
-            Place newPlace = placeRepository.save(place);
-            return ResponseEntity.status(HttpStatus.CREATED).body(newPlace);
+            System.out.println(place);
+            placeRepo.createPlace(place);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    //PUT update place
-    public ResponseEntity<Place> updatePlace(Long id, Place updatedPlace) {
+    // UPDATE place
+    public ResponseEntity<Void> updatePlace(int id, Place updatedPlace) {
         try {
-            Optional<Place> existingPlace = placeRepository.findById(id);
-            if (existingPlace.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-            Place placeToSave = existingPlace.get();
-            placeToSave.setName(updatedPlace.getName());
-            placeToSave.setAddress(updatedPlace.getAddress());
-            placeToSave.setAddresscode(updatedPlace.getAddresscode());
-            placeToSave.setEstado(updatedPlace.getEstado());
-            Place savedPlace = placeRepository.save(placeToSave);
-            return ResponseEntity.ok(savedPlace);
+            updatedPlace.setId(id);
+            placeRepo.updatePlace(updatedPlace);
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    //DELETE place
-    public ResponseEntity<Place> deletePlace(Long id) {
+    // DELETE place (soft delete)
+    public ResponseEntity<Void> deletePlace(int id) {
         try {
-            Optional<Place> existingPlace = placeRepository.findById(id);
-            if (existingPlace.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-            Place placeToDelete = existingPlace.get();
-            placeToDelete.setEstado(0);
-            placeRepository.save(placeToDelete);
+            placeRepo.deletePlace(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-
 }
