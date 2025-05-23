@@ -124,7 +124,7 @@ export default function AccountScreen() {
         [{ text: 'Entendido' }]
       );
 
-      console.error('Error detallado al actualizar:', {
+      console.warn('Error detallado al actualizar:', {
         message: error.message,
         response: error.response?.data,
         status: error.response?.status,
@@ -185,7 +185,7 @@ export default function AccountScreen() {
       // Resetear errores al cargar el perfil
       setFieldErrors({});
     } catch (error) {
-      console.error('Error al cargar el perfil:', {
+      console.warn('Error al cargar el perfil:', {
         message: error.message,
         status: error.response?.status,
         data: error.response?.data,

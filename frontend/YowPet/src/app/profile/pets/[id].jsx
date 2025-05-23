@@ -89,7 +89,7 @@ export default function PetDetailScreen() {
         setDate(new Date(petData.birthDate));
       }
     } catch (error) {
-      console.error('Error al cargar mascota:', error);
+      console.warn('Error al cargar mascota:', error);
       Alert.alert('Error', 'No se pudo cargar la información de la mascota', [
         { text: 'OK', onPress: () => router.back() },
       ]);
@@ -97,6 +97,26 @@ export default function PetDetailScreen() {
       setIsLoading(false);
     }
   };
+
+const handledeletePet = async () => {
+  try {
+    setIsLoading(true);
+    const response = await petService.eliminarMascota(id);
+    if (response) {
+      Alert.alert(
+        '¡Éxito!',
+        'La mascota se ha eliminado correctamente',
+        [{ text: 'OK', onPress: () => router.back() }],
+      );}
+  } catch (error) {
+    console.warn('Error al eliminar mascota:', error);
+    Alert.alert(
+      'Error',
+      'No se pudo eliminar la mascota. Por favor, intenta de nuevo.',
+    );
+  } finally {
+    setIsLoading(false);
+  }}
 
   useFocusEffect(
     useCallback(() => {
@@ -177,7 +197,7 @@ export default function PetDetailScreen() {
         );
       }
     } catch (error) {
-      console.error('Error al actualizar:', error);
+      console.warn('Error al actualizar:', error);
       Alert.alert(
         'Error',
         'No se pudieron guardar los cambios. Por favor, intenta de nuevo.',
@@ -459,6 +479,14 @@ export default function PetDetailScreen() {
           setEditedPet(prev => ({ ...prev, gender: gender.id }))
         }
       />
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={handledeletePet}>
+        <Ionicons
+          name="trash-outline" color={"black"} size={24}></Ionicons>
+        <Text>Eliminar mascota</Text>
+      </TouchableOpacity>
+
     </ScreenContainer>
   );
 }
@@ -696,5 +724,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 12,
     fontWeight: '600',
+  },
+  deleteButton: {
+    backgroundColor: YowPetTheme.status.errorState,
+    padding: 12,
+    borderRadius: 12,
+    marginTop: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
   },
 });

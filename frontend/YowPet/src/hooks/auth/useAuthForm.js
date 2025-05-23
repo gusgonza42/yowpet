@@ -69,7 +69,7 @@ export function useAuthForm() {
 
         // Validar datos críticos
         if (!userData.token) {
-          console.error('Datos de usuario recibidos:', userData);
+         console.warn('Datos de usuario recibidos:', userData);
           throw new Error('Token de autenticación no recibido');
         }
 
@@ -99,7 +99,7 @@ export function useAuthForm() {
 
         // Validar datos críticos
         if (!userData.token) {
-          console.error('Datos de usuario recibidos:', userData);
+         console.warn('Datos de usuario recibidos:', userData);
           throw new Error('Token de autenticación no recibido');
         }
 
@@ -109,8 +109,8 @@ export function useAuthForm() {
         }
       }
     } catch (error) {
-      console.error('Error completo:', error);
-      console.error('Respuesta del servidor:', error.response?.data);
+     console.warn('Error completo:', error);
+     console.warn('Respuesta del servidor:', error.response?.data);
 
       let errorMessage = 'Error en la autenticación';
       if (error.response?.data?.message) {

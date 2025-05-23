@@ -32,7 +32,7 @@ export default function EducateScreen() {
         const data = await educateService.getAllLessons();
         setLessons(data);
       } catch (error) {
-        console.error('Error fetching lessons:', error);
+        console.warn('Error fetching lessons:', error);
       } finally {
         setLoading(false);
       }

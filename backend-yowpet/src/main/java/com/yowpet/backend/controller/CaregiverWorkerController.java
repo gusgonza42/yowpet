@@ -165,4 +165,9 @@ public class CaregiverWorkerController {
         return caregiverWorkerService.checkIsCaregiver(userId);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public void deleteCaregiver(@PathVariable int id) {
+        caregiverWorkerService.deleteCaregiver(id);
+    }
+
 }

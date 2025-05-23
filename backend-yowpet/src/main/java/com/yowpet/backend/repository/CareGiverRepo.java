@@ -32,10 +32,10 @@ public class CareGiverRepo {
     };
 
     public void createCaregiverWorker(CaregiverWorker caregiver) {
-        String sql = "CALL createCaregiverWorker(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "CALL createCaregiverWorker(?, ?, ?, ?, ?, ?)";
+
         template.update(sql, caregiver.getUser(), caregiver.getSpeciality(), caregiver.getExperienceYears(),
-                caregiver.getHourlyRate(), caregiver.getRating(), caregiver.getReview(), caregiver.getDescription(),
-                caregiver.getServiceWorker());
+                caregiver.getHourlyRate(), caregiver.getDescription(), caregiver.getServiceWorker());
     }
 
     public void updateCaregiverWorker(CaregiverWorker caregiver) {
@@ -71,9 +71,12 @@ public class CareGiverRepo {
     }
 
     public CaregiverWorker getCaregiverWorkersByUser(int userId) {
+        try{
         String sql = "CALL getCaregiverWorkersByUser(?)";
         return template.queryForObject(sql, new Object[]{userId}, CareGiverRowMapper);
-    }
+        }catch (Exception e){
+            return null;
+    }}
 
     public List<CaregiverWorker> getCaregiverWorkersBySpeciality(String speciality) {
         String sql = "CALL getCaregiverWorkersBySpeciality(?)";
@@ -103,7 +106,7 @@ public class CareGiverRepo {
     }
 
     public boolean checkCaregiverExists(int userId) {
-        String sql = "SELECT COUNT(*) > 0 FROM caregiver_workers WHERE user_id = ?";
+        String sql = "CALL checkifcargiver(?)";
         return template.queryForObject(sql, Boolean.class, userId);
     }
 

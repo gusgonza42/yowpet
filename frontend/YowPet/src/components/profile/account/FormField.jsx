@@ -77,7 +77,7 @@ export const FormField = ({
         day: '2-digit',
       });
     } catch (error) {
-      console.error('Error al formatear fecha:', error);
+      console.warn('Error al formatear fecha:', error);
       return getPlaceholderText();
     }
   };

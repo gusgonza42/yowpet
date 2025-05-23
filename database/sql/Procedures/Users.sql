@@ -14,6 +14,9 @@ DROP PROCEDURE IF EXISTS updateUserToken;
 DROP PROCEDURE IF EXISTS validateUserCredentials;
 DROP PROCEDURE IF EXISTS activateUser;
 DROP PROCEDURE IF EXISTS deactivateUser;
+DROP PROCEDURE IF EXISTS tocargiver;
+DROP PROCEDURE IF EXISTS nocargiver;
+DROP PROCEDURE IF EXISTS checkifcargiver;
 
 DELIMITER //
 
@@ -366,4 +369,28 @@ BEGIN
     WHERE id = p_id;
 END //
 
-DELIMITER ;
+CREATE PROCEDURE tocargiver(
+    in p_id int
+)
+BEGIN
+    UPDATE users SET rol = 2 WHERE id = p_id;
+END //
+
+CREATE PROCEDURE checkifcargiver(
+    in p_id int
+)
+SELECT COUNT(*) > 0
+FROM users
+WHERE id = p_id
+  AND rol = 2;
+
+END//
+
+CREATE PROCEDURE nocargiver(
+    in p_id int
+)
+BEGIN
+    UPDATE users SET rol = 1 WHERE id = p_id;
+end//
+
+DELIMITER;

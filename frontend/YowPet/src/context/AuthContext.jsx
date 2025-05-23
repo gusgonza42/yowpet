@@ -31,7 +31,7 @@ const processUserData = rawUserData => {
       decodedData = jwtDecode(rawUserData.token);
       console.log('Token decodificado:', decodedData);
     } catch (error) {
-      console.error('Error al decodificar token:', error);
+     console.warn('Error al decodificar token:', error);
     }
   }
 
@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }) => {
         setUser(userData);
       }
     } catch (error) {
-      console.error('Error al cargar usuario:', error);
+     console.warn('Error al cargar usuario:', error);
     } finally {
       setLoading(false);
     }
@@ -92,7 +92,7 @@ export const AuthProvider = ({ children }) => {
       setUser(processedData);
       return true;
     } catch (error) {
-      console.error('Error al guardar datos:', error);
+     console.warn('Error al guardar datos:', error);
       return false;
     }
   };
@@ -102,7 +102,7 @@ export const AuthProvider = ({ children }) => {
     try {
       return await saveUserData(rawUserData);
     } catch (error) {
-      console.error('Error en login:', error);
+     console.warn('Error en login:', error);
       return false;
     } finally {
       setIsAuthenticating(false);
@@ -114,7 +114,7 @@ export const AuthProvider = ({ children }) => {
     try {
       return await saveUserData(rawUserData);
     } catch (error) {
-      console.error('Error en registro:', error);
+     console.warn('Error en registro:', error);
       return false;
     } finally {
       setIsAuthenticating(false);
@@ -128,7 +128,7 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       return true;
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
+     console.warn('Error al cerrar sesión:', error);
       return false;
     } finally {
       setIsAuthenticating(false);

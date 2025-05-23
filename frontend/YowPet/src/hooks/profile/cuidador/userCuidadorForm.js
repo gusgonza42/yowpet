@@ -30,7 +30,7 @@ export const useCaregiver = () => {
 
   const fetchCaregiverStatus = async () => {
     if (!user?.userId) {
-      console.error('No hay ID de usuario disponible');
+     console.warn('No hay ID de usuario disponible');
       setLoading(false);
       return;
     }
@@ -62,7 +62,7 @@ export const useCaregiver = () => {
             setProfileComplete(true);
           }
         } catch (error) {
-          console.error('Error al obtener datos del cuidador:', error.message);
+         console.warn('Error al obtener datos del cuidador:', error.message);
           Alert.alert(
             'Error',
             'No se pudo obtener la información del cuidador'
@@ -70,7 +70,7 @@ export const useCaregiver = () => {
         }
       }
     } catch (error) {
-      console.error('Error al verificar estado del cuidador:', error.message);
+     console.warn('Error al verificar estado del cuidador:', error.message);
       setIsActivated(false);
       Alert.alert('Error', 'No se pudo verificar el estado del perfil');
     } finally {
@@ -90,7 +90,7 @@ export const useCaregiver = () => {
         );
       }
     } catch (error) {
-      console.error('Error al activar perfil:', error);
+     console.warn('Error al activar perfil:', error);
       Alert.alert('Error', 'No se pudo activar el perfil');
     } finally {
       setLoading(false);
@@ -137,7 +137,7 @@ export const useCaregiver = () => {
         );
       }
     } catch (error) {
-      console.error('Error al crear perfil:', error);
+     console.warn('Error al crear perfil:', error);
       Alert.alert(
         'Error',
         'No se pudieron guardar los datos. Inténtalo de nuevo.'
@@ -163,7 +163,7 @@ export const useCaregiver = () => {
         );
       }
     } catch (error) {
-      console.error('Error al desactivar perfil:', error);
+     console.warn('Error al desactivar perfil:', error);
       Alert.alert('Error', 'No se pudo desactivar el perfil de cuidador');
     } finally {
       setLoading(false);

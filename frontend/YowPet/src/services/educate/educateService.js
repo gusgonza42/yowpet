@@ -6,7 +6,7 @@ export const educateService = {
       .get('/lesson/all')
       .then(response => response.data)
       .catch(error => {
-        console.error('Error fetching lessons:', error);
+       console.warn('Error fetching lessons:', error);
         throw error;
       }),
 };

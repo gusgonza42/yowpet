@@ -84,7 +84,7 @@ export const userService = {
       const decoded = decodeJWT(token);
       return decoded?.userId || decoded?.id || null;
     } catch (e) {
-      console.error('Failed to extract userId from token:', e);
+      console.warn('Failed to extract userId from token:', e);
       return null;
     }
   },

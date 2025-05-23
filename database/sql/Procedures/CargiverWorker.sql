@@ -20,17 +20,13 @@ CREATE PROCEDURE createCaregiverWorker(
     IN p_speciality VARCHAR(255),
     IN p_experience_years INT,
     IN p_hourly_rate DECIMAL(10, 2),
-    IN p_rating DECIMAL(3, 2),
-    IN p_review TEXT,
     IN p_description TEXT,
-    IN p_service_worker VARCHAR(255),
-    IN p_status_active_work BOOLEAN
+    IN p_service_worker VARCHAR(255)
 )
 BEGIN
-INSERT INTO caregiver_workers (user_id, speciality, experience_years, hourly_rate, rating, review,
-                              description, service_worker, status_active_work)
-VALUES (p_user_id, p_speciality, p_experience_years, p_hourly_rate, p_rating,
-        p_review, p_description, p_service_worker, p_status_active_work);
+INSERT INTO caregiver_workers (user_id, speciality, experience_years, hourly_rate , description, service_worker, status_active_work,created_at)
+VALUES (p_user_id, p_speciality, p_experience_years, p_hourly_rate,
+         p_description, p_service_worker, 1,NOW());
 END //
 DELIMITER ;
 
@@ -69,7 +65,9 @@ CREATE PROCEDURE deleteCaregiverWorker(
     IN p_id INT
 )
 BEGIN
-DELETE FROM caregiver_workers WHERE id = p_id;
+UPDATE caregiver_workers
+SET status_active_work = 0
+WHERE id = p_id;
 END //
 DELIMITER ;
 

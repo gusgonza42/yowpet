@@ -34,7 +34,7 @@ export default function HomeScreen() {
       const response = await petService.obtenerMascotas(userId);
       setPets(response || []);
     } catch (error) {
-      console.error('Error al cargar mascotas:', error);
+      console.warn('Error al cargar mascotas:', error);
     } finally {
       setIsLoading(false);
     }

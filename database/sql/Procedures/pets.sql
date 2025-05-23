@@ -189,7 +189,8 @@ BEGIN
            updated_at        AS updatedAt,
            deleted_at        AS deletedAt
     FROM pets
-    WHERE users_id = p_ownerId;
+    WHERE users_id = p_ownerId
+    AND status = 1;
 END;
 
 DELIMITER ;

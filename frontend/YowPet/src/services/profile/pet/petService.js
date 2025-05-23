@@ -41,10 +41,37 @@ export const petService = {
       console.log('Respuesta del servidor:', response?.data);
       return response.data;
     } catch (error) {
-      console.error('Error al registrar mascota:', error);
+      console.warn('Error al registrar mascota:', error);
       throw error;
     }
   },
+
+  eliminarMascota: async petId => {
+    try {
+      const token = await AsyncStorage.getItem('@auth_token');
+
+      if (!token) {
+        throw new Error('No hay token disponible');
+      }
+
+      const response = await axiosClient({
+        method: 'DELETE',
+        url: `/pet/delete/${petId}`,
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        timeout: 10000,
+      });
+
+      return response.data;
+    } catch (error) {
+      console.warn('Error al eliminar mascota:', error);
+      throw error;
+    }
+  },
+
 
   obtenerMascotas: async (userId) => {
     try {
@@ -67,7 +94,7 @@ export const petService = {
 
       return response.data;
     } catch (error) {
-      console.error('Error al obtener mascotas:', error);
+      console.warn('Error al obtener mascotas:', error);
       throw error;
     }
   },
@@ -93,7 +120,7 @@ export const petService = {
 
       return response.data;
     } catch (error) {
-      console.error('Error al obtener mascota:', error);
+      console.warn('Error al obtener mascota:', error);
       throw error;
     }
   },
@@ -135,7 +162,7 @@ export const petService = {
 
       return response.data;
     } catch (error) {
-      console.error(
+      console.warn(
         'Error detallado al actualizar mascota:',
         error.response?.data || error
       );

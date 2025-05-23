@@ -74,7 +74,7 @@ export default function MapScreen() {
         const loc = await Location.getCurrentPositionAsync({});
         setLocation(loc.coords);
       } catch (error) {
-        console.error('Error getting location:', error);
+        console.warn('Error getting location:', error);
       } finally {
         setIsLoading(false); // Finalizar carga siempre, incluso si hay error
       }
@@ -271,7 +271,7 @@ export default function MapScreen() {
         };
       }
     } catch (error) {
-      console.error('Geocoding error:', error);
+      console.warn('Geocoding error:', error);
     }
     return { address: '', addressCode: '' };
   };

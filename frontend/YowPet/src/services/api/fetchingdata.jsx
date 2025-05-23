@@ -35,7 +35,7 @@ export const useRequest = () => {
     } catch (err) {
       setLoading(false);
       setError(err.response ? err.response.data : err.message); // Handle error properly
-      console.error('Error:', err.message || err.response);
+     console.warn('Error:', err.message || err.response);
     } finally {
       setLoading(false);
     }

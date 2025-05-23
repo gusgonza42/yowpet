@@ -5,6 +5,7 @@ import com.yowpet.backend.repository.PetRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Servicio para manejar las operaciones relacionadas con las mascotas.
@@ -126,12 +125,16 @@ public class PetService {
             }
 
             return ResponseEntity.ok()
-                    .contentType(MediaType.IMAGE_PNG) // or detect from extension
+                    .contentType(Files.probeContentType(filePath) != null
+                            ? MediaType.parseMediaType(Files.probeContentType(filePath))
+                            : MediaType.IMAGE_PNG)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileName + "\"")
                     .body(resource);
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
 }

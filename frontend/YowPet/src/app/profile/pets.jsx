@@ -36,7 +36,7 @@ export default function PetsScreen() {
       const response = await petService.obtenerMascotas(userId);
       setPets(response || []);
     } catch (error) {
-      console.error('Error al cargar mascotas:', error);
+      console.warn('Error al cargar mascotas:', error);
       Alert.alert(
         'Error',
         'No se pudieron cargar las mascotas. Por favor, intenta de nuevo.',

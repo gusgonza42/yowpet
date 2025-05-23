@@ -14,7 +14,7 @@ export function HomeHeader({ user }) {
           setUserData(datos);
         }
       } catch (error) {
-        console.error('Error al cargar datos del usuario:', error);
+        console.warn('Error al cargar datos del usuario:', error);
       }
     };
 

@@ -10,7 +10,7 @@ export const authService = {
       console.log('Response data:', JSON.stringify(response.data, null, 2));
       return response;
     } catch (error) {
-      console.error('Error en login:', {
+     console.warn('Error en login:', {
         message: error.message,
         response: error.response?.data,
         status: error.response?.status,
@@ -29,7 +29,7 @@ export const authService = {
       console.log('Response data:', JSON.stringify(response.data, null, 2));
       return response;
     } catch (error) {
-      console.error('Error en registro:', {
+     console.warn('Error en registro:', {
         message: error.message,
         response: error.response?.data,
         status: error.response?.status,

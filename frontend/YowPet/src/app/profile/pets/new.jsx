@@ -225,7 +225,7 @@ export default function NewPetScreen() {
         );
       }
     } catch (error) {
-      console.error('Error detallado:', error.response || error);
+      console.warn('Error detallado:', error.response || error);
       Alert.alert(
         'Error',
         'No se pudo registrar la mascota. Por favor, verifica tu conexión e inténtalo nuevamente.',

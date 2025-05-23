@@ -54,6 +54,8 @@ public class CaregiverWorkerService {
 //                    user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getCity(),
 //                    user.getAddress(), user.getPhoneNumber()
 //            );
+
+            userRepository.tocargiver(user.getId());
             return ResponseEntity.ok(user);
         } catch (Exception e) {
             logger.error("Error activating caregiver with ID {}: ", id, e);
@@ -82,6 +84,11 @@ public class CaregiverWorkerService {
             logger.error("Error creating caregiver: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    public void deleteCaregiver(int id) {
+        userRepository.nocargiver(id);
+        caregiverWorkerRepository.deleteCaregiverWorker(id);
     }
 
     /**
@@ -164,10 +171,12 @@ public class CaregiverWorkerService {
 //                    user.getPaymentMethod(), user.getBirthDate()
 //            );
 
+
             CaregiverWorker caregiverWorker = caregiverWorkerRepository.getCaregiverWorkersByUser(id);
             if (caregiverWorker != null) {
                 caregiverWorker.setStatusActiveWork(false);
-                caregiverWorkerRepository.updateCaregiverWorker(caregiverWorker);
+                caregiverWorkerRepository.deleteCaregiverWorker(caregiverWorker.getId());
+                userRepository.nocargiver(id);
             }
 
             return ResponseEntity.ok(user);

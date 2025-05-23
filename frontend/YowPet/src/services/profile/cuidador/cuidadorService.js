@@ -6,7 +6,7 @@ export const checkCaregiverStatus = async userId => {
     const response = await axiosClient.get(`/caregiver/check/${userId}`);
     return response.data;
   } catch (error) {
-    console.error('Error en checkCaregiverStatus:', error);
+   console.warn('Error en checkCaregiverStatus:', error);
     throw error;
   }
 };
@@ -17,7 +17,7 @@ export const activateCaregiver = async userId => {
     const response = await axiosClient.post(`/caregiver/activate/${userId}`);
     return response.status === 200;
   } catch (error) {
-    console.error('Error en activateCaregiver:', error);
+   console.warn('Error en activateCaregiver:', error);
     throw error;
   }
 };
@@ -28,7 +28,7 @@ export const getCaregiverData = async userId => {
     const response = await axiosClient.get(`/caregiver/${userId}`);
     return response.data;
   } catch (error) {
-    console.error('Error en getCaregiverData:', error);
+   console.warn('Error en getCaregiverData:', error);
     throw error;
   }
 };
@@ -42,7 +42,7 @@ export const createCaregiverProfile = async (userId, caregiverData) => {
     );
     return response.status === 200;
   } catch (error) {
-    console.error('Error en createCaregiverProfile:', error);
+   console.warn('Error en createCaregiverProfile:', error);
     throw error;
   }
 };
@@ -54,7 +54,7 @@ export const disableCaregiverProfile = async userId => {
     const response = await axiosClient.delete(`/caregiver/disabled/${userId}`);
     return response.status === 200;
   } catch (error) {
-    console.error('Error en disableCaregiverProfile:', error);
+   console.warn('Error en disableCaregiverProfile:', error);
     throw error;
   }
 };

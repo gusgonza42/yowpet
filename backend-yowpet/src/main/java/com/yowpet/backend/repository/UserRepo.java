@@ -84,4 +84,12 @@ public class UserRepo {
         template.update(sql, userId);
     }
 
+    public void tocargiver(int userId) {
+        String sql = "CALL tocargiver(?)";
+        template.update(sql, userId);
+    }
+    public void nocargiver(int userId) {
+        String sql = "CALL nocargiver(?)";
+        template.update(sql, userId);
+    }
 }

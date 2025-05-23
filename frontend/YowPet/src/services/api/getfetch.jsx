@@ -28,7 +28,7 @@ export const useAxiosFetch = (
         setDatos([]); // Si no hay datos, establecer array vacío
       }
     } catch (err) {
-      console.error('Error al obtener los datos:', err.message);
+      console.warn('Error al obtener los datos:', err.message);
       setError(err.message);
       setDatos([]); // En caso de error, establecer array vacío
     } finally {

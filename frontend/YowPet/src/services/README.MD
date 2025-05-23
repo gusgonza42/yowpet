@@ -54,7 +54,7 @@ const LoginScreen = () => {
       const response = await authService.login(credentials);
       // Procesar respuesta
     } catch (error) {
-      console.error(error);
+     console.warn(error);
     }
   };
 };
@@ -83,7 +83,7 @@ try {
   // Manejar éxito
 } catch (error) {
   // Manejar error
-  console.error("Error en login:", error.message);
+ console.warn("Error en login:", error.message);
 }
 ```
 
